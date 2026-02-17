@@ -13,9 +13,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Users, Search, RefreshCw, ExternalLink, CheckCircle, XCircle, PauseCircle } from "lucide-react";
-import Link from "next/link";
+import { Users, Search, RefreshCw, Eye, CheckCircle, XCircle, PauseCircle } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { AdminProfileModal } from "@/components/admin/admin-profile-modal";
 
 interface ProfileRow {
   id: string;
@@ -41,6 +41,7 @@ export default function AdminProfilesPage() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [viewingProfileId, setViewingProfileId] = useState<string | null>(null);
 
   const fetchProfiles = async () => {
     const supabase = createClient();
@@ -80,6 +81,7 @@ export default function AdminProfilesPage() {
         .from("profiles")
         .update({
           profile_status: newStatus,
+          is_visible: newStatus === "active", // Make visible when approved
           approved_at: newStatus === "active" ? new Date().toISOString() : null,
           updated_at: new Date().toISOString(),
         })
@@ -225,11 +227,14 @@ export default function AdminProfilesPage() {
                         {new Date(p.created_at).toLocaleDateString()}
                       </TableCell>
                       <TableCell>
-                        <Button variant="ghost" size="sm" asChild className="gap-1">
-                          <Link href={`/profile/${p.id}`} target="_blank" rel="noopener noreferrer">
-                            <ExternalLink className="w-4 h-4" />
-                            View
-                          </Link>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="gap-1"
+                          onClick={() => setViewingProfileId(p.id)}
+                        >
+                          <Eye className="w-4 h-4" />
+                          View
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -240,6 +245,15 @@ export default function AdminProfilesPage() {
           </div>
         </CardContent>
       </Card>
+
+      <AdminProfileModal
+        profileId={viewingProfileId}
+        open={viewingProfileId !== null}
+        onOpenChange={(open) => {
+          if (!open) setViewingProfileId(null);
+        }}
+        onStatusUpdate={updateStatus}
+      />
     </div>
   );
 }
