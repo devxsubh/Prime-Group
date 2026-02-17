@@ -5,57 +5,16 @@ import Link from "next/link"
 import { motion } from "framer-motion"
 import { Heart, MapPin, Briefcase, GraduationCap } from "lucide-react"
 import { useFavorites } from "@/context/favorites-context"
-
-interface ProfileData {
-  id: string
-  name: string
-  birth_year: number
-  education: {
-    qualification: string
-    specialization: string
-  }
-  occupation: {
-    job_profile: string
-    organization: string
-    salary_package: string | null
-  }
-  personal_details: {
-    dob: string
-    birthplace: string
-    height: string
-    complexion: string
-  }
-  residential_address: {
-    city: string
-    state: string
-    country: string
-  }
-}
+import type { DiscoverCardData } from "@/lib/discover"
 
 interface ProfileCardProps {
-  data: ProfileData
+  data: DiscoverCardData
   index: number
 }
 
 export default function ProfileCard({ data, index }: ProfileCardProps) {
   const { isFavorite, toggleFavorite } = useFavorites()
-  const currentYear = new Date().getFullYear()
-  const age = currentYear - data.birth_year
-  const location = `${data.residential_address.city}, ${data.residential_address.state}`
   const favorite = isFavorite(data.id)
-
-  const profileImages = [
-    "/profiles/image.png",
-    "/profiles/image1.png",
-    "/profiles/image3.png",
-    "/profiles/image4.png",
-    "/profiles/boy.jpg",
-    "/profiles/boy2.jpg",
-    "/profiles/boy3.jpg",
-    "/profiles/boy5.jpg",
-  ]
-  const imageIndex = Number.parseInt(data.id.replace("P", "")) - 1
-  const profileImage = profileImages[imageIndex] || profileImages[0]
 
   return (
     <motion.div
@@ -95,10 +54,11 @@ export default function ProfileCard({ data, index }: ProfileCardProps) {
         {/* Profile Image */}
         <div className="relative h-80 overflow-hidden cursor-pointer">
           <Image
-            src={profileImage || "/placeholder.svg"}
+            src={data.imageUrl || "/placeholder.svg"}
             alt={data.name}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-700"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent" />
 
@@ -110,7 +70,7 @@ export default function ProfileCard({ data, index }: ProfileCardProps) {
               boxShadow: "0 4px 12px rgba(217, 170, 72, 0.3)",
             }}
           >
-            <span className="text-sm font-montserrat font-semibold text-black tracking-wide">{age} Years</span>
+            <span className="text-sm font-montserrat font-semibold text-black tracking-wide">{data.age} Years</span>
           </div>
         </div>
 
@@ -126,7 +86,7 @@ export default function ProfileCard({ data, index }: ProfileCardProps) {
                 style={{ color: "var(--primary-blue)" }}
               />
               <span className="text-sm font-montserrat text-gray-700 group-hover/item:text-gray-900 transition-colors">
-                {location}
+                {data.location}
               </span>
             </div>
 
@@ -136,7 +96,7 @@ export default function ProfileCard({ data, index }: ProfileCardProps) {
                 style={{ color: "var(--primary-blue)" }}
               />
               <span className="text-sm font-montserrat text-gray-700 group-hover/item:text-gray-900 transition-colors">
-                {data.occupation.job_profile}
+                {data.profession}
               </span>
             </div>
 
@@ -146,7 +106,7 @@ export default function ProfileCard({ data, index }: ProfileCardProps) {
                 style={{ color: "var(--primary-blue)" }}
               />
               <span className="text-sm font-montserrat text-gray-700 group-hover/item:text-gray-900 transition-colors">
-                {data.education.qualification} - {data.education.specialization}
+                {data.education}
               </span>
             </div>
           </div>

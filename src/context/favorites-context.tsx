@@ -1,54 +1,96 @@
-'use client'
+"use client";
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import { createClient } from "@/lib/supabase/client";
+import { useAuth } from "@/components/hooks/useAuth";
 
 interface FavoritesContextType {
   favorites: Set<string>;
   toggleFavorite: (id: string) => void;
   isFavorite: (id: string) => boolean;
   favoritesCount: number;
+  isLoading: boolean;
 }
 
 const FavoritesContext = createContext<FavoritesContextType | undefined>(undefined);
 
+const STORAGE_KEY = "favorites";
+
 export function FavoritesProvider({ children }: { children: React.ReactNode }) {
+  const { user } = useAuth();
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Load favorites from localStorage on mount
+  // Load favorites: from Supabase when logged in, else from localStorage
   useEffect(() => {
-    const stored = localStorage.getItem('favorites');
-    if (stored) {
+    if (!user) {
       try {
-        const favoritesArray = JSON.parse(stored);
-        setFavorites(new Set(favoritesArray));
-      } catch (e) {
-        console.error('Error loading favorites:', e);
+        const stored = typeof window !== "undefined" ? localStorage.getItem(STORAGE_KEY) : null;
+        if (stored) {
+          const arr = JSON.parse(stored) as string[];
+          setFavorites(new Set(Array.isArray(arr) ? arr : []));
+        } else {
+          setFavorites(new Set());
+        }
+      } catch {
+        setFavorites(new Set());
       }
+      setIsLoading(false);
+      return;
     }
-  }, []);
 
-  // Save favorites to localStorage whenever it changes
-  useEffect(() => {
-    if (favorites.size > 0 || localStorage.getItem('favorites')) {
-      localStorage.setItem('favorites', JSON.stringify(Array.from(favorites)));
-    }
-  }, [favorites]);
-
-  const toggleFavorite = (id: string) => {
-    setFavorites((prev) => {
-      const newFavorites = new Set(prev);
-      if (newFavorites.has(id)) {
-        newFavorites.delete(id);
+    const supabase = createClient();
+    (async () => {
+      const { data, error } = await supabase
+        .from("profile_favorites")
+        .select("profile_id")
+        .eq("user_id", user.id);
+      if (!error && data) {
+        setFavorites(new Set(data.map((r) => r.profile_id)));
       } else {
-        newFavorites.add(id);
+        setFavorites(new Set());
       }
-      return newFavorites;
-    });
-  };
+      setIsLoading(false);
+    })();
+  }, [user?.id]);
 
-  const isFavorite = (id: string) => {
-    return favorites.has(id);
-  };
+  // Persist to localStorage when not logged in
+  useEffect(() => {
+    if (user || typeof window === "undefined") return;
+    if (favorites.size > 0 || localStorage.getItem(STORAGE_KEY)) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(Array.from(favorites)));
+    }
+  }, [user, favorites]);
+
+  const toggleFavorite = useCallback(
+    async (profileId: string) => {
+      if (user) {
+        const supabase = createClient();
+        const isCurrently = favorites.has(profileId);
+        if (isCurrently) {
+          const { error } = await supabase
+            .from("profile_favorites")
+            .delete()
+            .eq("user_id", user.id)
+            .eq("profile_id", profileId);
+          if (!error) setFavorites((prev) => { const n = new Set(prev); n.delete(profileId); return n; });
+        } else {
+          const { error } = await supabase.from("profile_favorites").insert({ user_id: user.id, profile_id: profileId });
+          if (!error) setFavorites((prev) => new Set(prev).add(profileId));
+        }
+      } else {
+        setFavorites((prev) => {
+          const next = new Set(prev);
+          if (next.has(profileId)) next.delete(profileId);
+          else next.add(profileId);
+          return next;
+        });
+      }
+    },
+    [user, favorites]
+  );
+
+  const isFavorite = useCallback((id: string) => favorites.has(id), [favorites]);
 
   return (
     <FavoritesContext.Provider
@@ -57,6 +99,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
         toggleFavorite,
         isFavorite,
         favoritesCount: favorites.size,
+        isLoading,
       }}
     >
       {children}
@@ -67,8 +110,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
 export function useFavorites() {
   const context = useContext(FavoritesContext);
   if (context === undefined) {
-    throw new Error('useFavorites must be used within a FavoritesProvider');
+    throw new Error("useFavorites must be used within a FavoritesProvider");
   }
   return context;
 }
-
