@@ -1,6 +1,7 @@
 'use client'
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import {
   Sheet,
@@ -10,15 +11,25 @@ import {
   SheetTitle,
   SheetDescription,
 } from "../ui/sheet";
-import { Menu } from 'lucide-react';
+import { Menu, User, Settings, LogOut, Heart } from "lucide-react";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
+import { useAuth } from "@/components/hooks/useAuth";
 
 export default function MobileNav() {
   const [open, setOpen] = useState(false);
+  const { user, signOut } = useAuth();
+  const router = useRouter();
 
   const handleLinkClick = () => {
     setOpen(false);
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+    setOpen(false);
+    router.push("/");
+    router.refresh();
   };
 
   return (
@@ -45,10 +56,10 @@ export default function MobileNav() {
               Home
             </Link>
             <Link href="/discover" className="block py-2 text-lg font-semibold" onClick={handleLinkClick}>
-                Discover
-                  </Link>
+              Discover
+            </Link>
             <Link href="/faqs" className="block py-2 text-lg font-semibold" onClick={handleLinkClick}>
-              FAQ'S
+              FAQ&apos;S
             </Link>
             <Link href="/blog" className="block py-2 text-lg font-semibold" onClick={handleLinkClick}>
               Blogs
@@ -56,6 +67,27 @@ export default function MobileNav() {
             <Link href="/contact-us" className="block py-2 text-lg font-semibold" onClick={handleLinkClick}>
               Contact Us
             </Link>
+            <Separator className="my-2" />
+            {user ? (
+              <>
+                <Link href="/favorites" className="flex items-center gap-2 py-2 text-lg font-semibold" onClick={handleLinkClick}>
+                  <Heart className="h-5 w-5" /> Wishlist
+                </Link>
+                <Link href="/profile" className="flex items-center gap-2 py-2 text-lg font-semibold" onClick={handleLinkClick}>
+                  <User className="h-5 w-5" /> Profile
+                </Link>
+                <Link href="/settings" className="flex items-center gap-2 py-2 text-lg font-semibold" onClick={handleLinkClick}>
+                  <Settings className="h-5 w-5" /> Settings
+                </Link>
+                <Button variant="outline" className="justify-start gap-2 text-red-600 border-red-200" onClick={handleSignOut}>
+                  <LogOut className="h-5 w-5" /> Sign out
+                </Button>
+              </>
+            ) : (
+              <Link href="/sign-in" className="block py-2 text-lg font-semibold" onClick={handleLinkClick}>
+                Sign in
+              </Link>
+            )}
           </nav>
         </SheetContent>
       </Sheet>

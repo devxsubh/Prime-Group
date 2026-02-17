@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -16,7 +17,7 @@ function Footerdemo() {
   return (
     <footer className="relative border-t transition-colors duration-300" style={{ backgroundColor: 'var(--primary-blue)', borderColor: 'var(--accent-gold)' }}>
       <div className="container mx-auto px-4 py-12 md:px-6 lg:px-8">
-        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-5">
           <div className="relative">
             <h2 className="mb-4 text-3xl font-playfair-display font-bold tracking-tight text-gold-gradient">Stay Connected</h2>
             <p className="mb-6 font-montserrat" style={{ color: 'var(--pure-white)' }}>
@@ -43,21 +44,47 @@ function Footerdemo() {
           <div>
             <h3 className="mb-4 text-lg font-playfair-display font-bold text-gold-gradient">Quick Links</h3>
             <nav className="space-y-2 text-sm font-montserrat">
-              <a href="/" className="block transition-colors duration-300" style={{ color: 'var(--pure-white)' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-gold)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--pure-white)'}>
+              <Link href="/" className="block transition-colors duration-300" style={{ color: 'var(--pure-white)' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-gold)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--pure-white)'}>
                 Home
-              </a>
-              <a href="/packages" className="block transition-colors duration-300" style={{ color: 'var(--pure-white)' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-gold)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--pure-white)'}>
+              </Link>
+              <Link href="/discover" className="block transition-colors duration-300" style={{ color: 'var(--pure-white)' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-gold)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--pure-white)'}>
                 Discover
-              </a>
-              <a href="/blog" className="block transition-colors duration-300" style={{ color: 'var(--pure-white)' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-gold)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--pure-white)'}>
+              </Link>
+              <Link href="/profile" className="block transition-colors duration-300" style={{ color: 'var(--pure-white)' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-gold)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--pure-white)'}>
+                My profile
+              </Link>
+              <Link href="/about" className="block transition-colors duration-300" style={{ color: 'var(--pure-white)' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-gold)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--pure-white)'}>
+                About
+              </Link>
+              <Link href="/blog" className="block transition-colors duration-300" style={{ color: 'var(--pure-white)' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-gold)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--pure-white)'}>
                 Blog
-              </a>
-              <a href="/faqs" className="block transition-colors duration-300" style={{ color: 'var(--pure-white)' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-gold)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--pure-white)'}>
+              </Link>
+              <Link href="/faqs" className="block transition-colors duration-300" style={{ color: 'var(--pure-white)' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-gold)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--pure-white)'}>
                 FAQs
-              </a>
-              <a href="/contact-us" className="block transition-colors duration-300" style={{ color: 'var(--pure-white)' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-gold)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--pure-white)'}>
+              </Link>
+              <Link href="/contact-us" className="block transition-colors duration-300" style={{ color: 'var(--pure-white)' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-gold)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--pure-white)'}>
                 Contact Us
-              </a>
+              </Link>
+            </nav>
+          </div>
+          <div>
+            <h3 className="mb-4 text-lg font-playfair-display font-bold text-gold-gradient">Legal</h3>
+            <nav className="space-y-2 text-sm font-montserrat">
+              <Link href="/privacy" className="block transition-colors duration-300" style={{ color: 'var(--pure-white)' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-gold)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--pure-white)'}>
+                Privacy Policy
+              </Link>
+              <Link href="/terms" className="block transition-colors duration-300" style={{ color: 'var(--pure-white)' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-gold)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--pure-white)'}>
+                Terms of Service
+              </Link>
+              <Link href="/refund" className="block transition-colors duration-300" style={{ color: 'var(--pure-white)' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-gold)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--pure-white)'}>
+                Refund Policy
+              </Link>
+              <Link href="/community-guidelines" className="block transition-colors duration-300" style={{ color: 'var(--pure-white)' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-gold)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--pure-white)'}>
+                Community Guidelines
+              </Link>
+              <Link href="/privacy#cookies" className="block transition-colors duration-300" style={{ color: 'var(--pure-white)' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-gold)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--pure-white)'}>
+                Cookie Settings
+              </Link>
             </nav>
           </div>
           <div>
@@ -200,16 +227,19 @@ function Footerdemo() {
           <p className="text-sm font-montserrat" style={{ color: 'var(--pure-white)' }}>
             © 2024 Prime Group Matrimony. All rights reserved.
           </p>
-          <nav className="flex gap-4 text-sm font-montserrat">
-            <a href="#" className="transition-colors duration-300" style={{ color: 'var(--pure-white)' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-gold)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--pure-white)'}>
+          <nav className="flex flex-wrap justify-center gap-4 text-sm font-montserrat">
+            <Link href="/privacy" className="transition-colors duration-300" style={{ color: 'var(--pure-white)' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-gold)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--pure-white)'}>
               Privacy Policy
-            </a>
-            <a href="#" className="transition-colors duration-300" style={{ color: 'var(--pure-white)' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-gold)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--pure-white)'}>
+            </Link>
+            <Link href="/terms" className="transition-colors duration-300" style={{ color: 'var(--pure-white)' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-gold)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--pure-white)'}>
               Terms of Service
-            </a>
-            <a href="#" className="transition-colors duration-300" style={{ color: 'var(--pure-white)' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-gold)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--pure-white)'}>
+            </Link>
+            <Link href="/privacy#cookies" className="transition-colors duration-300" style={{ color: 'var(--pure-white)' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-gold)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--pure-white)'}>
               Cookie Settings
-            </a>
+            </Link>
+            <Link href="/refund" className="transition-colors duration-300" style={{ color: 'var(--pure-white)' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-gold)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--pure-white)'}>
+              Refund Policy
+            </Link>
           </nav>
         </div>
       </div>

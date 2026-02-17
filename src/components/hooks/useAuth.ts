@@ -1,57 +1,76 @@
-import { useState } from 'react';
-import { AuthFormData, UserType } from '../types/auth';
+"use client";
+
+import { useState, useEffect } from "react";
+import { createClient } from "@/lib/supabase/client";
+import type { User } from "@supabase/supabase-js";
+import type { AuthFormData, UserType } from "../types/auth";
 
 export function useAuth() {
-  const [isLoading, setIsLoading] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const signIn = async (data: AuthFormData, userType: UserType) => {
+  const supabase = createClient();
+
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+      setIsLoading(false);
+    });
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+      setIsLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [supabase.auth]);
+
+  const signIn = async (data: AuthFormData, _userType: UserType) => {
     setIsLoading(true);
     setError(null);
-    
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // In a real app, you would make an API call here
-      console.log(`Signing in ${userType}:`, data);
-      
-      // Simulate successful login
-      localStorage.setItem('userType', userType);
-      if (data.rememberMe) {
-        localStorage.setItem('email', data.email);
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    } finally {
-      setIsLoading(false);
+    const { error: e } = await supabase.auth.signInWithPassword({
+      email: data.email,
+      password: data.password,
+    });
+    setIsLoading(false);
+    if (e) {
+      setError(e.message);
+      return;
     }
   };
 
-  const signUp = async (data: AuthFormData, userType: UserType) => {
+  const signUp = async (data: AuthFormData, _userType: UserType) => {
     setIsLoading(true);
     setError(null);
-    
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // In a real app, you would make an API call here
-      console.log(`Signing up ${userType}:`, data);
-      
-      // Simulate successful registration
-      localStorage.setItem('userType', userType);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    } finally {
-      setIsLoading(false);
+    const { error: e } = await supabase.auth.signUp({
+      email: data.email,
+      password: data.password,
+      options: {
+        emailRedirectTo: `${typeof window !== "undefined" ? window.location.origin : ""}/auth/callback?next=/onboarding`,
+      },
+    });
+    setIsLoading(false);
+    if (e) {
+      setError(e.message);
+      return;
     }
+  };
+
+  const signOut = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
   };
 
   return {
+    user,
+    session: user ? { user } : null,
     isLoading,
     error,
     signIn,
-    signUp
+    signUp,
+    signOut,
   };
 }
