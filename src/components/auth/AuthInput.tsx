@@ -1,18 +1,18 @@
 import React from 'react';
 import { LucideIcon } from 'lucide-react';
-import { UseFormRegister } from 'react-hook-form';
-import { AuthFormData } from '../types/auth';
+import type { FieldValues, Path, UseFormRegister } from 'react-hook-form';
+import type { AuthFormData } from '../types/auth';
 
-interface AuthInputProps {
+interface AuthInputProps<T extends FieldValues = AuthFormData> {
   type: string;
-  name: keyof AuthFormData;
+  name: Path<T>;
   placeholder: string;
   icon: LucideIcon;
-  register: UseFormRegister<AuthFormData>;
+  register: UseFormRegister<T>;
   error?: string;
 }
 
-export function AuthInput({ type, name, placeholder, icon: Icon, register, error }: AuthInputProps) {
+export function AuthInput<T extends FieldValues = AuthFormData>({ type, name, placeholder, icon: Icon, register, error }: AuthInputProps<T>) {
   return (
     <div className="space-y-1">
       <div className="relative">

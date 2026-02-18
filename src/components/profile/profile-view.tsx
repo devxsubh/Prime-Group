@@ -184,9 +184,11 @@ export function ProfileView({
                   type="button"
                   onClick={() => setSelectedPhotoIndex(idx)}
                   className={`relative flex-shrink-0 w-14 h-14 rounded-lg overflow-hidden border-2 transition-all ${
-                    selectedPhotoIndex === idx ? "ring-2 ring-offset-2" : "border-gray-200 hover:border-gray-300"
+                    selectedPhotoIndex === idx
+                      ? "ring-2 ring-offset-2 ring-[var(--accent-gold)]"
+                      : "border-gray-200 hover:border-gray-300"
                   }`}
-                  style={selectedPhotoIndex === idx ? { borderColor: "var(--accent-gold)", ringColor: "var(--accent-gold)" } : {}}
+                  style={selectedPhotoIndex === idx ? { borderColor: "var(--accent-gold)" } : undefined}
                 >
                   <Image
                     src={p.thumbnail_url || p.photo_url}
