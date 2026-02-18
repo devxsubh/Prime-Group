@@ -4,14 +4,14 @@ import { cn } from "@/lib/utils";
 
 export default function SignInPage() {
   return (
-    <div className="absolute inset-0 p-4 md:p-8 flex items-center justify-center min-h-screen overflow-hidden">
+    <div className="absolute inset-0 min-h-screen flex items-center justify-center overflow-y-auto overflow-x-hidden p-3 sm:p-4 md:p-6 lg:p-8 py-8 sm:py-10">
       {/* White background */}
       <div className="absolute inset-0 bg-white" />
       
       {/* Main content container */}
-      <div className="relative z-10 w-full max-w-5xl">
-        <div className="w-full overflow-hidden rounded-3xl border-2 bg-white/95 backdrop-blur-sm shadow-2xl animate-in fade-in zoom-in-95 duration-500" style={{ borderColor: "var(--accent-gold)" }}>
-          <div className="grid grid-cols-1 md:grid-cols-2 min-h-[680px]">
+      <div className="relative z-10 w-full max-w-5xl my-auto flex-shrink-0">
+        <div className="w-full overflow-hidden rounded-2xl sm:rounded-3xl border-2 bg-white/95 backdrop-blur-sm shadow-2xl animate-in fade-in zoom-in-95 duration-500" style={{ borderColor: "var(--accent-gold)" }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 min-h-0 md:min-h-[680px]">
             {/* Left side - Creative Doodles */}
             <div 
               className="relative hidden md:block overflow-hidden"
@@ -135,15 +135,21 @@ export default function SignInPage() {
             </div>
 
             {/* Right side - Form */}
-            <div className="p-8 sm:p-10 md:p-12 flex flex-col justify-center bg-gradient-to-br from-white to-gray-50/30">
-              <div className="mb-8 space-y-3">
-                <div className="flex items-center justify-between">
-                  <p className="text-sm text-gray-500">
+            <div className="p-5 sm:p-8 md:p-10 lg:p-12 flex flex-col justify-center min-h-0 overflow-y-auto bg-gradient-to-br from-white to-gray-50/30">
+              {/* Mobile: small brand line (left panel hidden) */}
+              <div className="md:hidden mb-4 pb-3 border-b border-gray-200/80">
+                <p className="text-xs font-bold tracking-wider uppercase" style={{ color: "var(--primary-blue)" }}>
+                  PRIME GROUP
+                </p>
+              </div>
+              <div className="mb-6 sm:mb-8 space-y-3">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <p className="text-xs sm:text-sm text-gray-500">
                     New to Prime Group?{" "}
                     <Link 
                       href="/sign-up" 
                       className={cn(
-                        "font-semibold transition-all duration-200 hover:opacity-100",
+                        "font-semibold transition-all duration-200 hover:opacity-100 whitespace-nowrap",
                         "relative inline-block after:absolute after:bottom-0 after:left-0",
                         "after:h-[2px] after:w-0 after:bg-[var(--accent-gold)]",
                         "hover:after:w-full after:transition-all after:duration-300"
@@ -154,11 +160,11 @@ export default function SignInPage() {
                     </Link>
                   </p>
                 </div>
-                <div className="space-y-2">
-                  <h1 className="text-4xl font-montserrat font-bold tracking-tight" style={{ color: "var(--primary-blue)" }}>
+                <div className="space-y-1.5 sm:space-y-2">
+                  <h1 className="text-2xl sm:text-3xl md:text-4xl font-montserrat font-bold tracking-tight" style={{ color: "var(--primary-blue)" }}>
                     Welcome back
                   </h1>
-                  <p className="text-gray-600 text-base leading-relaxed">
+                  <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
                     Sign in to continue your matchmaking journey.
                   </p>
                 </div>
@@ -166,7 +172,7 @@ export default function SignInPage() {
 
               <AuthForm mode="sign-in" hideTitle submitLabel="Sign in" className="max-w-none" />
 
-              <p className="text-center text-xs mt-8 text-gray-500">
+              <p className="text-center text-xs mt-6 sm:mt-8 text-gray-500">
                 <Link 
                   href="/" 
                   className="hover:text-[var(--primary-blue)] transition-colors duration-200 underline underline-offset-2"
