@@ -4,10 +4,29 @@ export interface Step1Data {
   full_name: string;
   gender: "male" | "female" | "other";
   date_of_birth: string;
+  birth_time: string;
   marital_status: string;
+  school: string;
+  college_university: string;
+  highest_education: string;
+  organization: string;
+  birthplace: string;
+  height_cm: string;
+  complexion: string;
+  gotra: string; // user's own gotra (on profile)
 }
 
 export interface Step2Data {
+  father_name: string;
+  father_occupation: string;
+  mother_name: string;
+  mother_occupation: string;
+  has_siblings: boolean;
+  siblings_brothers: string;
+  siblings_sisters: string;
+  siblings_notes: string;
+  contact_address: string;
+  contact_number: string;
   country: string;
   state: string;
   city: string;
@@ -17,7 +36,7 @@ export interface Step2Data {
 export interface Step3Data {
   age_min: number;
   age_max: number;
-  additional_notes: string;
+  additional_notes: string; // what you're looking for in a partner
 }
 
 /** Serializable photo entry for Redux (actual File kept in component ref for upload) */
@@ -50,7 +69,7 @@ const profileDraftSlice = createSlice({
   initialState,
   reducers: {
     setStepIndex(state, action: PayloadAction<number>) {
-      state.stepIndex = Math.max(0, Math.min(action.payload, 3));
+      state.stepIndex = Math.max(0, Math.min(action.payload, 6));
     },
     updateStep1(state, action: PayloadAction<Partial<Step1Data>>) {
       state.step1 = { ...state.step1, ...action.payload };

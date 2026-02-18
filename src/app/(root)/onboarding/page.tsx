@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { OnboardingWizard } from "@/components/auth/onboarding-wizard";
+import { OnboardingStepBackground } from "@/components/auth/onboarding-step-background";
 
 export default async function OnboardingPage() {
   const supabase = await createClient();
@@ -23,13 +24,12 @@ export default async function OnboardingPage() {
   }
 
   return (
-    <div
-      className="min-h-screen py-12 px-4"
-      style={{ backgroundColor: "var(--pure-white)" }}
-    >
-      <div className="container mx-auto max-w-2xl">
+    <div className="relative min-h-screen overflow-hidden">
+      <OnboardingStepBackground />
+
+      <section className="relative z-0 mx-auto max-w-2xl px-6 py-16 md:py-20">
         <OnboardingWizard userId={user.id} existingProfileId={profile?.id} />
-      </div>
+      </section>
     </div>
   );
 }

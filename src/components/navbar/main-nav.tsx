@@ -192,13 +192,15 @@ export default function MainNav() {
                   </Popover>
                 </>
               ) : (
-                <Link href="/sign-in">
-                  <Button
-                    className="rounded-full px-6 py-2 bg-gradient-to-r from-yellow-400 to-yellow-500 text-slate-900 font-montserrat font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200 border-none"
-                  >
-                    Sign In
-                  </Button>
-                </Link>
+                !pathname?.startsWith("/sign-in") && !pathname?.startsWith("/sign-up") && (
+                  <Link href="/sign-in">
+                    <Button
+                      className="rounded-full px-6 py-2 bg-gradient-to-r from-yellow-400 to-yellow-500 text-slate-900 font-montserrat font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200 border-none"
+                    >
+                      Sign In
+                    </Button>
+                  </Link>
+                )
               )}
             </div>
           </div>
