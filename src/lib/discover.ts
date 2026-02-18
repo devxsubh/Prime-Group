@@ -32,7 +32,7 @@ export async function getDiscoverProfiles(options?: { limit?: number; profileIds
 
   let query = supabase
     .from("profiles")
-    .select("id, full_name, date_of_birth, city, state, country, occupation, highest_education, college_university, field_of_study")
+    .select("id, full_name, date_of_birth, city, state, country, occupation, organization, highest_education, college_university, school, field_of_study")
     .eq("profile_status", "active")
     .eq("is_visible", true)
     .is("deleted_at", null)
@@ -67,8 +67,8 @@ export async function getDiscoverProfiles(options?: { limit?: number; profileIds
     name: p.full_name ?? "—",
     age: parseAge(p.date_of_birth),
     location: buildLocation([p.city, p.state, p.country]),
-    profession: p.occupation ?? "—",
-    education: ([p.highest_education, p.field_of_study].filter(Boolean).join(" – ") || p.college_university) || "—",
+    profession: p.occupation ?? (p.organization ? `Working at ${p.organization}` : null) ?? "—",
+    education: ([p.highest_education, p.school, p.field_of_study].filter(Boolean).join(" – ") || p.college_university) || "—",
     imageUrl: photoByProfileId.get(p.id) || "/placeholder.svg",
   }));
 

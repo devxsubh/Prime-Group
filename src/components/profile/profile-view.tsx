@@ -11,6 +11,9 @@ import {
   Heart,
   Users,
   User,
+  Phone,
+  Home,
+  Lock,
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -27,6 +30,7 @@ export interface ProfilePhoto {
 export interface PartnerPreferences {
   age_min: number | null;
   age_max: number | null;
+  gotra?: string | null;
   additional_notes: string | null;
 }
 
@@ -44,6 +48,7 @@ export interface ProfileRecord {
   city: string | null;
   highest_education: string | null;
   college_university?: string | null;
+  school?: string | null;
   field_of_study?: string | null;
   occupation: string | null;
   organization: string | null;
@@ -60,9 +65,20 @@ export interface ProfileRecord {
   mother_name?: string | null;
   mother_occupation?: string | null;
   siblings_count?: number | null;
+  has_siblings?: boolean | null;
+  siblings_brothers?: number | null;
+  siblings_sisters?: number | null;
+  siblings_notes?: string | null;
   family_type?: string | null;
   family_values?: string | null;
   family_status?: string | null;
+  birthplace?: string | null;
+  birth_time?: string | null;
+  complexion?: string | null;
+  gotra?: string | null;
+  contact_address?: string | null;
+  contact_number?: string | null;
+  willing_to_relocate?: string | null;
   [key: string]: unknown;
 }
 
@@ -129,10 +145,11 @@ export function ProfileView({
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState(0);
   const displayPhoto = sortedPhotos[selectedPhotoIndex] ?? primaryPhoto ?? sortedPhotos[0];
 
-  const showEducation = isOwnProfile ?? (profile.show_education !== false);
-  const showOccupation = isOwnProfile ?? (profile.show_occupation !== false);
-  const showFamily = isOwnProfile ?? (profile.show_family !== false);
-  const showLocation = isOwnProfile ?? (profile.show_location !== false);
+  // Show all sections (education, occupation, family, partner preference) when viewing a profile
+  const showEducation = true;
+  const showOccupation = true;
+  const showFamily = true;
+  const showLocation = true;
 
   return (
     <div className="space-y-8">
@@ -183,6 +200,37 @@ export function ProfileView({
               ))}
             </div>
           )}
+
+          {/* Contact section - visible below images */}
+          {(profile.contact_address || profile.contact_number) && (
+            <Section title="Contact" icon={Phone} visible>
+              <div className="space-y-2">
+                {profile.contact_address && (
+                  <p className="flex items-start gap-2 text-sm">
+                    <Home className="h-4 w-4 flex-shrink-0 mt-0.5" style={{ color: "var(--accent-gold)" }} />
+                    {isOwnProfile ? (
+                      <span className="break-words">{profile.contact_address}</span>
+                    ) : (
+                      <span className="select-none text-gray-400 blur-sm">Address visible with subscription</span>
+                    )}
+                  </p>
+                )}
+                {profile.contact_number && (
+                  <p className="flex items-center gap-2 text-sm">
+                    <Phone className="h-4 w-4 flex-shrink-0" style={{ color: "var(--accent-gold)" }} />
+                    {isOwnProfile ? (
+                      <span className="break-all">{profile.contact_number}</span>
+                    ) : (
+                      <span className="inline-flex items-center gap-2 rounded-md bg-gray-100 px-3 py-1.5 text-gray-500 select-none text-xs">
+                        <Lock className="h-3.5 w-3.5 flex-shrink-0" />
+                        <span>Subscribe to view contact number</span>
+                      </span>
+                    )}
+                  </p>
+                )}
+              </div>
+            </Section>
+          )}
         </div>
 
         {/* Right: Details */}
@@ -212,33 +260,40 @@ export function ProfileView({
             </Section>
           )}
 
-          {showEducation && (profile.highest_education || profile.college_university || profile.field_of_study) && (
+          {(profile.school || profile.highest_education || profile.college_university || profile.field_of_study) && (
             <Section title="Education" icon={GraduationCap} visible>
-              <p>
-                {[profile.highest_education, profile.college_university, profile.field_of_study].filter(Boolean).join(" · ")}
-              </p>
+              <div className="space-y-1">
+                {profile.school && <p>School: {profile.school}</p>}
+                {profile.college_university && <p>College / University: {profile.college_university}</p>}
+                {(profile.highest_education || profile.field_of_study) && (
+                  <p>Degree: {[profile.highest_education, profile.field_of_study].filter(Boolean).join(" · ")}</p>
+                )}
+              </div>
             </Section>
           )}
 
-          {showOccupation && (profile.occupation || profile.organization) && (
+          {(profile.occupation || profile.organization) && (
             <Section title="Occupation" icon={Briefcase} visible>
               <p>
-                {profile.occupation}
-                {profile.organization && ` at ${profile.organization}`}
+                {profile.occupation && profile.organization
+                  ? `${profile.occupation} at ${profile.organization}`
+                  : profile.organization
+                    ? `Working at ${profile.organization}`
+                    : profile.occupation}
               </p>
             </Section>
           )}
 
-          {(profile.height_cm || profile.marital_status || profile.religion || profile.mother_tongue) && (
-            <Section
-              title="Details"
-              icon={Ruler}
-              visible
-            >
+          {(profile.height_cm || profile.marital_status || profile.complexion || profile.birthplace || profile.gotra || profile.willing_to_relocate || profile.religion || profile.mother_tongue) && (
+            <Section title="Details" icon={Ruler} visible>
               <p>
                 {[
                   profile.height_cm && `${profile.height_cm} cm`,
                   profile.marital_status,
+                  profile.complexion,
+                  profile.birthplace,
+                  profile.gotra && `Gotra: ${profile.gotra}`,
+                  profile.willing_to_relocate && `Willing to relocate: ${profile.willing_to_relocate}`,
                   profile.religion,
                   profile.mother_tongue,
                 ]
@@ -248,12 +303,14 @@ export function ProfileView({
             </Section>
           )}
 
-          {showFamily &&
-            (profile.father_name ||
-              profile.mother_name ||
-              profile.siblings_count != null ||
-              profile.family_type ||
-              profile.family_values) && (
+          {(profile.father_name ||
+            profile.mother_name ||
+            profile.has_siblings ||
+            profile.siblings_brothers != null ||
+            profile.siblings_sisters != null ||
+            profile.siblings_count != null ||
+            profile.family_type ||
+            profile.family_values) && (
               <Section title="Family" icon={Users} visible>
                 <div className="space-y-2">
                   {profile.father_name && (
@@ -262,7 +319,17 @@ export function ProfileView({
                   {profile.mother_name && (
                     <p>Mother: {profile.mother_name}{profile.mother_occupation ? ` · ${profile.mother_occupation}` : ""}</p>
                   )}
-                  {profile.siblings_count != null && <p>Siblings: {profile.siblings_count}</p>}
+                  {(profile.has_siblings || profile.siblings_brothers != null || profile.siblings_sisters != null || profile.siblings_count != null) && (
+                    <p>
+                      Siblings:
+                      {profile.siblings_brothers != null || profile.siblings_sisters != null
+                        ? [profile.siblings_brothers != null && ` ${profile.siblings_brothers} brother(s)`, profile.siblings_sisters != null && ` ${profile.siblings_sisters} sister(s)`].filter(Boolean).join(",")
+                        : profile.siblings_count != null
+                          ? ` ${profile.siblings_count}`
+                          : " Yes"}
+                    </p>
+                  )}
+                  {profile.siblings_notes && <p className="opacity-90">{profile.siblings_notes}</p>}
                   {(profile.family_type || profile.family_values || profile.family_status) && (
                     <p>
                       {[profile.family_type, profile.family_values, profile.family_status].filter(Boolean).join(" · ")}
@@ -272,12 +339,13 @@ export function ProfileView({
               </Section>
             )}
 
-          {preferences && (preferences.age_min != null || preferences.age_max != null || preferences.additional_notes) && (
+          {preferences && (preferences.age_min != null || preferences.age_max != null || preferences.additional_notes || preferences.gotra) && (
             <Section title="Partner preferences" icon={Heart} visible>
               <p>
                 {preferences.age_min != null && preferences.age_max != null && (
-                  <>Age {preferences.age_min}–{preferences.age_max} years</>
+                  <>Looking for age {preferences.age_min}–{preferences.age_max} years</>
                 )}
+                {preferences.gotra && <span className="block mt-1">Gotra: {preferences.gotra}</span>}
                 {preferences.additional_notes && (
                   <span className="block mt-1 opacity-90">{preferences.additional_notes}</span>
                 )}

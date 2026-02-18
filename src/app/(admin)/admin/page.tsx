@@ -31,37 +31,52 @@ interface CategoryCount {
   pct: number;
 }
 
+interface PlanRow {
+  id: string;
+  name: string;
+}
+
 export default function AdminDashboardPage() {
   const [stats, setStats] = useState({
     totalUsers: 0,
     totalProfiles: 0,
     pendingProfiles: 0,
     activeProfiles: 0,
+    newUsersLast7: 0,
+    newProfilesLast7: 0,
   });
   const [revenue, setRevenue] = useState<RevenueRow>({
     total: 0,
     thisMonth: 0,
     byPlan: [],
   });
+  const [plans, setPlans] = useState<PlanRow[]>([]);
   const [byGender, setByGender] = useState<CategoryCount[]>([]);
   const [byReligion, setByReligion] = useState<CategoryCount[]>([]);
   const [byStatus, setByStatus] = useState<CategoryCount[]>([]);
   const [byCity, setByCity] = useState<CategoryCount[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const [fetchError, setFetchError] = useState<string | null>(null);
 
   const fetchStats = async () => {
     const supabase = createClient();
+    setFetchError(null);
+    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
     try {
-      const [usersRes, profilesRes, paymentsRes, plansRes] = await Promise.all([
+      const [usersRes, profilesRes, paymentsRes, plansRes, usersLast7Res, profilesLast7Res] = await Promise.all([
         supabase.from("users").select("*", { count: "exact", head: true }),
         supabase.from("profiles").select("id, profile_status, gender, religion, city"),
         supabase.from("payments").select("amount, paid_at, plan_id, created_at").eq("status", "success"),
-        supabase.from("plans").select("id, name").catch(() => ({ data: [] })),
+        supabase.from("plans").select("id, name"),
+        supabase.from("users").select("*", { count: "exact", head: true }).gte("created_at", sevenDaysAgo),
+        supabase.from("profiles").select("*", { count: "exact", head: true }).gte("created_at", sevenDaysAgo),
       ]);
       const profiles = profilesRes.data ?? [];
       const payments = paymentsRes.data ?? [];
-      const plans = (plansRes as { data?: { id: string; name: string }[] }).data ?? [];
+      const plansData = (plansRes as { data?: PlanRow[]; error?: unknown }).error ? [] : ((plansRes as { data?: PlanRow[] }).data ?? []);
+      setPlans(plansData);
 
       const totalProfiles = profiles.length;
       const pendingProfiles = profiles.filter((p) => p.profile_status === "pending").length;
@@ -71,6 +86,8 @@ export default function AdminDashboardPage() {
         totalProfiles,
         pendingProfiles,
         activeProfiles,
+        newUsersLast7: usersLast7Res.count ?? 0,
+        newProfilesLast7: profilesLast7Res.count ?? 0,
       });
 
       const totalRevenue = payments.reduce((s, p) => s + (p.amount || 0), 0);
@@ -126,10 +143,12 @@ export default function AdminDashboardPage() {
         }, {})
       ).map(([name, count]) => ({ name, count, pct: toPct(count) }));
       setByCity(cityCounts.sort((a, b) => b.count - a.count).slice(0, 6));
-    } catch {
-      setStats({ totalUsers: 0, totalProfiles: 0, pendingProfiles: 0, activeProfiles: 0 });
+    } catch (e) {
+      setFetchError(e instanceof Error ? e.message : "Failed to load dashboard data.");
+      setStats({ totalUsers: 0, totalProfiles: 0, pendingProfiles: 0, activeProfiles: 0, newUsersLast7: 0, newProfilesLast7: 0 });
       setRevenue({ total: 0, thisMonth: 0, byPlan: [] });
     } finally {
+      setLastUpdated(new Date());
       setLoading(false);
       setRefreshing(false);
     }
@@ -149,17 +168,24 @@ export default function AdminDashboardPage() {
     backgroundColor: "white",
   };
 
+  const planName = (planId: string | null) => plans.find((p) => p.id === planId)?.name ?? (planId ? "Unknown plan" : "Other");
+
   return (
     <div className="p-6 space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-playfair-display font-bold flex items-center gap-2" style={{ color: "var(--primary-blue)" }}>
             <BarChart3 className="w-7 h-7" style={{ color: "var(--accent-gold)" }} />
-            Admin Dashboard
+            Prime Group — Admin Dashboard
           </h1>
           <p className="font-montserrat text-sm mt-1 text-gray-600">
-            Overview of your matrimony platform.
+            Live overview of profiles, revenue, and platform activity.
           </p>
+          {lastUpdated && (
+            <p className="font-montserrat text-xs mt-1 text-gray-500">
+              Last updated: {lastUpdated.toLocaleTimeString()} — {lastUpdated.toLocaleDateString()}
+            </p>
+          )}
         </div>
         <Button
           variant="outline"
@@ -172,6 +198,21 @@ export default function AdminDashboardPage() {
           Refresh
         </Button>
       </div>
+
+      {fetchError && (
+        <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 font-montserrat text-sm text-amber-800">
+          {fetchError}
+        </div>
+      )}
+
+      {/* Recent activity */}
+      {!loading && (stats.newUsersLast7 > 0 || stats.newProfilesLast7 > 0) && (
+        <div className="rounded-xl border px-4 py-3 font-montserrat text-sm flex flex-wrap items-center gap-4" style={{ ...cardStyle }}>
+          <span className="font-semibold" style={{ color: "var(--primary-blue)" }}>This week:</span>
+          <span>{stats.newUsersLast7} new user{stats.newUsersLast7 !== 1 ? "s" : ""}</span>
+          <span>{stats.newProfilesLast7} new profile{stats.newProfilesLast7 !== 1 ? "s" : ""}</span>
+        </div>
+      )}
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card className="rounded-xl border shadow-sm" style={cardStyle}>
@@ -268,7 +309,7 @@ export default function AdminDashboardPage() {
               <div className="text-sm font-montserrat mt-1 space-y-0.5">
                 {loading ? "..." : revenue.byPlan.length === 0 ? "No payments yet" : revenue.byPlan.map(({ plan_id, sum }) => (
                   <div key={plan_id ?? "none"}>
-                    {plan_id ? `Plan: ₹${sum.toLocaleString()}` : `Other: ₹${sum.toLocaleString()}`}
+                    {planName(plan_id)}: ₹{sum.toLocaleString()}
                   </div>
                 ))}
               </div>
