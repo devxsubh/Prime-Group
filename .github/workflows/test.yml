@@ -22,21 +22,27 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CI: "true"
-      # Required for Next.js/Supabase to start; add these as repo secrets in GitHub.
       NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
       NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
     steps:
       - uses: actions/checkout@v4
       - name: Check Supabase secrets for E2E
+        id: supabase
         run: |
-          if [ -z "$NEXT_PUBLIC_SUPABASE_URL" ] || [ -z "$NEXT_PUBLIC_SUPABASE_ANON_KEY" ]; then
-            echo "::error::E2E needs Supabase env. Add repository secrets: NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY (Settings > Secrets and variables > Actions). Get values from https://supabase.com/dashboard/project/_/settings/api"
-            exit 1
+          if [ -n "$NEXT_PUBLIC_SUPABASE_URL" ] && [ -n "$NEXT_PUBLIC_SUPABASE_ANON_KEY" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "E2E skipped: NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY not set. Add them as repository secrets (Settings → Secrets and variables → Actions) to run E2E. Get values from https://supabase.com/dashboard/project/_/settings/api"
           fi
       - uses: actions/setup-node@v4
+        if: steps.supabase.outputs.ready == 'true'
         with:
           node-version: "20"
           cache: "npm"
       - run: npm ci
+        if: steps.supabase.outputs.ready == 'true'
       - run: npx playwright install --with-deps chromium
+        if: steps.supabase.outputs.ready == 'true'
       - run: npm run test:e2e
+        if: steps.supabase.outputs.ready == 'true'
