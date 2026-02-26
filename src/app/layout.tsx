@@ -23,6 +23,11 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://primegroupmatrimony
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
+  icons: {
+    icon: "/img/home.png",
+    shortcut: "/img/home.png",
+    apple: "/img/home.png",
+  },
   title: {
     default: "Prime Group Matrimony | Find Your Perfect Life Partner",
     template: "%s | Prime Group Matrimony",
