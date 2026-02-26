@@ -2,7 +2,17 @@ import Link from "next/link";
 import { AuthForm } from "@/components/auth/auth-form";
 import { cn } from "@/lib/utils";
 
-export default function SignInPage() {
+export default async function SignInPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ message?: string; next?: string }>;
+}) {
+  const params = await searchParams;
+  const showPasswordResetSuccess = params.message === "password_reset";
+  const next = params.next && params.next.trim().startsWith("/") && !params.next.trim().startsWith("//")
+    ? params.next
+    : undefined;
+
   return (
     <div className="absolute inset-0 min-h-screen flex items-center justify-center overflow-y-auto overflow-x-hidden p-3 sm:p-4 md:p-6 lg:p-8 py-8 sm:py-10">
       {/* White background */}
@@ -170,7 +180,13 @@ export default function SignInPage() {
                 </div>
               </div>
 
-              <AuthForm mode="sign-in" hideTitle submitLabel="Sign in" className="max-w-none" />
+              {showPasswordResetSuccess && (
+                <div className="mb-4 p-3 rounded-lg bg-green-50 text-green-800 text-sm font-montserrat">
+                  Password reset successfully. Sign in with your new password.
+                </div>
+              )}
+
+              <AuthForm mode="sign-in" hideTitle submitLabel="Sign in" className="max-w-none" next={next} />
 
               <p className="text-center text-xs mt-6 sm:mt-8 text-gray-500">
                 <Link 

@@ -15,6 +15,7 @@ import {
   IndianRupee,
   TrendingUp,
   PieChart,
+  Sparkles,
 } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
@@ -207,11 +208,18 @@ export default function AdminDashboardPage() {
 
       {/* Recent activity */}
       {!loading && (stats.newUsersLast7 > 0 || stats.newProfilesLast7 > 0) && (
-        <div className="rounded-xl border px-4 py-3 font-montserrat text-sm flex flex-wrap items-center gap-4" style={{ ...cardStyle }}>
-          <span className="font-semibold" style={{ color: "var(--primary-blue)" }}>This week:</span>
-          <span>{stats.newUsersLast7} new user{stats.newUsersLast7 !== 1 ? "s" : ""}</span>
-          <span>{stats.newProfilesLast7} new profile{stats.newProfilesLast7 !== 1 ? "s" : ""}</span>
-        </div>
+        <Card className="rounded-xl border shadow-sm" style={cardStyle}>
+          <CardContent className="py-4 px-5 flex flex-wrap items-center gap-3">
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-amber-50">
+              <Sparkles className="w-5 h-5 text-amber-600" />
+            </div>
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-1 font-montserrat text-sm font-medium">
+              <span style={{ color: "var(--primary-blue)" }}>This week</span>
+              <span className="text-gray-700">{stats.newUsersLast7} new user{stats.newUsersLast7 !== 1 ? "s" : ""}</span>
+              <span className="text-gray-700">{stats.newProfilesLast7} new profile{stats.newProfilesLast7 !== 1 ? "s" : ""}</span>
+            </div>
+          </CardContent>
+        </Card>
       )}
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -287,25 +295,26 @@ export default function AdminDashboardPage() {
             <IndianRupee className="w-5 h-5" style={{ color: "var(--accent-gold)" }} />
             Revenue
           </CardTitle>
+          <p className="text-sm font-montserrat text-gray-600">Payment totals and breakdown by plan</p>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div className="rounded-lg p-4 bg-gray-50">
-              <p className="text-sm font-montserrat text-gray-600">Total revenue</p>
+            <div className="rounded-lg p-4 bg-gray-50 border border-gray-100">
+              <p className="text-sm font-montserrat font-medium text-gray-600">Total revenue</p>
               <p className="text-xl font-bold font-playfair-display" style={{ color: "var(--primary-blue)" }}>
                 {loading ? "..." : `₹${revenue.total.toLocaleString()}`}
               </p>
             </div>
-            <div className="rounded-lg p-4 bg-gray-50">
-              <p className="text-sm font-montserrat text-gray-600 flex items-center gap-1">
+            <div className="rounded-lg p-4 bg-gray-50 border border-gray-100">
+              <p className="text-sm font-montserrat font-medium text-gray-600 flex items-center gap-1">
                 <TrendingUp className="w-4 h-4" /> This month
               </p>
               <p className="text-xl font-bold font-playfair-display" style={{ color: "var(--primary-blue)" }}>
                 {loading ? "..." : `₹${revenue.thisMonth.toLocaleString()}`}
               </p>
             </div>
-            <div className="rounded-lg p-4 bg-gray-50">
-              <p className="text-sm font-montserrat text-gray-600">By plan</p>
+            <div className="rounded-lg p-4 bg-gray-50 border border-gray-100">
+              <p className="text-sm font-montserrat font-medium text-gray-600">By plan</p>
               <div className="text-sm font-montserrat mt-1 space-y-0.5">
                 {loading ? "..." : revenue.byPlan.length === 0 ? "No payments yet" : revenue.byPlan.map(({ plan_id, sum }) => (
                   <div key={plan_id ?? "none"}>
@@ -318,64 +327,153 @@ export default function AdminDashboardPage() {
         </CardContent>
       </Card>
 
-      {/* Category-based segregation */}
-      <Card className="rounded-xl border shadow-sm" style={cardStyle}>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 font-playfair-display" style={{ color: "var(--primary-blue)" }}>
+      {/* Category breakdown: four separate cards with clear tables */}
+      <section className="space-y-4">
+        <div>
+          <h2 className="text-lg font-semibold font-montserrat flex items-center gap-2" style={{ color: "var(--primary-blue)" }}>
             <PieChart className="w-5 h-5" style={{ color: "var(--accent-gold)" }} />
             Category breakdown
-          </CardTitle>
-          <p className="text-sm font-montserrat text-gray-600">Profiles by category</p>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div>
-              <h4 className="font-montserrat font-semibold mb-2" style={{ color: "var(--primary-blue)" }}>By gender</h4>
-              <ul className="space-y-1.5 text-sm font-montserrat">
-                {loading ? <li className="text-gray-500">...</li> : byGender.length === 0 ? <li className="text-gray-500">No data</li> : byGender.map((g) => (
-                  <li key={g.name} className="flex justify-between">
-                    <span>{g.name}</span>
-                    <span className="font-medium">{g.count} ({g.pct}%)</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-montserrat font-semibold mb-2" style={{ color: "var(--primary-blue)" }}>By religion</h4>
-              <ul className="space-y-1.5 text-sm font-montserrat">
-                {loading ? <li className="text-gray-500">...</li> : byReligion.length === 0 ? <li className="text-gray-500">No data</li> : byReligion.map((r) => (
-                  <li key={r.name} className="flex justify-between">
-                    <span className="truncate max-w-[120px]" title={r.name}>{r.name}</span>
-                    <span className="font-medium shrink-0">{r.count} ({r.pct}%)</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-montserrat font-semibold mb-2" style={{ color: "var(--primary-blue)" }}>By status</h4>
-              <ul className="space-y-1.5 text-sm font-montserrat">
-                {loading ? <li className="text-gray-500">...</li> : byStatus.length === 0 ? <li className="text-gray-500">No data</li> : byStatus.map((s) => (
-                  <li key={s.name} className="flex justify-between">
-                    <span>{s.name}</span>
-                    <span className="font-medium">{s.count} ({s.pct}%)</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-montserrat font-semibold mb-2" style={{ color: "var(--primary-blue)" }}>By city (top)</h4>
-              <ul className="space-y-1.5 text-sm font-montserrat">
-                {loading ? <li className="text-gray-500">...</li> : byCity.length === 0 ? <li className="text-gray-500">No data</li> : byCity.map((c) => (
-                  <li key={c.name} className="flex justify-between">
-                    <span className="truncate max-w-[100px]" title={c.name}>{c.name}</span>
-                    <span className="font-medium shrink-0">{c.count} ({c.pct}%)</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </h2>
+          <p className="text-sm font-montserrat text-gray-600 mt-0.5">Profile counts by different dimensions. Each block is a separate summary.</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+          <Card className="rounded-xl border shadow-sm overflow-hidden" style={cardStyle}>
+            <CardHeader className="py-3 px-4 border-b bg-gray-50/80" style={{ borderColor: "rgba(212, 175, 55, 0.2)" }}>
+              <CardTitle className="text-sm font-semibold font-montserrat" style={{ color: "var(--primary-blue)" }}>
+                By gender
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+              <table className="w-full text-sm font-montserrat">
+                <thead>
+                  <tr className="border-b bg-gray-50/50" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
+                    <th className="text-left py-2.5 px-4 font-semibold text-gray-700">Category</th>
+                    <th className="text-right py-2.5 px-4 font-semibold text-gray-700 w-20">Count</th>
+                    <th className="text-right py-2.5 px-4 font-semibold text-gray-700 w-14">%</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {loading ? (
+                    <tr><td colSpan={3} className="py-4 px-4 text-gray-500">Loading...</td></tr>
+                  ) : byGender.length === 0 ? (
+                    <tr><td colSpan={3} className="py-4 px-4 text-gray-500">No data</td></tr>
+                  ) : (
+                    byGender.map((g) => (
+                      <tr key={g.name} className="border-b last:border-0" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
+                        <td className="py-2 px-4 font-medium text-gray-800">{g.name}</td>
+                        <td className="py-2 px-4 text-right font-medium text-gray-700">{g.count}</td>
+                        <td className="py-2 px-4 text-right font-medium text-gray-700">{g.pct}%</td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-xl border shadow-sm overflow-hidden" style={cardStyle}>
+            <CardHeader className="py-3 px-4 border-b bg-gray-50/80" style={{ borderColor: "rgba(212, 175, 55, 0.2)" }}>
+              <CardTitle className="text-sm font-semibold font-montserrat" style={{ color: "var(--primary-blue)" }}>
+                By religion
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+              <table className="w-full text-sm font-montserrat">
+                <thead>
+                  <tr className="border-b bg-gray-50/50" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
+                    <th className="text-left py-2.5 px-4 font-semibold text-gray-700">Category</th>
+                    <th className="text-right py-2.5 px-4 font-semibold text-gray-700 w-20">Count</th>
+                    <th className="text-right py-2.5 px-4 font-semibold text-gray-700 w-14">%</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {loading ? (
+                    <tr><td colSpan={3} className="py-4 px-4 text-gray-500">Loading...</td></tr>
+                  ) : byReligion.length === 0 ? (
+                    <tr><td colSpan={3} className="py-4 px-4 text-gray-500">No data</td></tr>
+                  ) : (
+                    byReligion.map((r) => (
+                      <tr key={r.name} className="border-b last:border-0" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
+                        <td className="py-2 px-4 font-medium text-gray-800 truncate max-w-[140px]" title={r.name}>{r.name}</td>
+                        <td className="py-2 px-4 text-right font-medium text-gray-700">{r.count}</td>
+                        <td className="py-2 px-4 text-right font-medium text-gray-700">{r.pct}%</td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-xl border shadow-sm overflow-hidden" style={cardStyle}>
+            <CardHeader className="py-3 px-4 border-b bg-gray-50/80" style={{ borderColor: "rgba(212, 175, 55, 0.2)" }}>
+              <CardTitle className="text-sm font-semibold font-montserrat" style={{ color: "var(--primary-blue)" }}>
+                By status
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+              <table className="w-full text-sm font-montserrat">
+                <thead>
+                  <tr className="border-b bg-gray-50/50" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
+                    <th className="text-left py-2.5 px-4 font-semibold text-gray-700">Status</th>
+                    <th className="text-right py-2.5 px-4 font-semibold text-gray-700 w-20">Count</th>
+                    <th className="text-right py-2.5 px-4 font-semibold text-gray-700 w-14">%</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {loading ? (
+                    <tr><td colSpan={3} className="py-4 px-4 text-gray-500">Loading...</td></tr>
+                  ) : byStatus.length === 0 ? (
+                    <tr><td colSpan={3} className="py-4 px-4 text-gray-500">No data</td></tr>
+                  ) : (
+                    byStatus.map((s) => (
+                      <tr key={s.name} className="border-b last:border-0" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
+                        <td className="py-2 px-4 font-medium text-gray-800">{s.name}</td>
+                        <td className="py-2 px-4 text-right font-medium text-gray-700">{s.count}</td>
+                        <td className="py-2 px-4 text-right font-medium text-gray-700">{s.pct}%</td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-xl border shadow-sm overflow-hidden" style={cardStyle}>
+            <CardHeader className="py-3 px-4 border-b bg-gray-50/80" style={{ borderColor: "rgba(212, 175, 55, 0.2)" }}>
+              <CardTitle className="text-sm font-semibold font-montserrat" style={{ color: "var(--primary-blue)" }}>
+                By city (top 6)
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+              <table className="w-full text-sm font-montserrat">
+                <thead>
+                  <tr className="border-b bg-gray-50/50" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
+                    <th className="text-left py-2.5 px-4 font-semibold text-gray-700">City</th>
+                    <th className="text-right py-2.5 px-4 font-semibold text-gray-700 w-20">Count</th>
+                    <th className="text-right py-2.5 px-4 font-semibold text-gray-700 w-14">%</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {loading ? (
+                    <tr><td colSpan={3} className="py-4 px-4 text-gray-500">Loading...</td></tr>
+                  ) : byCity.length === 0 ? (
+                    <tr><td colSpan={3} className="py-4 px-4 text-gray-500">No data</td></tr>
+                  ) : (
+                    byCity.map((c) => (
+                      <tr key={c.name} className="border-b last:border-0" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
+                        <td className="py-2 px-4 font-medium text-gray-800 truncate max-w-[120px]" title={c.name}>{c.name}</td>
+                        <td className="py-2 px-4 text-right font-medium text-gray-700">{c.count}</td>
+                        <td className="py-2 px-4 text-right font-medium text-gray-700">{c.pct}%</td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
 
       <Card className="rounded-xl border shadow-sm" style={cardStyle}>
         <CardHeader>
@@ -383,6 +481,7 @@ export default function AdminDashboardPage() {
             <Image className="w-5 h-5" style={{ color: "var(--accent-gold)" }} />
             Quick Actions
           </CardTitle>
+          <p className="text-sm font-montserrat text-gray-600">Shortcuts to main admin sections</p>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">

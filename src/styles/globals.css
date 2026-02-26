@@ -1,5 +1,5 @@
 @import url("https://fonts.cdnfonts.com/css/general-sans");
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -89,6 +89,48 @@ body {
     @apply bg-background text-foreground;
     font-family: var(--font-albert-sans), system-ui, sans-serif;
   }
+}
+
+/* Admin panel: heavier, more readable text */
+.admin-main {
+  font-weight: 500;
+  color: #111827;
+}
+.admin-main p,
+.admin-main span:not([class*="font-"]),
+.admin-main li,
+.admin-main td,
+.admin-main label {
+  font-weight: 500;
+  color: #1f2937;
+}
+.admin-main th,
+.admin-main h1,
+.admin-main h2,
+.admin-main h3,
+.admin-main h4,
+.admin-main [class*="CardTitle"],
+.admin-main .font-bold {
+  font-weight: 600;
+  color: #111827;
+}
+.admin-main .text-gray-500,
+.admin-main .text-gray-600 {
+  font-weight: 500;
+}
+.admin-main input,
+.admin-main select,
+.admin-main textarea,
+.admin-main button {
+  font-weight: 500;
+}
+.admin-main table th {
+  font-weight: 600 !important;
+  color: #111827 !important;
+}
+.admin-main table td {
+  font-weight: 500;
+  color: #1f2937;
 }
 
 .package-carousel {

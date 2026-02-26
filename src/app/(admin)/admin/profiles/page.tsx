@@ -13,9 +13,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Users, Search, RefreshCw, Eye, CheckCircle, XCircle, PauseCircle } from "lucide-react";
+import { Users, Search, RefreshCw, Eye, Trash2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { AdminProfileModal } from "@/components/admin/admin-profile-modal";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface ProfileRow {
   id: string;
@@ -41,6 +48,7 @@ export default function AdminProfilesPage() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [viewingProfileId, setViewingProfileId] = useState<string | null>(null);
 
   const fetchProfiles = async () => {
@@ -50,6 +58,7 @@ export default function AdminProfilesPage() {
       const { data, error } = await supabase
         .from("profiles")
         .select("id, user_id, full_name, gender, city, profile_status, profile_completion_pct, created_at")
+        .is("deleted_at", null)
         .order("created_at", { ascending: false });
       if (error) throw error;
       setProfiles((data as ProfileRow[]) ?? []);
@@ -81,7 +90,7 @@ export default function AdminProfilesPage() {
         .from("profiles")
         .update({
           profile_status: newStatus,
-          is_visible: newStatus === "active", // Make visible when approved
+          is_visible: newStatus === "active",
           approved_at: newStatus === "active" ? new Date().toISOString() : null,
           updated_at: new Date().toISOString(),
         })
@@ -94,6 +103,24 @@ export default function AdminProfilesPage() {
       console.error(e);
     } finally {
       setUpdatingId(null);
+    }
+  };
+
+  const deleteProfile = async (profileId: string) => {
+    if (!confirm("Are you sure you want to delete this profile? This will hide it from the site.")) return;
+    const supabase = createClient();
+    setDeletingId(profileId);
+    try {
+      const { error } = await supabase
+        .from("profiles")
+        .update({ deleted_at: new Date().toISOString(), updated_at: new Date().toISOString() })
+        .eq("id", profileId);
+      if (error) throw error;
+      setProfiles((prev) => prev.filter((p) => p.id !== profileId));
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -203,39 +230,50 @@ export default function AdminProfilesPage() {
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        <div className="flex flex-wrap gap-1">
-                          {STATUS_OPTIONS.map((opt) => (
-                            <Button
-                              key={opt.value}
-                              variant={p.profile_status === opt.value ? "secondary" : "ghost"}
-                              size="sm"
-                              className="text-xs h-7 px-2"
-                              disabled={updatingId === p.id || p.profile_status === opt.value}
-                              onClick={() => updateStatus(p.id, opt.value)}
-                              title={`Set to ${opt.label}`}
-                            >
-                              {opt.value === "active" && <CheckCircle className="w-3 h-3 mr-0.5" />}
-                              {opt.value === "rejected" && <XCircle className="w-3 h-3 mr-0.5" />}
-                              {opt.value === "suspended" && <PauseCircle className="w-3 h-3 mr-0.5" />}
-                              {opt.label}
-                            </Button>
-                          ))}
-                        </div>
+                        <Select
+                          value={p.profile_status}
+                          onValueChange={(value) => updateStatus(p.id, value)}
+                          disabled={updatingId === p.id}
+                        >
+                          <SelectTrigger className="w-[140px] h-8 text-xs font-montserrat">
+                            <SelectValue placeholder="Change status" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {STATUS_OPTIONS.map((opt) => (
+                              <SelectItem key={opt.value} value={opt.value} className="font-montserrat text-sm">
+                                {opt.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </TableCell>
                       <TableCell>{p.profile_completion_pct ?? 0}%</TableCell>
                       <TableCell className="text-sm text-gray-600">
                         {new Date(p.created_at).toLocaleDateString()}
                       </TableCell>
                       <TableCell>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="gap-1"
-                          onClick={() => setViewingProfileId(p.id)}
-                        >
-                          <Eye className="w-4 h-4" />
-                          View
-                        </Button>
+                        <div className="flex items-center gap-1">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="gap-1"
+                            onClick={() => setViewingProfileId(p.id)}
+                            title="View"
+                          >
+                            <Eye className="w-4 h-4" />
+                            View
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                            onClick={() => deleteProfile(p.id)}
+                            disabled={deletingId === p.id}
+                            title="Delete profile"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))

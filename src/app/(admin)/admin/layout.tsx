@@ -108,7 +108,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <Sidebar collapsed={isSidebarCollapsed} onToggle={handleToggleSidebar} />
       </div>
 
-      <main className="flex-1 overflow-y-auto p-4 lg:p-8 w-full bg-gray-50 transition-all duration-300">
+      <main className="admin-main flex-1 overflow-y-auto p-4 lg:p-8 w-full bg-gray-50 transition-all duration-300 text-base">
         <div className="pt-14 lg:pt-0">{children}</div>
       </main>
     </div>

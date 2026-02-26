@@ -69,13 +69,13 @@ export default function AdminLoginPage() {
         <h1 className="text-2xl font-playfair-display font-bold mb-2 text-center" style={{ color: "var(--primary-blue)" }}>
           Admin Login
         </h1>
-        <p className="text-sm font-montserrat text-center mb-8 opacity-80" style={{ color: "var(--primary-blue)" }}>
+        <p className="text-sm font-montserrat font-medium text-center mb-8 opacity-90" style={{ color: "var(--primary-blue)" }}>
           Prime Group Admin Panel
         </p>
 
         {error && (
           <div
-            className="rounded-xl mb-6 p-4 text-sm font-montserrat flex items-center gap-2 border border-red-200 bg-red-50 text-red-700"
+            className="rounded-xl mb-6 p-4 text-sm font-montserrat font-medium flex items-center gap-2 border border-red-200 bg-red-50 text-red-700"
           >
             <span aria-hidden>⚠️</span>
             {error}
@@ -84,7 +84,7 @@ export default function AdminLoginPage() {
 
         <form onSubmit={handleLogin} className="space-y-6">
           <div>
-            <label htmlFor="admin-email" className="block text-sm font-medium font-montserrat mb-2" style={{ color: "var(--primary-blue)" }}>
+            <label htmlFor="admin-email" className="block text-sm font-semibold font-montserrat mb-2" style={{ color: "var(--primary-blue)" }}>
               Email
             </label>
             <Input
@@ -100,7 +100,7 @@ export default function AdminLoginPage() {
           </div>
 
           <div>
-            <label htmlFor="admin-password" className="block text-sm font-medium font-montserrat mb-2" style={{ color: "var(--primary-blue)" }}>
+            <label htmlFor="admin-password" className="block text-sm font-semibold font-montserrat mb-2" style={{ color: "var(--primary-blue)" }}>
               Password
             </label>
             <div className="relative">

@@ -6,9 +6,10 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Mail, Lock, Loader2 } from "lucide-react";
+import { Mail, Lock } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { AuthInput } from "./AuthInput";
+import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 import type { AuthFormData } from "../types/auth";
 
@@ -35,14 +36,23 @@ const linkClass =
   "font-medium underline hover:opacity-90 transition-colors";
 const inputErrorClass = "text-red-500 text-sm";
 
+/** Allow only relative app paths; disallow protocol-relative or absolute URLs */
+function isSafeNextPath(next: string | undefined): next is string {
+  if (!next || typeof next !== "string") return false;
+  const trimmed = next.trim();
+  return trimmed.startsWith("/") && !trimmed.startsWith("//");
+}
+
 interface AuthFormProps {
   mode: "sign-in" | "sign-up";
   hideTitle?: boolean;
   submitLabel?: string;
   className?: string;
+  /** After sign-in, redirect here if safe (e.g. from /sign-in?next=/favorites) */
+  next?: string;
 }
 
-export function AuthForm({ mode, hideTitle = false, submitLabel, className }: AuthFormProps) {
+export function AuthForm({ mode, hideTitle = false, submitLabel, className, next: nextParam }: AuthFormProps) {
   const router = useRouter();
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
@@ -108,7 +118,8 @@ export function AuthForm({ mode, hideTitle = false, submitLabel, className }: Au
       }
     }
     router.refresh();
-    router.push("/discover");
+    const destination = isSafeNextPath(nextParam) ? nextParam : "/discover";
+    router.push(destination);
   };
 
   return (
@@ -122,6 +133,8 @@ export function AuthForm({ mode, hideTitle = false, submitLabel, className }: Au
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {message && (
           <div
+            role="status"
+            aria-live="polite"
             className={`p-3 rounded-lg text-sm ${
               message.type === "error"
                 ? "bg-red-50 text-red-700"
@@ -136,6 +149,7 @@ export function AuthForm({ mode, hideTitle = false, submitLabel, className }: Au
           type="email"
           name="email"
           placeholder="Email"
+          label="Email"
           icon={Mail}
           register={register as any}
           error={errors.email?.message as string | undefined}
@@ -144,6 +158,7 @@ export function AuthForm({ mode, hideTitle = false, submitLabel, className }: Au
           type="password"
           name="password"
           placeholder="Password"
+          label="Password"
           icon={Lock}
           register={register as any}
           error={errors.password?.message as string | undefined}
@@ -210,11 +225,12 @@ export function AuthForm({ mode, hideTitle = false, submitLabel, className }: Au
         <button
           type="submit"
           disabled={isSubmitting}
+          aria-label={submitLabel ?? (isSignUp ? "Sign up" : "Sign in")}
           className="w-full py-2.5 px-4 rounded-lg font-montserrat font-medium text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           style={{ backgroundColor: "var(--primary-blue)" }}
         >
           {isSubmitting ? (
-            <Loader2 className="h-5 w-5 animate-spin" />
+            <Spinner size="sm" />
           ) : (
             submitLabel ?? (isSignUp ? "Sign up" : "Sign in")
           )}

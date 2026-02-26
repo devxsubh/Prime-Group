@@ -15,12 +15,18 @@ import {
   IndianRupee,
   PieChart,
   TrendingUp,
+  FileText,
+  HelpCircle,
+  Mail,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const menuItems = [
   { name: "Dashboard", href: "/admin", icon: BarChart3, description: "Overview & stats" },
   { name: "Profiles", href: "/admin/profiles", icon: Users, description: "Manage profiles" },
+  { name: "Blogs", href: "/admin/blogs", icon: FileText, description: "Create & edit posts" },
+  { name: "FAQs", href: "/admin/faqs", icon: HelpCircle, description: "Manage FAQs" },
+  { name: "Contact", href: "/admin/contact", icon: Mail, description: "Form submissions" },
   { name: "Categories", href: "/admin/categories", icon: PieChart, description: "Category breakdown" },
   { name: "Revenue", href: "/admin/revenue", icon: TrendingUp, description: "Revenue & analytics" },
   { name: "Pricing", href: "/admin/pricing", icon: IndianRupee, description: "Plans & prices" },
@@ -81,7 +87,7 @@ export function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
               <h1 className="text-lg font-bold font-playfair-display" style={{ color: "var(--primary-blue)" }}>
                 Prime Group
               </h1>
-              <p className="text-xs font-montserrat opacity-70" style={{ color: "var(--primary-blue)" }}>
+              <p className="text-sm font-montserrat font-medium opacity-90" style={{ color: "var(--primary-blue)" }}>
                 Admin Panel
               </p>
             </div>
@@ -92,7 +98,7 @@ export function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
       <nav className="flex-1 overflow-y-auto px-3 py-6 space-y-2">
         {!collapsed && (
           <div className="mb-4">
-            <h3 className="text-xs font-semibold font-montserrat uppercase tracking-wider px-3 opacity-70" style={{ color: "var(--primary-blue)" }}>
+            <h3 className="text-sm font-semibold font-montserrat uppercase tracking-wider px-3 opacity-90" style={{ color: "var(--primary-blue)" }}>
               Navigation
             </h3>
           </div>
@@ -105,7 +111,7 @@ export function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
               key={item.href}
               href={item.href}
               className={cn(
-                "group relative flex items-center rounded-xl text-sm font-medium font-montserrat transition-all duration-200",
+                "group relative flex items-center rounded-xl text-sm font-semibold font-montserrat transition-all duration-200",
                 collapsed ? "justify-center px-3 py-3" : "gap-3 px-4 py-3",
                 isActive
                   ? "text-white shadow-md"
@@ -135,8 +141,8 @@ export function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
               </div>
               {!collapsed && (
                 <div className="flex-1 min-w-0">
-                  <div className="font-medium">{item.name}</div>
-                  <div className={cn("text-xs", isActive ? "text-white/80" : "opacity-70")}>
+                  <div className="font-semibold">{item.name}</div>
+                  <div className={cn("text-sm font-medium", isActive ? "text-white/90" : "opacity-90")}>
                     {item.description}
                   </div>
                 </div>
@@ -149,20 +155,20 @@ export function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
       <div className={cn("border-t transition-all duration-300", collapsed ? "p-3" : "p-4")} style={{ borderColor: "rgba(212, 175, 55, 0.2)" }}>
         {!collapsed && (
           <div
-            className="rounded-xl p-3 mb-3 font-montserrat text-xs"
+            className="rounded-xl p-3 mb-3 font-montserrat text-sm font-medium"
             style={{ backgroundColor: "rgba(226, 194, 133, 0.2)", color: "var(--primary-blue)" }}
           >
-            <div className="flex items-center gap-2 mb-1 font-medium">
+            <div className="flex items-center gap-2 mb-1 font-semibold">
               <UserCircle className="w-4 h-4" />
               Admin Access
             </div>
-            <p className="opacity-80">Full system control</p>
+            <p className="opacity-90">Full system control</p>
           </div>
         )}
         <button
           onClick={handleLogout}
           className={cn(
-            "flex items-center w-full rounded-xl text-sm font-medium font-montserrat text-red-600 hover:bg-red-50 transition-all duration-200",
+            "flex items-center w-full rounded-xl text-sm font-semibold font-montserrat text-red-600 hover:bg-red-50 transition-all duration-200",
             collapsed ? "justify-center px-3 py-3" : "gap-3 px-4 py-3"
           )}
           title={collapsed ? "Logout" : undefined}

@@ -55,7 +55,7 @@ export default function ProfileCard({ data, index }: ProfileCardProps) {
         <div className="relative h-80 overflow-hidden cursor-pointer">
           <Image
             src={data.imageUrl || "/placeholder.svg"}
-            alt={data.name}
+            alt={data.imageUrl ? data.name : "No image"}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-700"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"

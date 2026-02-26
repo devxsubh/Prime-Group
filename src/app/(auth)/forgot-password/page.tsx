@@ -5,9 +5,10 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Mail, Loader2 } from "lucide-react";
+import { Mail } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { AuthInput } from "@/components/auth/AuthInput";
+import { Spinner } from "@/components/ui/spinner";
 import type { AuthFormData } from "@/components/types/auth";
 
 const schema = z.object({
@@ -28,7 +29,7 @@ export default function ForgotPasswordPage() {
     setMessage(null);
     const supabase = createClient();
     const { error } = await supabase.auth.resetPasswordForEmail(data.email, {
-      redirectTo: `${window.location.origin}/auth/callback?next=/sign-in`,
+      redirectTo: `${window.location.origin}/auth/callback?next=/reset-password`,
     });
     if (error) {
       setMessage({ type: "error", text: error.message });
@@ -41,18 +42,20 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-center p-4 bg-black/30">
-      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl">
+    <div className="absolute inset-0 min-h-screen flex items-center justify-center p-4">
+      <div className="w-full max-w-md rounded-2xl border-2 bg-white/95 backdrop-blur-sm p-8 shadow-xl" style={{ borderColor: "var(--accent-gold)" }}>
         <h2 className="text-2xl font-playfair-display font-bold text-center mb-2" style={{ color: "var(--primary-blue)" }}>
           Forgot password?
         </h2>
-        <p className="text-sm text-center mb-6" style={{ color: "var(--primary-blue)" }}>
-          Enter your email and we&apos;ll send you a reset link.
+        <p className="text-sm font-montserrat text-center mb-6 text-gray-600">
+          Enter your email and we&apos;ll send you a link to reset your password.
         </p>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {message && (
             <div
-              className={`p-3 rounded-lg text-sm ${
+              role="status"
+              aria-live="polite"
+              className={`p-3 rounded-lg text-sm font-montserrat ${
                 message.type === "error" ? "bg-red-50 text-red-700" : "bg-green-50 text-green-800"
               }`}
             >
@@ -63,6 +66,7 @@ export default function ForgotPasswordPage() {
             type="email"
             name="email"
             placeholder="Email"
+            label="Email"
             icon={Mail}
             register={register}
             error={errors.email?.message}
@@ -70,14 +74,15 @@ export default function ForgotPasswordPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-2.5 px-4 rounded-lg font-montserrat font-medium text-white flex items-center justify-center gap-2 disabled:opacity-50"
+            aria-label="Send reset link"
+            className="w-full py-2.5 px-4 rounded-lg font-montserrat font-medium text-white flex items-center justify-center gap-2 disabled:opacity-50 transition-colors hover:opacity-95"
             style={{ backgroundColor: "var(--primary-blue)" }}
           >
-            {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin" /> : "Send reset link"}
+            {isSubmitting ? <Spinner size="sm" /> : "Send reset link"}
           </button>
         </form>
-        <p className="text-center text-sm mt-6" style={{ color: "var(--primary-blue)" }}>
-          <Link href="/sign-in" className="font-medium underline" style={{ color: "var(--accent-gold)" }}>
+        <p className="text-center text-sm mt-6 font-montserrat" style={{ color: "var(--primary-blue)" }}>
+          <Link href="/sign-in" className="font-medium underline hover:opacity-90" style={{ color: "var(--accent-gold)" }}>
             Back to sign in
           </Link>
         </p>

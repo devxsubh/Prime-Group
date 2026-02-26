@@ -22,6 +22,9 @@ import { useAuth } from "@/components/hooks/useAuth";
 import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
 
+const SCROLL_THRESHOLD = 80;
+const NAV_BG_OPAQUE = "rgba(15, 25, 55, 0.88)";
+
 
 export default function MainNav() {
    const { favoritesCount } = useFavorites();
@@ -29,6 +32,17 @@ export default function MainNav() {
    const router = useRouter();
    const pathname = usePathname();
    const [profilePhotoUrl, setProfilePhotoUrl] = useState<string | null>(null);
+   const [scrolled, setScrolled] = useState(false);
+
+   const isHome = pathname === "/";
+   useEffect(() => {
+     if (!isHome) return;
+     const onScroll = () => setScrolled(window.scrollY > SCROLL_THRESHOLD);
+     onScroll(); // init
+     window.addEventListener("scroll", onScroll, { passive: true });
+     return () => window.removeEventListener("scroll", onScroll);
+   }, [isHome]);
+
    const navLinkClass = (href: string) =>
      cn(
        "px-4 py-2 text-sm font-montserrat font-medium transition-colors rounded-lg duration-200",
@@ -58,15 +72,20 @@ export default function MainNav() {
      })();
    }, [user?.id]);
 
+  const headerTransparent = isHome && !scrolled;
   return (
     <>
-      {/* <ScrollProgress className="pointer-events-none z-[1000]" /> */}
       <div
-        className="sticky top-0 z-[60] w-full border-b transition-all duration-300 shadow-lg md:relative md:top-auto"
+        className={cn(
+          "w-full border-b transition-all duration-300 z-[60]",
+          isHome && "fixed top-0 left-0 right-0",
+          !headerTransparent && "shadow-lg",
+          !isHome && "sticky top-0 md:relative md:top-auto"
+        )}
         style={{
-          backgroundColor: "rgba(15, 25, 55, 0.88)",
-          borderColor: "rgba(226, 194, 133, 0.22)",
-          backdropFilter: "blur(16px)",
+          backgroundColor: headerTransparent ? "transparent" : NAV_BG_OPAQUE,
+          borderColor: headerTransparent ? "transparent" : "rgba(226, 194, 133, 0.22)",
+          backdropFilter: headerTransparent ? "none" : "blur(16px)",
         }}
       >
         <header className="z-50 w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10">
@@ -79,9 +98,9 @@ export default function MainNav() {
                   src="/img/home.png"
                   alt="Prime Group Logo"
                   priority
-                  width={48}
-                  height={48}
-                  className="object-contain group-hover:scale-105 transition-transform duration-300"
+                  width={56}
+                  height={56}
+                  className="object-contain group-hover:scale-105 transition-transform duration-300 h-14 w-14"
                 />
                 <span className="hidden sm:block font-playfair text-lg sm:text-xl font-bold text-gold-gradient group-hover:opacity-80 transition-opacity">
                   Prime Group
