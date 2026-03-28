@@ -95,7 +95,7 @@ export default function ProfileCard({ data, index }: ProfileCardProps) {
                 className="h-4 w-4 flex-shrink-0 mt-0.5 transition-all duration-300"
                 style={{ color: "var(--primary-blue)" }}
               />
-              <span className="text-sm font-montserrat text-gray-700 group-hover/item:text-gray-900 transition-colors">
+              <span className="text-sm font-montserrat text-gray-700 group-hover/item:text-gray-900 transition-colors line-clamp-1">
                 {data.profession}
               </span>
             </div>
@@ -105,7 +105,7 @@ export default function ProfileCard({ data, index }: ProfileCardProps) {
                 className="h-4 w-4 flex-shrink-0 mt-0.5 transition-all duration-300"
                 style={{ color: "var(--primary-blue)" }}
               />
-              <span className="text-sm font-montserrat text-gray-700 group-hover/item:text-gray-900 transition-colors">
+              <span className="text-sm font-montserrat text-gray-700 group-hover/item:text-gray-900 transition-colors line-clamp-1">
                 {data.education}
               </span>
             </div>
@@ -115,8 +115,8 @@ export default function ProfileCard({ data, index }: ProfileCardProps) {
           <div
             className="w-full mt-7 py-3 rounded-xl font-montserrat font-semibold transition-all duration-300 hover:shadow-lg text-white text-center cursor-pointer tracking-wide"
             style={{
-              backgroundColor: "rgba(30, 90, 160, 0.85)",
-              boxShadow: "0 2px 8px rgba(30, 90, 160, 0.25)",
+              backgroundColor: "var(--primary-blue)",
+              boxShadow: "0 4px 12px rgba(0, 51, 102, 0.2)",
             }}
           >
             View Profile

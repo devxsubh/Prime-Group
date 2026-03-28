@@ -31,7 +31,6 @@ export default async function Home() {
         <BeverageLanding />
         {/* <FeaturesSection /> */}
         {/* <HeroVideoDialogDemoTopInBottomOut /> */}
-        <Feature6 />
         <HeadSection />
           <SubscriptionPlan />
           <FaqsSection faqs={faqs} />

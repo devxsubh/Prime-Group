@@ -1,149 +1,204 @@
 'use client'
 
 import { motion } from "framer-motion";
-import { Check, Crown, Sparkles } from "lucide-react";
+import { Check, Coins, Sparkles, Zap, Crown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-export default function SubscriptionPlan() {
-  const features = [
-    "Instant full contact details",
-    "Scroll up to 10 to 15 profiles",
-  ];
+const creditPlans = [
+  {
+    name: "Starter",
+    slug: "starter",
+    credits: 200,
+    price: 499,
+    originalPrice: 799,
+    icon: Zap,
+    features: [
+      "200 contact unlocks",
+      "Credits never expire",
+      "Instant access",
+    ],
+    badge: null,
+    gradient: "from-blue-500/10 to-blue-600/5",
+  },
+  {
+    name: "Popular",
+    slug: "popular",
+    credits: 500,
+    price: 999,
+    originalPrice: 1999,
+    icon: Sparkles,
+    features: [
+      "500 contact unlocks",
+      "Credits never expire",
+      "Best value per credit",
+      "Priority support",
+    ],
+    badge: "Best Value",
+    gradient: "from-yellow-500/10 to-amber-500/5",
+  },
+  {
+    name: "Premium",
+    slug: "premium-pack",
+    credits: 1000,
+    price: 1799,
+    originalPrice: 3999,
+    icon: Crown,
+    features: [
+      "1000 contact unlocks",
+      "Credits never expire",
+      "Lowest cost per credit",
+      "Priority support",
+      "Dedicated assistance",
+    ],
+    badge: "Max Savings",
+    gradient: "from-purple-500/10 to-indigo-500/5",
+  },
+];
 
+export default function SubscriptionPlan() {
   return (
     <section className="py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden" style={{ backgroundColor: 'var(--pure-white)' }}>
       {/* Decorative background elements */}
       <div className="absolute top-0 right-0 w-64 h-64 rounded-full blur-3xl opacity-10" style={{ backgroundColor: 'var(--accent-gold)' }}></div>
       <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full blur-3xl opacity-10" style={{ backgroundColor: 'var(--primary-blue)' }}></div>
       
-      <div className="container mx-auto max-w-5xl relative z-10">
+      <div className="container mx-auto max-w-6xl relative z-10">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="text-center mb-14"
         >
           <div className="inline-block mb-4 px-6 py-2 rounded-full" style={{ backgroundColor: 'var(--primary-blue)' }}>
             <span className="text-sm font-montserrat font-semibold uppercase tracking-wide text-gold-gradient">
-              Membership
+              Credits
             </span>
           </div>
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-playfair-display font-bold mb-4 text-gold-gradient" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.15)' }}>
-            Unlock Premium Features
+            Buy Credits
           </h2>
           <p className="text-lg sm:text-xl font-montserrat max-w-2xl mx-auto" style={{ color: 'var(--primary-blue)' }}>
-            Get instant access to contact details and browse more profiles with our premium membership
+            Purchase credits to instantly unlock contact details — phone, address & email — on any profile
           </p>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="relative"
-        >
-          <div 
-            className="rounded-2xl p-8 md:p-12 shadow-2xl relative overflow-hidden"
-            style={{ 
-              background: 'linear-gradient(135deg, var(--primary-blue) 0%, #004080 100%)',
-              border: `3px solid var(--accent-gold)`
-            }}
-          >
-            {/* Decorative corner elements */}
-            <div className="absolute top-0 right-0 w-32 h-32 opacity-20">
-              <Crown className="w-full h-full" style={{ color: 'var(--accent-gold)' }} />
-            </div>
-            <div className="absolute bottom-0 left-0 w-24 h-24 opacity-20">
-              <Sparkles className="w-full h-full" style={{ color: 'var(--accent-gold)' }} />
-            </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+          {creditPlans.map((plan, index) => (
+            <motion.div
+              key={plan.slug}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.15 * index }}
+              className="relative group"
+            >
+              {/* Badge */}
+              {plan.badge && (
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
+                  <span className="px-4 py-1.5 rounded-full text-xs font-montserrat font-bold uppercase tracking-wider text-black bg-gold-gradient shadow-lg">
+                    {plan.badge}
+                  </span>
+                </div>
+              )}
 
-            <div className="relative z-10">
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
-                <div className="flex-1">
-                  {/* Badge */}
-                  <div className="inline-block mb-4 px-4 py-2 rounded-full bg-gold-gradient">
-                    <span className="text-sm font-montserrat font-bold text-black">Most Popular</span>
+              <div
+                className={`rounded-2xl p-7 sm:p-8 h-full flex flex-col transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl bg-gradient-to-br ${plan.gradient}`}
+                style={{
+                  border: plan.badge
+                    ? '2px solid var(--accent-gold)'
+                    : '1px solid rgba(212, 175, 55, 0.2)',
+                  boxShadow: plan.badge
+                    ? '0 10px 40px rgba(212, 175, 55, 0.15)'
+                    : '0 4px 20px rgba(0, 0, 0, 0.06)',
+                }}
+              >
+                {/* Icon & Name */}
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{ backgroundColor: 'var(--primary-blue)' }}>
+                    <plan.icon className="w-5 h-5" style={{ color: 'var(--accent-gold)' }} />
                   </div>
-
-                  {/* Plan Name */}
-                  <h3 className="text-3xl md:text-4xl font-playfair-display font-bold text-gold-gradient">
-                    Premium Membership
+                  <h3 className="text-xl font-playfair-display font-bold" style={{ color: 'var(--primary-blue)' }}>
+                    {plan.name}
                   </h3>
                 </div>
 
-                {/* Price - Right Corner */}
-                <div className="text-right">
-                  <div className="flex items-baseline justify-end gap-2 mb-2">
-                    <span className="text-2xl md:text-3xl font-montserrat line-through opacity-70" style={{ color: 'var(--pure-white)' }}>
-                      ₹3,500
-                    </span>
-                    <span className="text-4xl md:text-5xl font-playfair-display font-bold" style={{ color: 'var(--pure-white)' }}>
-                      ₹1,100
-                    </span>
-                  </div>
-                  <div className="flex items-baseline justify-end gap-2">
-                    <span className="text-lg font-montserrat" style={{ color: 'var(--accent-gold)' }}>
-                      /year
-                    </span>
-                  </div>
-                  <p className="text-sm font-montserrat mt-2" style={{ color: 'var(--pure-white)', opacity: 0.9 }}>
-                    Just ₹92 per month
-                  </p>
+                {/* Credits */}
+                <div className="flex items-center gap-2 mb-2">
+                  <Coins className="w-5 h-5" style={{ color: 'var(--accent-gold)' }} />
+                  <span className="text-3xl font-playfair-display font-bold" style={{ color: 'var(--primary-blue)' }}>
+                    {plan.credits.toLocaleString()}
+                  </span>
+                  <span className="text-sm font-montserrat font-medium" style={{ color: 'var(--primary-blue)', opacity: 0.7 }}>
+                    credits
+                  </span>
                 </div>
-              </div>
 
-              {/* Features */}
-              <div className="mb-10 space-y-4">
-                {features.map((feature, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
-                    className="flex items-center gap-4 p-4 rounded-lg"
-                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
-                  >
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gold-gradient flex items-center justify-center">
-                      <Check className="w-5 h-5 text-black" />
+                {/* Price */}
+                <div className="flex items-baseline gap-2 mb-6">
+                  <span className="text-sm font-montserrat line-through" style={{ color: 'var(--primary-blue)', opacity: 0.5 }}>
+                    ₹{plan.originalPrice.toLocaleString()}
+                  </span>
+                  <span className="text-2xl font-playfair-display font-bold" style={{ color: 'var(--primary-blue)' }}>
+                    ₹{plan.price.toLocaleString()}
+                  </span>
+                </div>
+
+                {/* Features */}
+                <div className="flex-1 space-y-3 mb-8">
+                  {plan.features.map((feature, idx) => (
+                    <div key={idx} className="flex items-center gap-3">
+                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-gold-gradient flex items-center justify-center">
+                        <Check className="w-3 h-3 text-black" />
+                      </div>
+                      <span className="text-sm font-montserrat font-medium" style={{ color: 'var(--primary-blue)' }}>
+                        {feature}
+                      </span>
                     </div>
-                    <span className="text-lg font-montserrat font-semibold" style={{ color: 'var(--pure-white)' }}>
-                      {feature}
-                    </span>
-                  </motion.div>
-                ))}
-              </div>
+                  ))}
+                </div>
 
-              {/* CTA Button */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.5 }}
-              >
-                <Link href="/checkout?plan=premium">
-                  <Button 
-                    className="w-full md:w-auto px-12 py-6 text-lg font-montserrat font-semibold rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-xl bg-gold-gradient text-black border-none"
+                {/* CTA */}
+                <Link href={`/checkout?plan=${plan.slug}`}>
+                  <Button
+                    className={`w-full py-5 text-base font-montserrat font-semibold rounded-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-xl border-none ${
+                      plan.badge
+                        ? 'bg-gold-gradient text-black'
+                        : ''
+                    }`}
+                    style={
+                      !plan.badge
+                        ? { backgroundColor: 'var(--primary-blue)', color: 'var(--pure-white)' }
+                        : undefined
+                    }
                   >
-                    Get Started Now
+                    Buy {plan.credits} Credits
                   </Button>
                 </Link>
-              </motion.div>
 
-              {/* Trust Badge */}
-              <div className="mt-8 pt-8 border-t" style={{ borderColor: 'var(--accent-gold)', opacity: 0.3 }}>
-                <p className="text-sm font-montserrat text-center" style={{ color: 'var(--pure-white)', opacity: 0.8 }}>
-                  ✓ Secure Payment ✓ 30-Day Money Back Guarantee ✓ Cancel Anytime
+                {/* Per-credit price */}
+                <p className="text-center text-xs font-montserrat mt-3" style={{ color: 'var(--primary-blue)', opacity: 0.6 }}>
+                  ₹{(plan.price / plan.credits).toFixed(2)} per credit
                 </p>
               </div>
-            </div>
-          </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Trust Badge */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.6 }}
+          className="mt-12 text-center"
+        >
+          <p className="text-sm font-montserrat" style={{ color: 'var(--primary-blue)', opacity: 0.6 }}>
+            ✓ Secure Payment &nbsp; ✓ Credits Never Expire &nbsp; ✓ Instant Activation
+          </p>
         </motion.div>
       </div>
     </section>
   );
 }
-

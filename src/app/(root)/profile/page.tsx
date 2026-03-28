@@ -19,7 +19,7 @@ export default async function ProfilePage() {
 
   if (profileError || !profile) {
     return (
-      <div className="min-h-screen py-16 px-4" style={{ backgroundColor: "var(--pure-white)" }}>
+      <div className="min-h-screen py-16 px-4 bg-[#FDFBF7]">
         <div className="container mx-auto max-w-2xl text-center">
           <h1 className="font-playfair-display text-2xl font-bold mb-4" style={{ color: "var(--primary-blue)" }}>
             No profile yet
@@ -48,21 +48,19 @@ export default async function ProfilePage() {
     .single();
 
   return (
-    <div className="min-h-screen py-12 px-4" style={{ backgroundColor: "var(--pure-white)" }}>
-      <div className="container mx-auto max-w-4xl">
+    <div className="min-h-screen py-12 px-4 bg-[#FDFBF7]">
+      <div className="container mx-auto w-full max-w-5xl">
         <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
           <h1 className="font-playfair-display text-3xl font-bold" style={{ color: "var(--primary-blue)" }}>
             My profile
           </h1>
-          <Button asChild variant="outline" size="sm">
-            <Link href="/profile/edit">Edit profile</Link>
-          </Button>
         </div>
         <ProfileView
           profile={profile}
           photos={photos ?? []}
           preferences={preferences ?? null}
           isOwnProfile
+          userId={user.id}
         />
       </div>
     </div>

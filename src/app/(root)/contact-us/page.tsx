@@ -2,7 +2,7 @@ import ContactForm from "@/components/contact/contact-form";
 
 export default function ContactUsPage() {
   return (
-    <div className="min-h-screen py-16 px-4" style={{ backgroundColor: "var(--pure-white)" }}>
+    <div className="min-h-screen py-16 px-4">
       <div className="container mx-auto max-w-xl">
         <div className="text-center mb-12">
           <div className="inline-block px-8 py-4 rounded-full mb-6" style={{ backgroundColor: "var(--primary-blue)" }}>

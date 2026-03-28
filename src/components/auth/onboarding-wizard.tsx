@@ -38,6 +38,7 @@ import {
   getProfilePhotoFiles,
   clearProfilePhotoFiles,
 } from "./profile-photo-upload";
+import { OnboardingChecklist } from "./onboarding-checklist";
 
 // Step 0: name, DOB, time, birthplace, gender, marital
 const step0Schema = z.object({
@@ -122,9 +123,10 @@ const ROYAL_GOLD = "rgba(198,167,94,0.5)";
 interface OnboardingWizardProps {
   userId: string;
   existingProfileId?: string;
+  email?: string;
 }
 
-export function OnboardingWizard({ userId, existingProfileId }: OnboardingWizardProps) {
+export function OnboardingWizard({ userId, existingProfileId, email }: OnboardingWizardProps) {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const reduxStepIndex = useAppSelector(selectStepIndex);
@@ -493,17 +495,9 @@ export function OnboardingWizard({ userId, existingProfileId }: OnboardingWizard
   const err = (field: string) => (form.formState.errors as Record<string, { message?: string }>)[field]?.message;
 
   return (
-    <div
-      className="relative rounded-3xl bg-white p-12 animate-in fade-in slide-in-from-bottom-4 duration-500 shadow-[0_60px_120px_rgba(0,0,0,0.08)]"
-      style={{
-        border: `1px solid ${ROYAL_GOLD}`,
-      }}
-    >
-      {/* Thin gold inner frame — softened, restraint */}
-      <div
-        className="absolute inset-6 border border-[rgba(212,175,55,0.25)] rounded-2xl pointer-events-none"
-        aria-hidden
-      />
+    <div className="flex flex-col-reverse lg:grid lg:grid-cols-12 gap-8 lg:gap-12 items-start w-full">
+      <div className="lg:col-span-8 w-full">
+        <div className="relative animate-in fade-in slide-in-from-bottom-4 duration-500">
 
       {/* Ultra-subtle royal watermark — centered behind form, barely visible */}
       <div
@@ -808,6 +802,11 @@ export function OnboardingWizard({ userId, existingProfileId }: OnboardingWizard
           </div>
         </form>
       )}
+        </div>
+      </div>
+      <div className="lg:col-span-4 w-full lg:sticky lg:top-8 animate-in fade-in slide-in-from-right-4 duration-500">
+        <OnboardingChecklist currentStep={step} email={email} />
+      </div>
     </div>
   );
 }
