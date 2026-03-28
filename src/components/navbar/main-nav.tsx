@@ -23,7 +23,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
 
 const SCROLL_THRESHOLD = 80;
-const NAV_BG_OPAQUE = "rgba(15, 25, 55, 0.88)";
+const NAV_BG_OPAQUE = "rgba(10, 25, 47, 0.95)";
 
 
 export default function MainNav() {

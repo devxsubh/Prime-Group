@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import {
   Calendar,
@@ -14,8 +14,11 @@ import {
   Phone,
   Home,
   Lock,
+  X,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
-import Link from "next/link";
+import { EditProfileForm } from "@/components/profile/edit-profile-form";
 import { Button } from "@/components/ui/button";
 
 export interface ProfilePhoto {
@@ -87,6 +90,7 @@ export interface ProfileViewProps {
   photos: ProfilePhoto[];
   preferences: PartnerPreferences | null;
   isOwnProfile?: boolean;
+  userId?: string;
 }
 
 function formatAge(dob: string): number {
@@ -117,7 +121,7 @@ function Section({
   if (!visible) return null;
   return (
     <div
-      className="rounded-2xl p-6 sm:p-8 transition-shadow hover:shadow-xl"
+      className="rounded-2xl p-6 sm:p-8 transition-shadow hover:shadow-xl bg-white"
       style={cardStyle}
     >
       <h3 className="font-playfair-display text-xl font-bold mb-1 flex items-center gap-2" style={{ color: "var(--primary-blue)" }}>
@@ -125,7 +129,7 @@ function Section({
         {title}
       </h3>
       <div className="w-12 h-0.5 rounded-full mb-4" style={{ backgroundColor: "var(--accent-gold)" }} />
-      <div className="font-montserrat text-sm" style={{ color: "var(--primary-blue)" }}>
+      <div className="font-montserrat text-base leading-relaxed" style={{ color: "var(--primary-blue)" }}>
         {children}
       </div>
     </div>
@@ -137,13 +141,27 @@ export function ProfileView({
   photos,
   preferences,
   isOwnProfile,
+  userId,
 }: ProfileViewProps) {
   const age = formatAge(profile.date_of_birth);
   const location = [profile.city, profile.state, profile.country].filter(Boolean).join(", ");
   const sortedPhotos = [...photos].sort((a, b) => a.display_order - b.display_order);
   const primaryPhoto = sortedPhotos.find((p) => p.is_primary) ?? sortedPhotos[0];
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState(0);
+  const [isEditing, setIsEditing] = useState(false);
+  const [enlargedPhotoIndex, setEnlargedPhotoIndex] = useState<number | null>(null);
   const displayPhoto = sortedPhotos[selectedPhotoIndex] ?? primaryPhoto ?? sortedPhotos[0];
+
+  useEffect(() => {
+    if (enlargedPhotoIndex !== null) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [enlargedPhotoIndex]);
 
   // Show all sections (education, occupation, family, partner preference) when viewing a profile
   const showEducation = true;
@@ -151,228 +169,290 @@ export function ProfileView({
   const showFamily = true;
   const showLocation = true;
 
+  if (isEditing && userId) {
+    return (
+      <div className="space-y-6 sm:space-y-8 max-w-5xl mx-auto">
+        <EditProfileForm
+          profile={profile}
+          photos={photos}
+          preferences={preferences}
+          userId={userId}
+          onClose={() => setIsEditing(false)}
+        />
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-8">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left: Photo gallery */}
-        <div className="lg:col-span-1 space-y-4">
-          <div
-            className="relative aspect-[3/4] max-w-sm mx-auto rounded-2xl overflow-hidden bg-gray-100"
-            style={{ boxShadow: "0 20px 40px rgba(25, 80, 150, 0.12)", border: "1px solid rgba(212, 175, 55, 0.2)" }}
-          >
-            {displayPhoto?.photo_url ? (
+    <div className="space-y-6 sm:space-y-8 max-w-5xl mx-auto">
+      {/* 1. HERO SECTION */}
+      <div className="bg-white rounded-3xl p-6 sm:p-10 flex flex-col md:flex-row items-center md:items-start gap-6 sm:gap-10" style={cardStyle}>
+        
+        {/* Avatar / Main Photo */}
+        <div 
+          className="flex-shrink-0 relative w-44 h-44 sm:w-48 sm:h-48 md:w-56 md:h-56 rounded-2xl overflow-hidden border-4 border-white shadow-[0_15px_35px_rgba(25,80,150,0.15)] bg-gray-50 flex items-center justify-center cursor-pointer group"
+          onClick={() => {
+            if (displayPhoto?.id) {
+              const idx = sortedPhotos.findIndex(p => p.id === displayPhoto.id);
+              setEnlargedPhotoIndex(idx >= 0 ? idx : 0);
+            }
+          }}
+        >
+          {displayPhoto?.photo_url ? (
+            <>
               <Image
                 src={displayPhoto.photo_url}
                 alt={profile.full_name}
                 fill
-                className="object-cover"
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
                 unoptimized
-                sizes="(max-width: 768px) 100vw, 360px"
+                sizes="(max-width: 768px) 176px, 224px"
                 priority
               />
-            ) : (
-              <div className="absolute inset-0 flex items-center justify-center font-montserrat text-gray-400">
-                No photo
-              </div>
-            )}
-          </div>
-          {sortedPhotos.length > 1 && (
-            <div className="flex gap-2 overflow-x-auto pb-2 justify-center flex-wrap">
-              {sortedPhotos.map((p, idx) => (
-                <button
-                  key={p.id}
-                  type="button"
-                  onClick={() => setSelectedPhotoIndex(idx)}
-                  className={`relative flex-shrink-0 w-14 h-14 rounded-lg overflow-hidden border-2 transition-all ${
-                    selectedPhotoIndex === idx
-                      ? "ring-2 ring-offset-2 ring-[var(--accent-gold)]"
-                      : "border-gray-200 hover:border-gray-300"
-                  }`}
-                  style={selectedPhotoIndex === idx ? { borderColor: "var(--accent-gold)" } : undefined}
-                >
-                  <Image
-                    src={p.thumbnail_url || p.photo_url}
-                    alt=""
-                    fill
-                    className="object-cover"
-                    unoptimized
-                    sizes="56px"
-                  />
-                </button>
-              ))}
-            </div>
-          )}
-
-          {/* Contact section - visible below images */}
-          {(profile.contact_address || profile.contact_number) && (
-            <Section title="Contact" icon={Phone} visible>
-              <div className="space-y-2">
-                {profile.contact_address && (
-                  <p className="flex items-start gap-2 text-sm">
-                    <Home className="h-4 w-4 flex-shrink-0 mt-0.5" style={{ color: "var(--accent-gold)" }} />
-                    {isOwnProfile ? (
-                      <span className="break-words">{profile.contact_address}</span>
-                    ) : (
-                      <span className="select-none text-gray-400 blur-sm">Address visible with subscription</span>
-                    )}
-                  </p>
-                )}
-                {profile.contact_number && (
-                  <p className="flex items-center gap-2 text-sm">
-                    <Phone className="h-4 w-4 flex-shrink-0" style={{ color: "var(--accent-gold)" }} />
-                    {isOwnProfile ? (
-                      <span className="break-all">{profile.contact_number}</span>
-                    ) : (
-                      <span className="inline-flex items-center gap-2 rounded-md bg-gray-100 px-3 py-1.5 text-gray-500 select-none text-xs">
-                        <Lock className="h-3.5 w-3.5 flex-shrink-0" />
-                        <span>Subscribe to view contact number</span>
-                      </span>
-                    )}
-                  </p>
-                )}
-              </div>
-            </Section>
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+            </>
+          ) : (
+            <User className="h-16 w-16 text-gray-300" />
           )}
         </div>
 
-        {/* Right: Details */}
-        <div className="lg:col-span-2 space-y-6">
-          <div className="rounded-2xl p-6 sm:p-8" style={cardStyle}>
-            <h1 className="font-playfair-display text-3xl font-bold mb-2" style={{ color: "var(--primary-blue)" }}>
-              {profile.full_name}
-            </h1>
-            <div className="w-12 h-1 rounded-full mb-4" style={{ backgroundColor: "var(--accent-gold)" }} />
-            <div className="flex flex-wrap gap-4 font-montserrat text-sm" style={{ color: "var(--primary-blue)" }}>
-              <span className="flex items-center gap-1.5">
-                <Calendar className="h-4 w-4" style={{ color: "var(--accent-gold)" }} />
-                {age} years
+        {/* Info */}
+        <div className="flex-1 text-center md:text-left flex flex-col justify-center h-full pt-0 md:pt-4">
+          <h1 className="font-playfair-display text-4xl sm:text-5xl lg:text-6xl font-bold text-[var(--primary-blue)] mb-4 tracking-tight">
+            {profile.full_name}
+          </h1>
+          
+          <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 sm:gap-6 text-base sm:text-lg font-montserrat text-[var(--primary-blue)]/90 mb-6">
+            <span className="flex items-center gap-2 shrink-0">
+              <Calendar className="w-5 h-5 text-[var(--accent-gold)]" />
+              {age} years
+            </span>
+            {showLocation && location && (
+              <span className="flex items-center gap-2 shrink-0">
+                <MapPin className="w-5 h-5 text-[var(--accent-gold)]" />
+                {location}
               </span>
-              {showLocation && location && (
-                <span className="flex items-center gap-1.5">
-                  <MapPin className="h-4 w-4" style={{ color: "var(--accent-gold)" }} />
-                  {location}
-                </span>
-              )}
-            </div>
+            )}
+            {(profile.occupation || profile.organization) && (
+              <span className="flex items-center gap-2 shrink-0">
+                <Briefcase className="w-5 h-5 text-[var(--accent-gold)]" />
+                {profile.occupation && profile.organization
+                  ? `${profile.occupation} at ${profile.organization}`
+                  : profile.organization || profile.occupation}
+              </span>
+            )}
           </div>
+          
+          {/* Quick Contact & Photos Toggle */}
+          <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center md:justify-start gap-4 mt-auto">
+            {(profile.contact_address || profile.contact_number) && (
+              <div className="flex flex-wrap justify-center sm:justify-start gap-3">
+                {profile.contact_number && (
+                  isOwnProfile ? (
+                    <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--primary-blue)]/15 bg-blue-50/40 text-sm font-semibold text-[var(--primary-blue)]">
+                      <Phone className="w-4 h-4 text-[var(--accent-gold)]" />
+                      {profile.contact_number}
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 bg-gray-50 text-sm font-medium text-gray-500">
+                      <Lock className="w-4 h-4 text-gray-400" />
+                      Subscribe for contact
+                    </div>
+                  )
+                )}
+                {profile.contact_address && (
+                  isOwnProfile ? (
+                     <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--primary-blue)]/15 bg-blue-50/40 text-sm font-semibold text-[var(--primary-blue)]">
+                      <Home className="w-4 h-4 text-[var(--accent-gold)]" />
+                      {profile.contact_address}
+                    </div>
+                  ) : null
+                )}
+              </div>
+            )}
+            
+            {/* Gallery Thumbnails */}
+            {sortedPhotos.length > 1 && (
+              <div className="flex gap-2 ml-0 sm:ml-auto mt-2 sm:mt-0">
+                {sortedPhotos.slice(0, 5).map((p, idx) => (
+                  <button
+                    key={p.id}
+                    type="button"
+                    onClick={() => setSelectedPhotoIndex(idx)}
+                    className={`relative w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden border-[3px] transition-all shadow-sm ${
+                      selectedPhotoIndex === idx
+                        ? "border-[var(--accent-gold)]"
+                        : "border-white hover:border-gray-200"
+                    }`}
+                  >
+                    <Image src={p.thumbnail_url || p.photo_url} alt="" fill className="object-cover" unoptimized sizes="48px" />
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
 
+      {isOwnProfile && (
+        <div
+          className="flex flex-wrap items-center justify-between gap-4 rounded-3xl px-6 py-5 bg-white shadow-sm"
+          style={{ border: "1px solid rgba(212, 175, 55, 0.4)" }}
+        >
+          <div className="flex flex-wrap items-center gap-6 font-montserrat text-sm" style={{ color: "var(--primary-blue)" }}>
+            <span className="flex items-center gap-3">
+              <div className="w-24 h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div className="h-full bg-[var(--accent-gold)]" style={{ width: `${profile.profile_completion_pct ?? 0}%` }} />
+              </div>
+              <strong>{profile.profile_completion_pct ?? 0}%</strong> Complete
+            </span>
+            <span>Status: <strong className="capitalize">{profile.profile_status.replace('_', ' ')}</strong></span>
+          </div>
+          <div className="flex gap-2">
+            <Button onClick={() => setIsEditing(true)} variant="outline" size="sm" className="rounded-xl border-[var(--primary-blue)]/20 text-[var(--primary-blue)] hover:bg-[var(--accent-gold)]/10 hover:text-[var(--primary-blue)] font-semibold px-6">
+              Edit Profile
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {/* 2. GRID DETAILS */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+        {/* Left Column */}
+        <div className="space-y-6 sm:space-y-8">
           {profile.about_me && (
-            <Section title="About" icon={User} visible>
-              <p className="whitespace-pre-wrap opacity-90">{profile.about_me}</p>
+            <Section title="About Me" icon={User} visible>
+              <p className="whitespace-pre-wrap leading-relaxed opacity-95">{profile.about_me}</p>
             </Section>
           )}
 
           {(profile.school || profile.highest_education || profile.college_university || profile.field_of_study) && (
             <Section title="Education" icon={GraduationCap} visible>
-              <div className="space-y-1">
-                {profile.school && <p>School: {profile.school}</p>}
-                {profile.college_university && <p>College / University: {profile.college_university}</p>}
+              <div className="space-y-5">
+                {profile.school && <p><span className="font-semibold opacity-70 block text-xs uppercase tracking-wider mb-1">School</span><span className="font-medium text-[15px]">{profile.school}</span></p>}
+                {profile.college_university && <p><span className="font-semibold opacity-70 block text-xs uppercase tracking-wider mb-1">College / University</span><span className="font-medium text-[15px]">{profile.college_university}</span></p>}
                 {(profile.highest_education || profile.field_of_study) && (
-                  <p>Degree: {[profile.highest_education, profile.field_of_study].filter(Boolean).join(" · ")}</p>
+                  <p><span className="font-semibold opacity-70 block text-xs uppercase tracking-wider mb-1">Degree</span><span className="font-medium text-[15px]">{[profile.highest_education, profile.field_of_study].filter(Boolean).join(" · ")}</span></p>
                 )}
               </div>
             </Section>
           )}
 
-          {(profile.occupation || profile.organization) && (
-            <Section title="Occupation" icon={Briefcase} visible>
-              <p>
-                {profile.occupation && profile.organization
-                  ? `${profile.occupation} at ${profile.organization}`
-                  : profile.organization
-                    ? `Working at ${profile.organization}`
-                    : profile.occupation}
-              </p>
-            </Section>
-          )}
-
           {(profile.height_cm || profile.marital_status || profile.complexion || profile.birthplace || profile.gotra || profile.willing_to_relocate || profile.religion || profile.mother_tongue) && (
-            <Section title="Details" icon={Ruler} visible>
-              <p>
-                {[
-                  profile.height_cm && `${profile.height_cm} cm`,
-                  profile.marital_status,
-                  profile.complexion,
-                  profile.birthplace,
-                  profile.gotra && `Gotra: ${profile.gotra}`,
-                  profile.willing_to_relocate && `Willing to relocate: ${profile.willing_to_relocate}`,
-                  profile.religion,
-                  profile.mother_tongue,
-                ]
-                  .filter(Boolean)
-                  .join(" · ")}
-              </p>
+            <Section title="Basic Details" icon={Ruler} visible>
+              <div className="grid grid-cols-2 gap-y-6 gap-x-4">
+                {profile.height_cm && <div><span className="font-semibold opacity-70 block text-xs uppercase tracking-wider mb-1">Height</span><span className="font-medium text-[15px]">{profile.height_cm} cm</span></div>}
+                {profile.marital_status && <div><span className="font-semibold opacity-70 block text-xs uppercase tracking-wider mb-1">Status</span><span className="capitalize font-medium text-[15px]">{profile.marital_status.replace('_', ' ')}</span></div>}
+                {profile.complexion && <div><span className="font-semibold opacity-70 block text-xs uppercase tracking-wider mb-1">Complexion</span><span className="font-medium text-[15px]">{profile.complexion}</span></div>}
+                {profile.birthplace && <div><span className="font-semibold opacity-70 block text-xs uppercase tracking-wider mb-1">Birthplace</span><span className="font-medium text-[15px]">{profile.birthplace}</span></div>}
+                {profile.gotra && <div><span className="font-semibold opacity-70 block text-xs uppercase tracking-wider mb-1">Gotra</span><span className="font-medium text-[15px]">{profile.gotra}</span></div>}
+                {profile.religion && <div><span className="font-semibold opacity-70 block text-xs uppercase tracking-wider mb-1">Religion</span><span className="font-medium text-[15px]">{profile.religion}</span></div>}
+                {profile.mother_tongue && <div><span className="font-semibold opacity-70 block text-xs uppercase tracking-wider mb-1">Mother Tongue</span><span className="font-medium text-[15px]">{profile.mother_tongue}</span></div>}
+                {profile.willing_to_relocate && <div><span className="font-semibold opacity-70 block text-xs uppercase tracking-wider mb-1">Relocate?</span><span className="capitalize font-medium text-[15px]">{profile.willing_to_relocate}</span></div>}
+              </div>
             </Section>
           )}
+        </div>
 
-          {(profile.father_name ||
-            profile.mother_name ||
-            profile.has_siblings ||
-            profile.siblings_brothers != null ||
-            profile.siblings_sisters != null ||
-            profile.siblings_count != null ||
-            profile.family_type ||
-            profile.family_values) && (
-              <Section title="Family" icon={Users} visible>
-                <div className="space-y-2">
+        {/* Right Column */}
+        <div className="space-y-6 sm:space-y-8">
+          {(profile.father_name || profile.mother_name || profile.has_siblings || profile.siblings_brothers != null || profile.siblings_sisters != null || profile.siblings_count != null || profile.family_type || profile.family_values) && (
+              <Section title="Family Background" icon={Users} visible>
+                <div className="space-y-5">
                   {profile.father_name && (
-                    <p>Father: {profile.father_name}{profile.father_occupation ? ` · ${profile.father_occupation}` : ""}</p>
+                    <p><span className="font-semibold opacity-70 block text-xs uppercase tracking-wider mb-1">Father</span><span className="font-medium text-[15px]">{profile.father_name}{profile.father_occupation ? ` · ${profile.father_occupation}` : ""}</span></p>
                   )}
                   {profile.mother_name && (
-                    <p>Mother: {profile.mother_name}{profile.mother_occupation ? ` · ${profile.mother_occupation}` : ""}</p>
+                    <p><span className="font-semibold opacity-70 block text-xs uppercase tracking-wider mb-1">Mother</span><span className="font-medium text-[15px]">{profile.mother_name}{profile.mother_occupation ? ` · ${profile.mother_occupation}` : ""}</span></p>
                   )}
                   {(profile.has_siblings || profile.siblings_brothers != null || profile.siblings_sisters != null || profile.siblings_count != null) && (
                     <p>
-                      Siblings:
-                      {profile.siblings_brothers != null || profile.siblings_sisters != null
+                      <span className="font-semibold opacity-70 block text-xs uppercase tracking-wider mb-1">Siblings</span>
+                      <span className="font-medium text-[15px]">{profile.siblings_brothers != null || profile.siblings_sisters != null
                         ? [profile.siblings_brothers != null && ` ${profile.siblings_brothers} brother(s)`, profile.siblings_sisters != null && ` ${profile.siblings_sisters} sister(s)`].filter(Boolean).join(",")
                         : profile.siblings_count != null
                           ? ` ${profile.siblings_count}`
-                          : " Yes"}
+                          : "Yes"}</span>
                     </p>
                   )}
                   {profile.siblings_notes && <p className="opacity-90">{profile.siblings_notes}</p>}
                   {(profile.family_type || profile.family_values || profile.family_status) && (
-                    <p>
-                      {[profile.family_type, profile.family_values, profile.family_status].filter(Boolean).join(" · ")}
-                    </p>
+                    <div className="pt-3">
+                       <span className="font-semibold opacity-70 block text-xs uppercase tracking-wider mb-1">About Family</span>
+                      <p className="font-medium text-[15px]">
+                        {[profile.family_type, profile.family_values, profile.family_status].filter(Boolean).join(" · ")}
+                      </p>
+                    </div>
                   )}
                 </div>
               </Section>
             )}
 
           {preferences && (preferences.age_min != null || preferences.age_max != null || preferences.additional_notes || preferences.gotra) && (
-            <Section title="Partner preferences" icon={Heart} visible>
-              <p>
+            <Section title="Partner Preferences" icon={Heart} visible>
+              <div className="space-y-5">
                 {preferences.age_min != null && preferences.age_max != null && (
-                  <>Looking for age {preferences.age_min}–{preferences.age_max} years</>
+                  <p><span className="font-semibold opacity-70 block text-xs uppercase tracking-wider mb-1">Age Range</span><span className="font-medium text-[15px]">{preferences.age_min} to {preferences.age_max} years</span></p>
                 )}
-                {preferences.gotra && <span className="block mt-1">Gotra: {preferences.gotra}</span>}
+                {preferences.gotra && <p><span className="font-semibold opacity-70 block text-xs uppercase tracking-wider mb-1">Preferred Gotra</span><span className="font-medium text-[15px]">{preferences.gotra}</span></p>}
                 {preferences.additional_notes && (
-                  <span className="block mt-1 opacity-90">{preferences.additional_notes}</span>
+                  <p><span className="font-semibold opacity-70 block text-xs uppercase tracking-wider mb-1">Additional Notes</span><span className="opacity-95 leading-relaxed font-medium text-[15px]">{preferences.additional_notes}</span></p>
                 )}
-              </p>
+              </div>
             </Section>
           )}
         </div>
       </div>
 
-      {isOwnProfile && (
-        <div
-          className="flex flex-wrap items-center justify-between gap-4 pt-6 border-t rounded-2xl px-6 py-4"
-          style={{ borderColor: "var(--accent-gold)", ...cardStyle }}
+      {/* Lightbox Modal */}
+      {enlargedPhotoIndex !== null && (
+        <div 
+          className="fixed top-0 left-0 w-screen h-screen z-[9999] bg-black/40 flex items-center justify-center p-4 sm:p-8 cursor-zoom-out backdrop-blur-md transition-all duration-300"
+          onClick={() => setEnlargedPhotoIndex(null)}
         >
-          <div className="flex flex-wrap items-center gap-4 font-montserrat text-sm" style={{ color: "var(--primary-blue)" }}>
-            <span>Profile completion: <strong>{profile.profile_completion_pct ?? 0}%</strong></span>
-            <span>Status: <strong>{profile.profile_status}</strong></span>
-          </div>
-          <div className="flex gap-2">
-            <Button asChild variant="outline" size="sm">
-              <Link href="/profile/edit">Edit profile</Link>
-            </Button>
-            <Button asChild size="sm" style={{ backgroundColor: "var(--primary-blue)" }}>
-              <Link href="/profile">View as others see</Link>
-            </Button>
+          <div 
+            className="relative inline-block cursor-default select-none" 
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img 
+              src={sortedPhotos[enlargedPhotoIndex]?.photo_url} 
+              alt="Enlarged profile photo" 
+              className="max-w-[95vw] max-h-[90vh] rounded-3xl object-scale-down shadow-[0_20px_60px_rgba(0,0,0,0.5)] bg-slate-900/50" 
+            />
+            
+            {/* Close button inside the true image boundary (pinned to top-right corner) */}
+            <button 
+              className="absolute top-4 right-4 bg-black/50 hover:bg-black/80 text-white rounded-full p-2 backdrop-blur-md transition-all duration-200 shadow-lg"
+              onClick={() => setEnlargedPhotoIndex(null)}
+            >
+              <X className="w-5 h-5 flex-shrink-0" />
+            </button>
+
+            {/* Navigation Left */}
+            {sortedPhotos.length > 1 && (
+              <>
+                <button
+                  className="absolute top-1/2 left-4 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white rounded-full p-3 backdrop-blur-md transition-all duration-200 shadow-lg"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setEnlargedPhotoIndex((prev) => (prev === 0 ? sortedPhotos.length - 1 : prev! - 1));
+                  }}
+                >
+                  <ChevronLeft className="w-6 h-6 flex-shrink-0" />
+                </button>
+
+                {/* Navigation Right */}
+                <button
+                  className="absolute top-1/2 right-4 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white rounded-full p-3 backdrop-blur-md transition-all duration-200 shadow-lg"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setEnlargedPhotoIndex((prev) => (prev === sortedPhotos.length - 1 ? 0 : prev! + 1));
+                  }}
+                >
+                  <ChevronRight className="w-6 h-6 flex-shrink-0" />
+                </button>
+              </>
+            )}
           </div>
         </div>
       )}

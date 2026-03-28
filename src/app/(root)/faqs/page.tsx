@@ -5,7 +5,7 @@ export default async function FAQsPage() {
   const faqs = await getFaqs();
 
   return (
-    <div className="min-h-screen py-12" style={{ backgroundColor: "var(--pure-white)" }}>
+    <div className="min-h-screen py-12">
       <FaqsSection faqs={faqs} />
     </div>
   );

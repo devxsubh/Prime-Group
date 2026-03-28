@@ -18,17 +18,15 @@ export default async function OnboardingPage() {
 
   const isProfileCompleted =
     profile &&
-    (profile.profile_status === "active" || (profile.profile_completion_pct ?? 0) >= 75);
+    (profile.profile_status === "active" || (profile.profile_completion_pct ?? 0) >= 80);
   if (isProfileCompleted) {
     redirect("/discover");
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      <OnboardingStepBackground />
-
-      <section className="relative z-0 mx-auto max-w-2xl px-6 py-16 md:py-20">
-        <OnboardingWizard userId={user.id} existingProfileId={profile?.id} />
+    <div className="relative min-h-screen bg-[#FDFBF7]">
+      <section className="relative z-0 mx-auto max-w-[1400px] w-full px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        <OnboardingWizard userId={user.id} existingProfileId={profile?.id} email={user.email} />
       </section>
     </div>
   );

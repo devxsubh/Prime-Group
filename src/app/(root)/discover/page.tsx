@@ -51,7 +51,6 @@ export default async function DiscoverPage() {
       </div>
       <section
         className="py-20 px-4 sm:px-6 lg:px-8 shadow-lg"
-        style={{ backgroundColor: "var(--pure-white)" }}
       >
         <div className="container mx-auto max-w-7xl">
           <div className="text-center mb-16">

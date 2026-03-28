@@ -54,36 +54,15 @@ const editSchema = z.object({
 
 type EditFormData = z.infer<typeof editSchema>;
 
-function computeCompletion(profile: Partial<ProfileRecord>, photoCount: number): number {
-  const fields = [
-    profile?.full_name,
-    profile?.gender,
-    profile?.date_of_birth,
-    profile?.country,
-    profile?.city,
-    profile?.highest_education,
-    profile?.occupation,
-    profile?.marital_status,
-    profile?.religion,
-    profile?.state,
-    profile?.about_me,
-    profile?.college_university ?? profile?.field_of_study,
-    profile?.organization,
-    profile?.father_name ?? profile?.mother_name,
-  ];
-  const filled = fields.filter(Boolean).length;
-  const photoScore = Math.min(photoCount, 3) * 2;
-  return Math.min(100, Math.round((filled / 14) * 70 + photoScore));
-}
-
 interface EditProfileFormProps {
   profile: ProfileRecord;
   photos: { id: string; photo_url: string; thumbnail_url: string | null; display_order: number; is_primary: boolean; status: string }[];
   preferences: { age_min: number | null; age_max: number | null; additional_notes: string | null } | null;
   userId: string;
+  onClose?: () => void;
 }
 
-export function EditProfileForm({ profile, photos, preferences, userId }: EditProfileFormProps) {
+export function EditProfileForm({ profile, photos, preferences, userId, onClose }: EditProfileFormProps) {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -124,10 +103,6 @@ export function EditProfileForm({ profile, photos, preferences, userId }: EditPr
     },
   });
 
-  const completion = computeCompletion(
-    { ...profile, ...form.watch() },
-    photoCount
-  );
 
   const onSubmit = async (data: EditFormData) => {
     setError(null);
@@ -160,7 +135,6 @@ export function EditProfileForm({ profile, photos, preferences, userId }: EditPr
         family_type: data.family_type || null,
         family_values: data.family_values || null,
         family_status: data.family_status || null,
-        profile_completion_pct: completion,
         updated_at: new Date().toISOString(),
       };
       const { error: e } = await supabase.from("profiles").update(payload).eq("id", profile.id).eq("user_id", userId);
@@ -183,7 +157,8 @@ export function EditProfileForm({ profile, photos, preferences, userId }: EditPr
         });
       }
       router.refresh();
-      router.push("/profile");
+      if (onClose) onClose();
+      else router.push("/profile");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to save");
     } finally {
@@ -194,15 +169,26 @@ export function EditProfileForm({ profile, photos, preferences, userId }: EditPr
   const cardStyle = { boxShadow: "0 10px 30px rgba(25, 80, 150, 0.08)", border: "1px solid rgba(212, 175, 55, 0.15)" };
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-      <div className="rounded-2xl p-6" style={cardStyle}>
-        <h2 className="font-playfair-display text-lg font-bold mb-2" style={{ color: "var(--primary-blue)" }}>
-          Profile completion
-        </h2>
-        <Progress value={completion} className="h-3 mb-2" style={{ backgroundColor: "rgba(212, 175, 55, 0.2)" }} />
-        <p className="font-montserrat text-sm" style={{ color: "var(--primary-blue)" }}>
-          {completion}% complete — fill more sections to improve visibility.
-        </p>
+    <form onSubmit={form.handleSubmit(onSubmit)} className="bg-white rounded-3xl p-6 sm:p-10 shadow-sm space-y-8" style={cardStyle}>
+      {/* 1. Header with Controls */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 border-b pb-6 gap-4" style={{ borderColor: "rgba(212, 175, 55, 0.2)" }}>
+        <div>
+          <h1 className="font-playfair-display text-3xl font-bold" style={{ color: "var(--primary-blue)" }}>
+            Edit Profile
+          </h1>
+          <p className="font-montserrat text-sm mt-2 opacity-80" style={{ color: "var(--primary-blue)" }}>
+            Update your details, photos, and preferences inline.
+          </p>
+        </div>
+        <div className="flex gap-3">
+          <Button type="button" variant="outline" onClick={() => { if(onClose) onClose(); else router.push("/profile"); }} className="rounded-xl border-[var(--primary-blue)]/20 text-[var(--primary-blue)] hover:bg-[var(--accent-gold)]/10">
+            Cancel
+          </Button>
+          <Button type="submit" disabled={saving || !form.formState.isDirty} className="rounded-xl shadow-md transition-all px-6" style={{ backgroundColor: "var(--primary-blue)", color: "white" }}>
+            {saving ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+            {saving ? "Saving..." : "Save Profile"}
+          </Button>
+        </div>
       </div>
 
       {error && (
@@ -398,22 +384,13 @@ export function EditProfileForm({ profile, photos, preferences, userId }: EditPr
         </div>
       </div>
 
-      <div className="rounded-2xl p-6" style={cardStyle}>
+      <div className="rounded-2xl p-6 border bg-white shadow-sm" style={{ borderColor: "rgba(212, 175, 55, 0.2)" }}>
         <ProfilePhotoManager
           profileId={profile.id}
           userId={userId}
           initialPhotos={photos}
           onUpdate={handlePhotoUpdate}
         />
-      </div>
-
-      <div className="flex gap-3">
-        <Button type="submit" disabled={saving} style={{ backgroundColor: "var(--primary-blue)" }}>
-          {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save profile"}
-        </Button>
-        <Button type="button" variant="outline" onClick={() => router.push("/profile")}>
-          Cancel
-        </Button>
       </div>
     </form>
   );

@@ -48,7 +48,7 @@ export default function SubscriptionPlan() {
           <div 
             className="rounded-2xl p-8 md:p-12 shadow-2xl relative overflow-hidden"
             style={{ 
-              background: 'linear-gradient(135deg, var(--primary-blue) 0%, #004080 100%)',
+              backgroundColor: 'var(--primary-blue)',
               border: `3px solid var(--accent-gold)`
             }}
           >
