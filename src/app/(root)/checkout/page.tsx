@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
+
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -19,7 +20,8 @@ interface Plan {
   credits: number | null;
 }
 
-export default function CheckoutPage() {
+function CheckoutContent() {
+
   const searchParams = useSearchParams();
   const planSlug = searchParams.get("plan");
   const planIdParam = searchParams.get("plan_id");
@@ -343,3 +345,18 @@ export default function CheckoutPage() {
     </div>
   );
 }
+
+export default function CheckoutPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-[60vh] flex items-center justify-center">
+          <Loader2 className="w-8 h-8 animate-spin" style={{ color: "var(--primary-blue)" }} />
+        </div>
+      }
+    >
+      <CheckoutContent />
+    </Suspense>
+  );
+}
+
