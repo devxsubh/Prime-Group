@@ -24,6 +24,7 @@ import { cn } from "@/lib/utils";
 const menuItems = [
   { name: "Dashboard", href: "/admin", icon: BarChart3, description: "Overview & stats" },
   { name: "Profiles", href: "/admin/profiles", icon: Users, description: "Manage profiles" },
+  { name: "Admin Access", href: "/admin/access", icon: Shield, description: "Admins & permissions" },
   { name: "Blogs", href: "/admin/blogs", icon: FileText, description: "Create & edit posts" },
   { name: "FAQs", href: "/admin/faqs", icon: HelpCircle, description: "Manage FAQs" },
   { name: "Contact", href: "/admin/contact", icon: Mail, description: "Form submissions" },

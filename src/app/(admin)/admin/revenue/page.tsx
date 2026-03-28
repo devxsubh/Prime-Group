@@ -28,10 +28,13 @@ interface Plan {
 }
 
 interface PaymentRow {
+  id: string;
   amount: number;
   plan_id: string | null;
   paid_at: string | null;
   created_at: string;
+  status: string;
+  payment_method: string | null;
 }
 
 interface ByPlanRow {
@@ -53,26 +56,35 @@ interface MonthRow {
 export default function AdminRevenuePage() {
   const [payments, setPayments] = useState<PaymentRow[]>([]);
   const [plans, setPlans] = useState<Plan[]>([]);
+  const [pendingUpi, setPendingUpi] = useState<PaymentRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [confirmingId, setConfirmingId] = useState<string | null>(null);
 
   const fetchData = async () => {
     const supabase = createClient();
     setLoading(true);
     try {
-      const [paymentsRes, plansRes] = await Promise.all([
+      const [paymentsRes, plansRes, pendingUpiRes] = await Promise.all([
         supabase
           .from("payments")
-          .select("amount, plan_id, paid_at, created_at")
+          .select("id, amount, plan_id, paid_at, created_at, status, payment_method")
           .eq("status", "success"),
         supabase.from("plans").select("id, name"),
+        supabase
+          .from("payments")
+          .select("id, amount, plan_id, created_at, payment_method")
+          .eq("status", "pending")
+          .eq("payment_method", "upi_qr"),
       ]);
       if (paymentsRes.error) throw paymentsRes.error;
       setPayments((paymentsRes.data ?? []) as PaymentRow[]);
       setPlans((plansRes.data ?? []) as Plan[]);
+      setPendingUpi((pendingUpiRes.data ?? []) as PaymentRow[]);
     } catch {
       setPayments([]);
       setPlans([]);
+      setPendingUpi([]);
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -320,6 +332,67 @@ export default function AdminRevenuePage() {
           </div>
         </CardContent>
       </Card>
+
+      {pendingUpi.length > 0 && (
+        <Card className="rounded-xl border shadow-sm" style={cardStyle}>
+          <CardHeader>
+            <CardTitle className="font-playfair-display" style={{ color: "var(--primary-blue)" }}>
+              Pending UPI payments
+            </CardTitle>
+            <p className="text-sm font-montserrat text-gray-600">
+              After the user pays via UPI QR, confirm here to add credits to their account.
+            </p>
+          </CardHeader>
+          <CardContent>
+            <div className="rounded-lg border overflow-hidden" style={{ borderColor: "rgba(212, 175, 55, 0.2)" }}>
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-gray-50">
+                    <TableHead className="font-montserrat">Order ID</TableHead>
+                    <TableHead className="font-montserrat text-right">Amount</TableHead>
+                    <TableHead className="font-montserrat">Created</TableHead>
+                    <TableHead className="font-montserrat w-[120px]">Action</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {pendingUpi.map((row) => (
+                    <TableRow key={row.id} className="font-montserrat">
+                      <TableCell className="font-mono text-sm">{row.id.slice(0, 8)}…</TableCell>
+                      <TableCell className="text-right">₹{row.amount?.toLocaleString() ?? 0}</TableCell>
+                      <TableCell className="text-gray-600">
+                        {row.created_at ? new Date(row.created_at).toLocaleString() : "—"}
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          size="sm"
+                          className="rounded-lg font-montserrat"
+                          style={{ backgroundColor: "var(--primary-blue)" }}
+                          disabled={confirmingId === row.id}
+                          onClick={async () => {
+                            setConfirmingId(row.id);
+                            try {
+                              const res = await fetch("/api/payments/confirm-upi", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({ order_id: row.id }),
+                              });
+                              if (res.ok) fetchData();
+                            } finally {
+                              setConfirmingId(null);
+                            }
+                          }}
+                        >
+                          {confirmingId === row.id ? "…" : "Confirm paid"}
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
