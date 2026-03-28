@@ -7,7 +7,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { createClient } from "@/lib/supabase/client";
-import { IndianRupee, Loader2 } from "lucide-react";
+import { IndianRupee, Loader2, Check, Coins, Sparkles, Zap, Crown } from "lucide-react";
 
 // Payment method is fetched from API (set in Admin → Settings)
 
@@ -20,12 +20,19 @@ interface Plan {
   credits: number | null;
 }
 
+const planIcons: Record<string, React.ElementType> = {
+  starter: Zap,
+  popular: Sparkles,
+  "premium-pack": Crown,
+};
+
 function CheckoutContent() {
 
   const searchParams = useSearchParams();
   const planSlug = searchParams.get("plan");
   const planIdParam = searchParams.get("plan_id");
   const [plan, setPlan] = useState<Plan | null>(null);
+  const [allPlans, setAllPlans] = useState<Plan[]>([]);
   const [loading, setLoading] = useState(true);
   const [payLoading, setPayLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -49,7 +56,7 @@ function CheckoutContent() {
         .eq("id", planIdParam)
         .eq("is_active", true)
         .single();
-      return data as Plan | null;
+      return { selected: data as Plan | null, all: [] as Plan[] };
     }
     if (planSlug) {
       const { data } = await supabase
@@ -58,17 +65,16 @@ function CheckoutContent() {
         .eq("slug", planSlug)
         .eq("is_active", true)
         .single();
-      return data as Plan | null;
+      return { selected: data as Plan | null, all: [] as Plan[] };
     }
+    // No specific plan — load all active plans
     const { data } = await supabase
       .from("plans")
       .select("id, name, slug, description, price_inr, credits")
       .eq("is_active", true)
       .gt("price_inr", 0)
-      .order("display_order", { ascending: true })
-      .limit(1)
-      .single();
-    return data as Plan | null;
+      .order("display_order", { ascending: true });
+    return { selected: null, all: (data ?? []) as Plan[] };
   }, [planIdParam, planSlug]);
 
   useEffect(() => {
@@ -82,17 +88,23 @@ function CheckoutContent() {
           window.location.href = `/sign-in?next=${encodeURIComponent("/checkout" + (planSlug ? `?plan=${planSlug}` : planIdParam ? `?plan_id=${planIdParam}` : ""))}`;
           return;
         }
-        const [p, methodRes] = await Promise.all([
+        const [result, methodRes] = await Promise.all([
           resolvePlan(),
           fetch("/api/settings/payment-method").then((r) => r.json()),
         ]);
         if (!cancelled && methodRes?.method) setPaymentMethod(methodRes.method === "upi_qr" ? "upi_qr" : "razorpay");
         if (!cancelled) {
-          setPlan(p ?? null);
-          if (!p) setError("Plan not found.");
+          if (result.selected) {
+            setPlan(result.selected);
+          } else if (result.all.length > 0) {
+            setAllPlans(result.all);
+            // Don't auto-select; let user choose
+          } else {
+            setError("No credit packs available.");
+          }
         }
       } catch {
-        if (!cancelled) setError("Failed to load plan.");
+        if (!cancelled) setError("Failed to load plans.");
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -165,8 +177,9 @@ function CheckoutContent() {
     []
   );
 
-  const handlePay = useCallback(async () => {
-    if (!plan) return;
+  const handlePay = useCallback(async (selectedPlan?: Plan) => {
+    const targetPlan = selectedPlan || plan;
+    if (!targetPlan) return;
     setPayLoading(true);
     setError(null);
     setUpiOrder(null);
@@ -174,7 +187,7 @@ function CheckoutContent() {
       const res = await fetch("/api/payments/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan_id: plan.id }),
+        body: JSON.stringify({ plan_id: targetPlan.id }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -207,7 +220,7 @@ function CheckoutContent() {
     } finally {
       setPayLoading(false);
     }
-  }, [plan, startRazorpay]);
+  }, [plan, startRazorpay, paymentMethod]);
 
   // Poll for UPI payment status
   useEffect(() => {
@@ -238,7 +251,7 @@ function CheckoutContent() {
     );
   }
 
-  if (error && !plan) {
+  if (error && !plan && allPlans.length === 0) {
     return (
       <div className="container max-w-lg mx-auto py-16 px-4">
         <Card className="rounded-xl border" style={{ borderColor: "rgba(212, 175, 55, 0.3)" }}>
@@ -253,10 +266,109 @@ function CheckoutContent() {
     );
   }
 
+  // Multi-plan selection view (no plan pre-selected)
+  if (!plan && allPlans.length > 0 && !upiOrder) {
+    return (
+      <div className="container max-w-4xl mx-auto py-12 px-4">
+        <h1 className="font-playfair-display text-3xl font-bold mb-2" style={{ color: "var(--primary-blue)" }}>
+          Buy Credits
+        </h1>
+        <p className="font-montserrat text-gray-600 mb-8">
+          Choose a credit pack to unlock contact details on profiles
+        </p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {allPlans.map((p) => {
+            const Icon = planIcons[p.slug] || Coins;
+            const isPopular = p.slug === "popular";
+            return (
+              <div
+                key={p.id}
+                className={`relative rounded-2xl p-6 flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
+                  isPopular ? "ring-2" : ""
+                }`}
+                style={{
+                  border: isPopular ? "2px solid var(--accent-gold)" : "1px solid rgba(212, 175, 55, 0.2)",
+                  boxShadow: isPopular ? "0 10px 40px rgba(212, 175, 55, 0.15)" : "0 4px 20px rgba(0, 0, 0, 0.06)",
+                }}
+              >
+                {isPopular && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                    <span className="px-4 py-1 rounded-full text-xs font-montserrat font-bold uppercase tracking-wider text-black bg-gold-gradient shadow-lg">
+                      Best Value
+                    </span>
+                  </div>
+                )}
+
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "var(--primary-blue)" }}>
+                    <Icon className="w-5 h-5" style={{ color: "var(--accent-gold)" }} />
+                  </div>
+                  <h3 className="text-lg font-playfair-display font-bold" style={{ color: "var(--primary-blue)" }}>
+                    {p.name}
+                  </h3>
+                </div>
+
+                <div className="flex items-center gap-2 mb-1">
+                  <Coins className="w-5 h-5" style={{ color: "var(--accent-gold)" }} />
+                  <span className="text-2xl font-bold" style={{ color: "var(--primary-blue)" }}>
+                    {(p.credits ?? 0).toLocaleString()}
+                  </span>
+                  <span className="text-sm font-montserrat" style={{ color: "var(--primary-blue)", opacity: 0.7 }}>
+                    credits
+                  </span>
+                </div>
+
+                <div className="flex items-baseline gap-2 mb-4">
+                  <span className="text-xl font-bold" style={{ color: "var(--primary-blue)" }}>
+                    ₹{p.price_inr.toLocaleString()}
+                  </span>
+                </div>
+
+                {p.description && (
+                  <p className="text-sm font-montserrat text-gray-600 mb-4 flex-1">{p.description}</p>
+                )}
+
+                <Button
+                  className="w-full py-4 font-montserrat font-semibold rounded-xl border-none transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
+                  style={
+                    isPopular
+                      ? { background: "linear-gradient(135deg, #D4AF37, #E8C547)", color: "var(--primary-blue)" }
+                      : { backgroundColor: "var(--primary-blue)", color: "var(--pure-white)" }
+                  }
+                  onClick={() => handlePay(p)}
+                  disabled={payLoading}
+                >
+                  {payLoading ? (
+                    <><Loader2 className="w-4 h-4 animate-spin" /> Processing…</>
+                  ) : (
+                    `Buy ${(p.credits ?? 0).toLocaleString()} Credits`
+                  )}
+                </Button>
+
+                <p className="text-center text-xs font-montserrat mt-2" style={{ color: "var(--primary-blue)", opacity: 0.5 }}>
+                  ₹{((p.credits ?? 1) > 0 ? (p.price_inr / (p.credits ?? 1)).toFixed(2) : "0")} / credit
+                </p>
+              </div>
+            );
+          })}
+        </div>
+
+        {error && <p className="font-montserrat text-sm text-red-600 text-center mt-4">{error}</p>}
+
+        <p className="text-center mt-8">
+          <Link href="/" className="font-montserrat text-sm underline" style={{ color: "var(--primary-blue)" }}>
+            Back to home
+          </Link>
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="container max-w-lg mx-auto py-12 px-4">
       <h1 className="font-playfair-display text-2xl font-bold mb-6" style={{ color: "var(--primary-blue)" }}>
-        Buy credits
+        Buy Credits
       </h1>
 
       {!upiOrder ? (
@@ -286,7 +398,7 @@ function CheckoutContent() {
             <Button
               className="w-full rounded-xl font-montserrat"
               style={{ backgroundColor: "var(--primary-blue)" }}
-              onClick={handlePay}
+              onClick={() => handlePay()}
               disabled={payLoading}
             >
               {payLoading ? (
@@ -359,4 +471,3 @@ export default function CheckoutPage() {
     </Suspense>
   );
 }
-

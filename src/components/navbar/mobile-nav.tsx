@@ -11,14 +11,16 @@ import {
   SheetTitle,
   SheetDescription,
 } from "../ui/sheet";
-import { Menu, User, Settings, LogOut, Heart } from "lucide-react";
+import { Menu, User, Settings, LogOut, Heart, Coins } from "lucide-react";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import { useAuth } from "@/components/hooks/useAuth";
+import { useCredits } from "@/context/credits-context";
 
 export default function MobileNav() {
   const [open, setOpen] = useState(false);
   const { user, signOut } = useAuth();
+  const { credits } = useCredits();
   const router = useRouter();
 
   const handleLinkClick = () => {
@@ -70,6 +72,22 @@ export default function MobileNav() {
             <Separator className="my-2" />
             {user ? (
               <>
+                {/* Credits balance */}
+                <div className="flex items-center justify-between py-2">
+                  <div className="flex items-center gap-2">
+                    <Coins className="h-5 w-5" style={{ color: 'var(--accent-gold)' }} />
+                    <span className="text-lg font-semibold">{credits} credits</span>
+                  </div>
+                  <Link
+                    href="/checkout"
+                    onClick={handleLinkClick}
+                    className="text-xs font-bold px-3 py-1.5 rounded-full"
+                    style={{ backgroundColor: 'var(--accent-gold)', color: 'var(--primary-blue)' }}
+                  >
+                    Buy Credits
+                  </Link>
+                </div>
+                <Separator className="my-2" />
                 <Link href="/favorites" className="flex items-center gap-2 py-2 text-lg font-semibold" onClick={handleLinkClick}>
                   <Heart className="h-5 w-5" /> Wishlist
                 </Link>

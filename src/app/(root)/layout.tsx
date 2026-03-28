@@ -2,6 +2,7 @@ import "@/styles/globals.css";
 import MainNav from "@/components/navbar/main-nav";
 import { ConditionalFooter } from "@/components/footer/conditional-footer";
 import { FavoritesProvider } from "@/context/favorites-context";
+import { CreditsProvider } from "@/context/credits-context";
 import { ReduxProvider } from "@/components/providers/redux-provider";
 
 export default function RootLayout({
@@ -12,9 +13,11 @@ export default function RootLayout({
   return (
     <ReduxProvider>
       <FavoritesProvider>
-        <MainNav />
-        {children}
-        <ConditionalFooter />
+        <CreditsProvider>
+          <MainNav />
+          {children}
+          <ConditionalFooter />
+        </CreditsProvider>
       </FavoritesProvider>
     </ReduxProvider>
   );

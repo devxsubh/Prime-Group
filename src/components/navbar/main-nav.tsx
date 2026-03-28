@@ -16,11 +16,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import MobileNav from "./mobile-nav";
 import ScrollProgress from "../ui/scroll-progress";
-import { Heart, User, Settings, LogOut } from "lucide-react";
+import { Heart, User, Settings, LogOut, Coins } from "lucide-react";
 import { useFavorites } from "@/context/favorites-context";
 import { useAuth } from "@/components/hooks/useAuth";
 import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
+import { useCredits } from "@/context/credits-context";
 
 const SCROLL_THRESHOLD = 80;
 const NAV_BG_OPAQUE = "rgba(10, 25, 47, 0.95)";
@@ -28,6 +29,7 @@ const NAV_BG_OPAQUE = "rgba(10, 25, 47, 0.95)";
 
 export default function MainNav() {
    const { favoritesCount } = useFavorites();
+   const { credits } = useCredits();
    const { user, signOut } = useAuth();
    const router = useRouter();
    const pathname = usePathname();
@@ -180,6 +182,22 @@ export default function MainNav() {
                       style={{ backgroundColor: "rgba(15, 25, 55, 0.95)", backdropFilter: "blur(16px)" }}
                     >
                       <div className="space-y-2">
+                        {/* Credits Balance */}
+                        <div className="flex items-center justify-between px-4 py-3 rounded-lg" style={{ backgroundColor: 'rgba(212, 175, 55, 0.1)' }}>
+                          <div className="flex items-center gap-2">
+                            <Coins className="h-4 w-4" style={{ color: 'var(--accent-gold)' }} />
+                            <span className="text-sm font-semibold text-white">{credits}</span>
+                            <span className="text-xs text-white/60">credits</span>
+                          </div>
+                          <Link
+                            href="/checkout"
+                            className="text-xs font-semibold px-2.5 py-1 rounded-full transition-all duration-200 hover:opacity-80"
+                            style={{ backgroundColor: 'var(--accent-gold)', color: 'var(--primary-blue)' }}
+                          >
+                            Buy
+                          </Link>
+                        </div>
+                        <div className="my-1 h-px bg-white/10" />
                         <Link
                           href="/profile"
                           className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-colors duration-200"

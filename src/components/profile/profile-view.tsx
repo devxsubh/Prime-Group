@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import {
   Calendar,
@@ -20,6 +20,9 @@ import {
 } from "lucide-react";
 import { EditProfileForm } from "@/components/profile/edit-profile-form";
 import { Button } from "@/components/ui/button";
+import { useCredits } from "@/context/credits-context";
+import Link from "next/link";
+import { Coins, Loader2, Mail, Unlock } from "lucide-react";
 
 export interface ProfilePhoto {
   id: string;
@@ -91,6 +94,8 @@ export interface ProfileViewProps {
   preferences: PartnerPreferences | null;
   isOwnProfile?: boolean;
   userId?: string;
+  currentUserId?: string;
+  unlockedProfileIds?: string[];
 }
 
 function formatAge(dob: string): number {
@@ -142,6 +147,8 @@ export function ProfileView({
   preferences,
   isOwnProfile,
   userId,
+  currentUserId,
+  unlockedProfileIds = [],
 }: ProfileViewProps) {
   const age = formatAge(profile.date_of_birth);
   const location = [profile.city, profile.state, profile.country].filter(Boolean).join(", ");
@@ -151,6 +158,17 @@ export function ProfileView({
   const [isEditing, setIsEditing] = useState(false);
   const [enlargedPhotoIndex, setEnlargedPhotoIndex] = useState<number | null>(null);
   const displayPhoto = sortedPhotos[selectedPhotoIndex] ?? primaryPhoto ?? sortedPhotos[0];
+
+  // Credit unlock state
+  const { credits, spendCredits, refreshCredits } = useCredits();
+  const [isUnlocked, setIsUnlocked] = useState(unlockedProfileIds.includes(profile.id));
+  const [unlocking, setUnlocking] = useState(false);
+  const [unlockError, setUnlockError] = useState<string | null>(null);
+  const [unlockedContact, setUnlockedContact] = useState<{
+    contact_number?: string | null;
+    contact_address?: string | null;
+    email?: string | null;
+  } | null>(null);
 
   useEffect(() => {
     if (enlargedPhotoIndex !== null) {
@@ -168,6 +186,43 @@ export function ProfileView({
   const showOccupation = true;
   const showFamily = true;
   const showLocation = true;
+
+  // Handle unlock
+  const handleUnlock = useCallback(async () => {
+    if (isUnlocked || unlocking) return;
+    setUnlocking(true);
+    setUnlockError(null);
+    try {
+      const res = await fetch("/api/credits/unlock", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ profile_id: profile.id }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        if (res.status === 402) {
+          setUnlockError("Not enough credits. Please buy more credits.");
+        } else {
+          setUnlockError(data.error || "Failed to unlock");
+        }
+        return;
+      }
+      setIsUnlocked(true);
+      setUnlockedContact({
+        contact_number: data.contact_number,
+        contact_address: data.contact_address,
+        email: data.email,
+      });
+      if (!data.already_unlocked) {
+        spendCredits(1);
+      }
+      refreshCredits();
+    } catch {
+      setUnlockError("Something went wrong");
+    } finally {
+      setUnlocking(false);
+    }
+  }, [isUnlocked, unlocking, profile.id, spendCredits, refreshCredits]);
 
   if (isEditing && userId) {
     return (
@@ -245,29 +300,78 @@ export function ProfileView({
           
           {/* Quick Contact & Photos Toggle */}
           <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center md:justify-start gap-4 mt-auto">
-            {(profile.contact_address || profile.contact_number) && (
+            {/* Contact Info Section */}
+            {isOwnProfile ? (
+              /* Own profile: show contact info directly */
               <div className="flex flex-wrap justify-center sm:justify-start gap-3">
                 {profile.contact_number && (
-                  isOwnProfile ? (
-                    <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--primary-blue)]/15 bg-blue-50/40 text-sm font-semibold text-[var(--primary-blue)]">
-                      <Phone className="w-4 h-4 text-[var(--accent-gold)]" />
-                      {profile.contact_number}
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 bg-gray-50 text-sm font-medium text-gray-500">
-                      <Lock className="w-4 h-4 text-gray-400" />
-                      Subscribe for contact
-                    </div>
-                  )
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--primary-blue)]/15 bg-blue-50/40 text-sm font-semibold text-[var(--primary-blue)]">
+                    <Phone className="w-4 h-4 text-[var(--accent-gold)]" />
+                    {profile.contact_number}
+                  </div>
                 )}
                 {profile.contact_address && (
-                  isOwnProfile ? (
-                     <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--primary-blue)]/15 bg-blue-50/40 text-sm font-semibold text-[var(--primary-blue)]">
-                      <Home className="w-4 h-4 text-[var(--accent-gold)]" />
-                      {profile.contact_address}
-                    </div>
-                  ) : null
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--primary-blue)]/15 bg-blue-50/40 text-sm font-semibold text-[var(--primary-blue)]">
+                    <Home className="w-4 h-4 text-[var(--accent-gold)]" />
+                    {profile.contact_address}
+                  </div>
                 )}
+              </div>
+            ) : isUnlocked ? (
+              /* Unlocked: show revealed contact info */
+              <div className="flex flex-wrap justify-center sm:justify-start gap-3">
+                {(unlockedContact?.contact_number || profile.contact_number) && (
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-green-200 bg-green-50/60 text-sm font-semibold text-green-800">
+                    <Phone className="w-4 h-4 text-green-600" />
+                    {unlockedContact?.contact_number || profile.contact_number}
+                  </div>
+                )}
+                {(unlockedContact?.contact_address || profile.contact_address) && (
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-green-200 bg-green-50/60 text-sm font-semibold text-green-800">
+                    <Home className="w-4 h-4 text-green-600" />
+                    {unlockedContact?.contact_address || profile.contact_address}
+                  </div>
+                )}
+                {unlockedContact?.email && (
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-green-200 bg-green-50/60 text-sm font-semibold text-green-800">
+                    <Mail className="w-4 h-4 text-green-600" />
+                    {unlockedContact.email}
+                  </div>
+                )}
+              </div>
+            ) : currentUserId ? (
+              /* Not unlocked yet: show unlock button */
+              <div className="flex flex-col sm:flex-row items-center gap-3">
+                <Button
+                  onClick={handleUnlock}
+                  disabled={unlocking}
+                  className="rounded-full px-6 py-2.5 font-montserrat font-semibold transition-all duration-300 hover:scale-105 hover:shadow-xl border-none gap-2"
+                  style={{ backgroundColor: 'var(--accent-gold)', color: 'var(--primary-blue)' }}
+                >
+                  {unlocking ? (
+                    <><Loader2 className="w-4 h-4 animate-spin" /> Unlocking…</>
+                  ) : (
+                    <><Unlock className="w-4 h-4" /> Unlock Contact · 1 Credit</>
+                  )}
+                </Button>
+                <div className="flex items-center gap-2 text-sm font-montserrat" style={{ color: 'var(--primary-blue)', opacity: 0.7 }}>
+                  <Coins className="w-4 h-4" style={{ color: 'var(--accent-gold)' }} />
+                  {credits} credits available
+                  {credits === 0 && (
+                    <Link href="/checkout" className="ml-1 font-semibold underline" style={{ color: 'var(--accent-gold)' }}>
+                      Buy Credits
+                    </Link>
+                  )}
+                </div>
+                {unlockError && (
+                  <p className="text-sm text-red-600 font-montserrat">{unlockError}</p>
+                )}
+              </div>
+            ) : (
+              /* Not logged in */
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 bg-gray-50 text-sm font-medium text-gray-500">
+                <Lock className="w-4 h-4 text-gray-400" />
+                <Link href="/sign-in" className="underline">Sign in</Link> to unlock contact details
               </div>
             )}
             
