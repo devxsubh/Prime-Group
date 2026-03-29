@@ -35,10 +35,10 @@ export default function FeaturedProfiles({ profiles }: FeaturedProfilesProps) {
               <span className="text-[10px] font-black uppercase tracking-[0.4em] text-gold-gradient">Featured Profiles</span>
             </div>
           </div>
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-outfit font-black mb-4 text-center text-gold-gradient tracking-tighter" style={{ textShadow: "2px 2px 4px rgba(0, 0, 0, 0.15)" }}>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-outfit font-black mb-3 sm:mb-4 text-center text-gold-gradient tracking-tighter px-2" style={{ textShadow: "2px 2px 4px rgba(0, 0, 0, 0.15)" }}>
             Find Your Perfect Match
           </h2>
-          <p className="text-lg sm:text-xl font-general font-medium max-w-2xl mx-auto text-center" style={{ color: "var(--primary-blue)" }}>
+          <p className="text-base sm:text-lg md:text-xl font-general font-medium max-w-2xl mx-auto text-center px-2" style={{ color: "var(--primary-blue)" }}>
             Discover our handpicked profiles of accomplished individuals looking for their life partner
           </p>
         </motion.div>

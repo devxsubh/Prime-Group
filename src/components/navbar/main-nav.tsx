@@ -55,7 +55,7 @@ export default function MainNav() {
   const navLinkClass = (href: string) => {
     const active = navHrefIsActive(pathname, href);
     return cn(
-      "relative rounded-full px-4 py-2.5 text-[15px] font-semibold font-general tracking-wide transition-all duration-200",
+      "relative rounded-full px-3 py-2 sm:px-4 sm:py-2.5 text-sm lg:text-[15px] font-semibold font-general tracking-wide transition-all duration-200",
       active
         ? "bg-gold-gradient text-[#001a33] shadow-[0_2px_14px_rgba(226,194,133,0.35)]"
         : "text-white hover:text-[#E2C285] hover:bg-[#E2C285]/12"

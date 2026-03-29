@@ -88,7 +88,7 @@ export default function CheckoutHero({ subtitle }: CheckoutHeroProps) {
           </p>
           <h1
             id="checkout-hero-heading"
-            className="font-outfit font-black text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-[1.08] tracking-tight"
+            className="font-outfit font-black text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl leading-[1.1] sm:leading-[1.08] tracking-tight"
           >
             Buy{" "}
             <span className="text-gold-gradient bg-clip-text text-transparent">credits</span>

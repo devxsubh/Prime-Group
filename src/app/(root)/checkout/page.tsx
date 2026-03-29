@@ -288,7 +288,7 @@ function CheckoutContent() {
                 return (
                   <div
                     key={p.id}
-                    className={`relative rounded-[2rem] p-7 sm:p-8 flex flex-col transition-all duration-300 hover:-translate-y-1 ${
+                    className={`relative rounded-[1.5rem] sm:rounded-[2rem] p-5 sm:p-7 md:p-8 flex flex-col transition-all duration-300 hover:-translate-y-1 ${
                       isPopular ? "ring-2 ring-[#E2C285]/70 shadow-[0_20px_50px_rgba(226,194,133,0.2)]" : "shadow-[0_12px_40px_rgba(0,51,102,0.08)] hover:shadow-[0_16px_48px_rgba(0,51,102,0.12)]"
                     }`}
                     style={{
@@ -313,11 +313,11 @@ function CheckoutContent() {
 
                     <div className="flex items-baseline gap-2 mb-2">
                       <Coins className="w-6 h-6 text-[#E2C285] shrink-0" />
-                      <span className="text-3xl font-outfit font-black text-[#003366]">{(p.credits ?? 0).toLocaleString()}</span>
+                      <span className="text-2xl sm:text-3xl font-outfit font-black text-[#003366] tabular-nums">{(p.credits ?? 0).toLocaleString()}</span>
                       <span className="text-sm font-montserrat font-medium text-[#003366]/65">credits</span>
                     </div>
 
-                    <p className="font-outfit text-2xl font-bold text-[#003366] mb-1">₹{p.price_inr.toLocaleString()}</p>
+                    <p className="font-outfit text-xl sm:text-2xl font-bold text-[#003366] mb-1 tabular-nums">₹{p.price_inr.toLocaleString()}</p>
 
                     {p.description && (
                       <p className="text-sm font-montserrat text-[#003366]/70 mb-6 flex-1 leading-relaxed">{p.description}</p>
@@ -387,7 +387,7 @@ function CheckoutContent() {
                   <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#003366]/45 font-general mb-1">
                     Your pack
                   </p>
-                  <h2 className="font-outfit text-2xl sm:text-3xl font-black text-[#003366] tracking-tight">
+                  <h2 className="font-outfit text-xl sm:text-2xl md:text-3xl font-black text-[#003366] tracking-tight">
                     {plan?.name ?? "Plan"}
                   </h2>
                 </div>
@@ -400,7 +400,7 @@ function CheckoutContent() {
               <div className="rounded-2xl bg-[#003366]/[0.04] border border-[#003366]/10 p-6 mb-8">
                 <div className="flex flex-wrap items-end gap-2 gap-y-1">
                   <IndianRupee className="w-7 h-7 text-[#E2C285] mb-1" aria-hidden />
-                  <span className="text-4xl font-outfit font-black text-[#003366] tabular-nums">
+                  <span className="text-2xl sm:text-3xl md:text-4xl font-outfit font-black text-[#003366] tabular-nums">
                     {plan?.price_inr?.toLocaleString() ?? 0}
                   </span>
                   <span className="text-lg font-montserrat font-semibold text-[#003366]/55 pb-1">INR</span>

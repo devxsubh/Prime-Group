@@ -79,14 +79,14 @@ export default function BeverageLanding() {
 
             {/* Middle Branding */}
             <div className="text-center md:pt-10">
-              <h2 className="text-4xl md:text-7xl lg:text-8xl font-black font-outfit text-gold-gradient tracking-tighter leading-[0.9]">
+              <h2 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-black font-outfit text-gold-gradient tracking-tighter leading-[0.95] sm:leading-[0.9]">
                 YOUR LIFE<br />PARTNER
               </h2>
             </div>
 
             {/* Bottom CTA Section */}
             <div className="flex flex-col items-center space-y-8">
-              <p className="text-lg md:text-xl text-center max-w-2xl font-general font-medium leading-relaxed opacity-70" style={{ color: 'var(--primary-blue)' }}>
+              <p className="text-base sm:text-lg md:text-xl text-center max-w-2xl font-general font-medium leading-relaxed opacity-70 px-1" style={{ color: 'var(--primary-blue)' }}>
                 Connecting Hearts, Building Families — your trusted companion in the journey of finding the perfect match through verified profiles.
               </p>
               

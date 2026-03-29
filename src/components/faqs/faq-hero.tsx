@@ -85,7 +85,7 @@ export default function FaqHero({
           </p>
           <h1
             id="faq-hero-heading"
-            className="font-outfit font-black text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.05] tracking-tight"
+            className="font-outfit font-black text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-[1.08] sm:leading-[1.05] tracking-tight"
           >
             Questions{" "}
             <span className="text-gold-gradient bg-clip-text text-transparent">&amp; answers</span>

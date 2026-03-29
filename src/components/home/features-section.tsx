@@ -83,7 +83,7 @@ export default function FeaturesSection() {
       {/* Content */}
       <div className="relative z-10">
         <div className="mb-16 relative">
-          <h1 className="text-4xl md:text-6xl tracking-tighter font-light text-left mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Features</h1>
+          <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl tracking-tighter font-light text-left mb-3 sm:mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Features</h1>
           <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
           <p className="text-base md:text-lg text-gray-600 mt-4 max-w-lg">Elevate your shopping experience with our premium features designed for your convenience.</p>
         </div>

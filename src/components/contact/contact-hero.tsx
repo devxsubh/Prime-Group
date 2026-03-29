@@ -71,12 +71,12 @@ export default function ContactHero() {
           </p>
           <h1
             id="contact-hero-heading"
-            className="font-outfit font-black text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.05] tracking-tight"
+            className="font-outfit font-black text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-[1.08] sm:leading-[1.05] tracking-tight"
           >
             Let&apos;s{" "}
             <span className="text-gold-gradient bg-clip-text text-transparent">connect</span>
           </h1>
-          <p className="mt-5 text-base sm:text-lg md:text-xl text-white/75 font-general font-medium max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+          <p className="mt-4 sm:mt-5 text-sm sm:text-base md:text-lg lg:text-xl text-white/75 font-general font-medium max-w-2xl mx-auto lg:mx-0 leading-relaxed">
             Questions about profiles, privacy, or your account? Send us a message—we typically reply
             within one to two business days.
           </p>

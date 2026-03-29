@@ -76,10 +76,10 @@ export default function SubscriptionPlan() {
               Credits
             </span>
           </div>
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-outfit font-black mb-4 text-gold-gradient tracking-tighter" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.15)' }}>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-outfit font-black mb-3 sm:mb-4 text-gold-gradient tracking-tighter px-2" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.15)' }}>
             Buy Credits
           </h2>
-          <p className="text-lg sm:text-xl font-general font-medium max-w-2xl mx-auto" style={{ color: 'var(--primary-blue)', opacity: 0.8 }}>
+          <p className="text-base sm:text-lg md:text-xl font-general font-medium max-w-2xl mx-auto px-2" style={{ color: 'var(--primary-blue)', opacity: 0.8 }}>
             Purchase credits to instantly unlock contact details — phone, address & email — on any profile
           </p>
         </motion.div>

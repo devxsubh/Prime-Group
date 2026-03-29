@@ -149,7 +149,7 @@ function ProfileMatchCard({
       <div className="p-5 sm:p-6 space-y-3 font-general">
         <div className="flex justify-between items-end gap-2">
           <div className="space-y-0.5 min-w-0">
-            <h3 className="text-xl sm:text-2xl font-outfit font-black text-[#003366] tracking-tight truncate">
+            <h3 className="text-lg sm:text-xl font-outfit font-black text-[#003366] tracking-tight truncate">
               {profile.name}, {profile.age}
             </h3>
             <p className="text-[9px] sm:text-[10px] text-[#003366]/50 uppercase tracking-[0.18em] font-black line-clamp-2">
@@ -267,23 +267,23 @@ const GuidedHero = ({ featuredProfiles }: GuidedHeroProps) => {
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#E2C285]/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-900/10 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2" />
 
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div className="space-y-10">
+      <div className="container mx-auto px-4 sm:px-6 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 sm:gap-16 items-center">
+          <div className="space-y-6 sm:space-y-10">
             <motion.div
               initial={reduceMotion ? false : { opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={reduceMotion ? instant : { duration: 0.8 }}
               className="space-y-4"
             >
-              <h1 className="text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-outfit font-black text-white leading-[0.9] tracking-tighter">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-outfit font-black text-white leading-[1.08] sm:leading-[1.05] md:leading-[1.02] tracking-tight max-w-3xl">
                 Where Families Connect, <br />
                 <span className="text-gold-gradient bg-clip-text text-transparent">Stories Begin.</span>
               </h1>
-              <p className="text-xl text-white/70 font-general font-medium max-w-lg leading-relaxed mt-6">
+              <p className="text-sm sm:text-base md:text-lg text-white/70 font-general font-medium max-w-lg leading-relaxed mt-3 sm:mt-5">
                 Let’s find someone meant for you. A journey of trust, tradition, and meaningful beginnings.
               </p>
-              <p className="text-sm text-white/55 font-general max-w-lg leading-relaxed border-l-2 border-[#E2C285]/50 pl-4">
+              <p className="text-xs sm:text-sm text-white/55 font-general max-w-lg leading-relaxed border-l-2 border-[#E2C285]/50 pl-3 sm:pl-4">
                 Trusted by families across India. Profiles are identity-verified — your privacy and safety come first.
               </p>
             </motion.div>
@@ -292,7 +292,7 @@ const GuidedHero = ({ featuredProfiles }: GuidedHeroProps) => {
               initial={reduceMotion ? false : { opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={reduceMotion ? instant : { delay: 0.3, duration: 0.8 }}
-              className="bg-[#1a3a5a]/80 backdrop-blur-xl p-8 rounded-[2.5rem] border border-[#E2C285]/20 shadow-2xl relative group"
+              className="bg-[#1a3a5a]/80 backdrop-blur-xl p-5 sm:p-8 rounded-[1.75rem] sm:rounded-[2.5rem] border border-[#E2C285]/20 shadow-2xl relative group"
             >
               <div className="absolute -top-3 left-8 bg-[#E2C285] text-[#003366] px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-lg font-general">
                 Start Your Journey
@@ -374,7 +374,7 @@ const GuidedHero = ({ featuredProfiles }: GuidedHeroProps) => {
                 <Button
                   type="button"
                   onClick={handleFindMatches}
-                  className="w-full h-16 bg-gold-gradient hover:scale-[1.02] text-[#001a33] rounded-[1.5rem] font-bold text-lg shadow-[0_0_30px_rgba(226,194,133,0.2)] hover:shadow-[0_0_40px_rgba(226,194,133,0.4)] transition-all duration-300 group border-none"
+                  className="w-full h-14 sm:h-16 bg-gold-gradient hover:scale-[1.02] text-[#001a33] rounded-[1.5rem] font-bold text-base sm:text-lg shadow-[0_0_30px_rgba(226,194,133,0.2)] hover:shadow-[0_0_40px_rgba(226,194,133,0.4)] transition-all duration-300 group border-none"
                 >
                   Find Matches <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Button>

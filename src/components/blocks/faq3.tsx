@@ -92,10 +92,10 @@ const Faq3 = ({
                 Help Center
               </span>
             </div>
-            <h2 className="mb-4 text-4xl sm:text-5xl md:text-6xl font-outfit font-black text-gold-gradient tracking-tighter" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.15)' }}>
+            <h2 className="mb-3 sm:mb-4 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-outfit font-black text-gold-gradient tracking-tighter px-1" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.15)' }}>
               {heading}
             </h2>
-            <p className="text-lg sm:text-xl font-general font-medium" style={{ color: 'var(--primary-blue)', opacity: 0.8 }}>{description}</p>
+            <p className="text-base sm:text-lg md:text-xl font-general font-medium px-1" style={{ color: 'var(--primary-blue)', opacity: 0.8 }}>{description}</p>
           </div>
         )}
         {list.length === 0 ? (

@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export function SoftCTASection() {
   return (
-    <section className="w-full py-40 px-4 bg-[#003366] relative overflow-hidden text-white">
+    <section className="w-full py-20 sm:py-28 md:py-40 px-4 bg-[#003366] relative overflow-hidden text-white">
       {/* Decorative patterns strictly following footer style */}
       <div className="absolute top-0 right-0 w-full h-full opacity-5 pointer-events-none">
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
@@ -14,24 +14,24 @@ export function SoftCTASection() {
       </div>
 
       <div className="max-w-7xl mx-auto relative z-10 text-center">
-        <h2 className="font-playfair-display text-5xl md:text-8xl font-black mb-12 animate-in slide-in-from-bottom-6 duration-1000">
+        <h2 className="font-playfair-display text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-black mb-8 sm:mb-12 px-1 leading-tight animate-in slide-in-from-bottom-6 duration-1000">
            Ready to <span className="text-gold-gradient bg-clip-text text-transparent">Find Your Story?</span>
         </h2>
-        <p className="text-2xl text-white/70 max-w-3xl mx-auto mb-20 font-light leading-relaxed">
+        <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/70 max-w-3xl mx-auto mb-12 sm:mb-16 md:mb-20 font-light leading-relaxed px-1">
           The journey of a thousand miles begins with a single match. Don&apos;t leave your happiness to chance when you can find it with Prime Group.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-10">
           <Link 
             href="/onboarding"
-            className="w-full sm:w-auto px-16 py-7 bg-gold-gradient text-[#003366] rounded-full font-black text-xl hover:scale-105 transition-all shadow-2xl shadow-[#E2C285]/20 group"
+            className="w-full sm:w-auto px-8 sm:px-16 py-5 sm:py-7 bg-gold-gradient text-[#003366] rounded-full font-black text-base sm:text-lg md:text-xl hover:scale-105 transition-all shadow-2xl shadow-[#E2C285]/20 group"
           >
             Create Your Profile
             <span className="ml-4 group-hover:translate-x-2 transition-transform inline-block">✨</span>
           </Link>
           <Link 
             href="/discover"
-            className="w-full sm:w-auto px-16 py-7 border-2 border-[#E2C285] text-white rounded-full font-black text-xl hover:bg-[#E2C285]/10 transition-all group"
+            className="w-full sm:w-auto px-8 sm:px-16 py-5 sm:py-7 border-2 border-[#E2C285] text-white rounded-full font-black text-base sm:text-lg md:text-xl hover:bg-[#E2C285]/10 transition-all group"
           >
             Browse matches
             <span className="ml-4 group-hover:translate-x-2 transition-transform inline-block">🔍</span>

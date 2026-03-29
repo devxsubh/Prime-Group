@@ -46,10 +46,10 @@ export default async function FavoritesPage() {
               My Favorites
             </span>
           </div>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-playfair-display font-bold mb-4 text-gold-gradient" style={{ textShadow: "2px 2px 4px rgba(0, 0, 0, 0.15)" }}>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-playfair-display font-bold mb-3 sm:mb-4 text-gold-gradient px-2" style={{ textShadow: "2px 2px 4px rgba(0, 0, 0, 0.15)" }}>
             {profiles.length === 0 ? "No Favorites Yet" : "Your Favorite Profiles"}
           </h1>
-          <p className="text-lg sm:text-xl font-montserrat max-w-2xl mx-auto" style={{ color: "var(--primary-blue)" }}>
+          <p className="text-base sm:text-lg md:text-xl font-montserrat max-w-2xl mx-auto px-2" style={{ color: "var(--primary-blue)" }}>
             {profiles.length === 0
               ? "Start exploring profiles and add them to your favorites to see them here."
               : `You have ${profiles.length} ${profiles.length === 1 ? "profile" : "profiles"} in your favorites.`}

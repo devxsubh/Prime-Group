@@ -85,6 +85,21 @@ body {
   * {
     @apply border-border;
   }
+  html {
+    -webkit-text-size-adjust: 100%;
+    /* Default slightly under 16px so headings/body feel less huge on laptop screens */
+    font-size: 15px;
+  }
+  @media (max-width: 639px) {
+    html {
+      font-size: 14px;
+    }
+  }
+  @media (min-width: 1536px) {
+    html {
+      font-size: 16px;
+    }
+  }
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-albert-sans), system-ui, sans-serif;
@@ -247,7 +262,7 @@ body {
   }
 
   .hero-heading {
-    @apply uppercase font-zentry font-black text-5xl sm:right-10 sm:text-7xl md:text-9xl lg:text-[12rem];
+    @apply uppercase font-zentry font-black text-4xl sm:right-10 sm:text-6xl md:text-8xl lg:text-[12rem];
   }
 
   .about-subtext {
@@ -259,7 +274,7 @@ body {
   }
 
   .animated-title {
-    @apply flex flex-col gap-1 text-7xl uppercase leading-[.8] text-white sm:px-32 md:text-[6rem];
+    @apply flex flex-col gap-1 text-3xl sm:text-5xl md:text-7xl uppercase leading-[.8] text-white sm:px-32 lg:text-[6rem];
   }
 
   .animated-word {
@@ -278,7 +293,7 @@ body {
   }
 
   .bento-title {
-    @apply uppercase md:text-6xl text-4xl font-black font-zentry;
+    @apply uppercase text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black font-zentry;
   }
 
   .story-img-container {

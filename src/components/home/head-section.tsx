@@ -90,10 +90,10 @@ export default function HeadSection() {
               Gallery
             </span>
           </div>
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-playfair-display font-bold text-gold-gradient" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.15)' }}>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-playfair-display font-bold text-gold-gradient px-2" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.15)' }}>
           {heading.title}
           </h2>
-          <p className="text-lg sm:text-xl font-montserrat max-w-3xl mx-auto mt-4" style={{ color: 'var(--primary-blue)' }}>
+          <p className="text-base sm:text-lg md:text-xl font-montserrat max-w-3xl mx-auto mt-3 sm:mt-4 px-2" style={{ color: 'var(--primary-blue)' }}>
             {heading.subtitle}
           </p>
         </motion.div>

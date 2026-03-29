@@ -51,7 +51,7 @@ export default function MobileNav() {
 
           <nav className="flex flex-col gap-4">
             <Link href="/" className="flex items-center" onClick={handleLinkClick}>
-              <span className="text-xl font-bold">Prime Group</span>
+              <span className="text-lg sm:text-xl font-bold">Prime Group</span>
             </Link>
             <Separator className="my-2" />
             <Link href="/" className="block py-2 text-lg font-semibold" onClick={handleLinkClick}>
@@ -76,7 +76,7 @@ export default function MobileNav() {
                 <div className="flex items-center justify-between py-2">
                   <div className="flex items-center gap-2">
                     <Coins className="h-5 w-5" style={{ color: 'var(--accent-gold)' }} />
-                    <span className="text-lg font-semibold">{credits} credits</span>
+                    <span className="text-base font-semibold">{credits} credits</span>
                   </div>
                   <Link
                     href="/checkout"

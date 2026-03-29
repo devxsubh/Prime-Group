@@ -15,18 +15,18 @@ export function BlogHeroSection({ featuredPost }: BlogHeroSectionProps) {
   if (!featuredPost) return null;
 
   return (
-    <section className="relative w-full pt-40 pb-24 px-4 overflow-hidden bg-white">
+    <section className="relative w-full pt-28 pb-16 sm:pt-36 sm:pb-20 md:pt-40 md:pb-24 px-4 overflow-hidden bg-white">
       {/* Decorative background elements using strict footer colors */}
       <div className="absolute top-0 right-0 w-1/3 h-full bg-[#003366]/5 -skew-x-12 transform translate-x-20 z-0" />
       <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#E2C285]/10 rounded-full blur-3xl -translate-x-32 translate-y-32 z-0" />
 
       <div className="max-w-7xl mx-auto relative z-10">
-        <div className="text-center mb-20 animate-in fade-in slide-in-from-top-4 duration-700">
-          <h1 className="font-outfit text-5xl md:text-8xl lg:text-9xl font-black text-[#003366] mb-8 leading-[0.9] tracking-tighter">
+        <div className="text-center mb-12 sm:mb-16 md:mb-20 animate-in fade-in slide-in-from-top-4 duration-700">
+          <h1 className="font-outfit text-3xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-black text-[#003366] mb-5 sm:mb-8 leading-[1.02] sm:leading-[0.95] md:leading-[0.9] tracking-tighter px-1">
             Real Stories. <span className="text-gold-gradient bg-clip-text text-transparent">Real Matches.</span> <br />
             Real Love.
           </h1>
-          <p className="text-xl text-gray-700 max-w-2xl mx-auto mb-10 font-general font-medium leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl text-gray-700 max-w-2xl mx-auto mb-8 sm:mb-10 font-general font-medium leading-relaxed px-1">
             Discover how thousands of families found their perfect life partners through Prime Group's trusted platform.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-6">
@@ -74,14 +74,14 @@ export function BlogHeroSection({ featuredPost }: BlogHeroSectionProps) {
               </span>
             </div>
           </div>
-          <div className="lg:w-1/2 p-12 md:p-20 flex flex-col justify-center bg-white relative">
+          <div className="lg:w-1/2 p-6 sm:p-10 md:p-16 lg:p-20 flex flex-col justify-center bg-white relative">
             {/* Corner decoration */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-[#E2C285]/5 rounded-bl-[100%] pointer-events-none" />
 
             <span className="text-[#E2C285] font-black text-[10px] uppercase tracking-[0.3em] mb-6 font-general">
               {featuredPost.category}
             </span>
-            <h2 className="font-playfair-display text-4xl md:text-5xl font-black text-[#003366] mb-8 leading-tight">
+            <h2 className="font-playfair-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-[#003366] mb-5 sm:mb-8 leading-tight">
               {featuredPost.title}
             </h2>
             <p className="text-gray-600 text-lg leading-relaxed mb-10 line-clamp-4 font-general font-normal">

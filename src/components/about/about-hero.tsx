@@ -72,7 +72,7 @@ export default function AboutHero() {
           </p>
           <h1
             id="about-hero-heading"
-            className="font-outfit font-black text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.05] tracking-tight"
+            className="font-outfit font-black text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-[1.08] sm:leading-[1.05] tracking-tight"
           >
             About{" "}
             <span className="text-gold-gradient bg-clip-text text-transparent">
@@ -81,7 +81,7 @@ export default function AboutHero() {
             <br className="hidden sm:block" />
             <span className="sm:ml-2">Matrimony</span>
           </h1>
-          <p className="mt-6 text-lg md:text-xl text-white/75 font-general font-medium max-w-2xl md:mx-0 mx-auto leading-relaxed">
+          <p className="mt-5 sm:mt-6 text-base sm:text-lg md:text-xl text-white/75 font-general font-medium max-w-2xl md:mx-0 mx-auto leading-relaxed">
             Where traditional values meet a secure, modern experience—so
             families and individuals can connect with confidence.
           </p>

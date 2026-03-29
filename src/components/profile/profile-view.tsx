@@ -277,7 +277,7 @@ export function ProfileView({
 
         {/* Info */}
         <div className="flex-1 text-center md:text-left flex flex-col justify-center h-full pt-0 md:pt-4">
-          <h1 className="font-playfair-display text-4xl sm:text-5xl lg:text-6xl font-bold text-[var(--primary-blue)] mb-4 tracking-tight">
+          <h1 className="font-playfair-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[var(--primary-blue)] mb-3 sm:mb-4 tracking-tight">
             {profile.full_name}
           </h1>
           

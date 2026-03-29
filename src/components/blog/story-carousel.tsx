@@ -22,7 +22,7 @@ export function StoryCarousel() {
         <div className="flex justify-between items-end mb-20">
           <div className="flex-1">
              <span className="text-[#E2C285] text-[10px] font-black uppercase tracking-[0.5em] mb-4 block animate-pulse">Testimonials</span>
-             <h2 className="font-playfair-display text-4xl md:text-6xl font-bold text-[#003366] leading-tight max-w-2xl">What Our Couples Say</h2>
+             <h2 className="font-playfair-display text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold text-[#003366] leading-tight max-w-2xl">What Our Couples Say</h2>
           </div>
           <div className="hidden md:flex gap-4">
             <button className="w-14 h-14 rounded-full border-2 border-[#E2C285]/30 flex items-center justify-center hover:bg-[#003366] hover:text-white hover:border-[#003366] transition-all duration-300 transform hover:scale-110 active:scale-90group">
@@ -36,7 +36,7 @@ export function StoryCarousel() {
 
         <div className="flex gap-10 overflow-x-auto pb-12 snap-x no-scrollbar scroll-smooth">
           {stories.map((story) => (
-            <div key={story.id} className="min-w-[350px] md:min-w-[500px] bg-white p-12 rounded-[3rem] snap-center flex flex-col justify-between border-2 border-gray-50 shadow-2xl hover:shadow-[#003366]/5 transition-all duration-500 relative group overflow-hidden">
+            <div key={story.id} className="min-w-[min(100%,320px)] sm:min-w-[350px] md:min-w-[500px] bg-white p-6 sm:p-10 md:p-12 rounded-[2rem] sm:rounded-[3rem] snap-center flex flex-col justify-between border-2 border-gray-50 shadow-2xl hover:shadow-[#003366]/5 transition-all duration-500 relative group overflow-hidden">
                {/* Pattern Overlay */}
               <div className="absolute bottom-0 right-0 w-40 h-40 bg-[#E2C285]/5 rounded-tl-full pointer-events-none transform translate-x-10 translate-y-10 group-hover:scale-150 transition-transform duration-1000" />
               

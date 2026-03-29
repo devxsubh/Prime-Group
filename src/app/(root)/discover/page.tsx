@@ -52,8 +52,8 @@ export default async function DiscoverPage({
           <div className="container mx-auto px-6 sm:px-10 lg:px-16">
             <div className="max-w-xl">
               <h1
-                className="font-playfair-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl
-                font-bold leading-tight text-gold-gradient mb-4 mt-20"
+                className="font-playfair-display text-2xl sm:text-3xl md:text-5xl lg:text-6xl
+                font-bold leading-tight text-gold-gradient mb-3 sm:mb-4 mt-16 sm:mt-20"
               >
                 Discover Your Forever
               </h1>
@@ -78,12 +78,12 @@ export default async function DiscoverPage({
               </span>
             </div>
             <h2
-              className="text-4xl sm:text-5xl md:text-6xl font-playfair-display font-bold mb-4 text-gold-gradient"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-playfair-display font-bold mb-3 sm:mb-4 text-gold-gradient px-2"
               style={{ textShadow: "2px 2px 4px rgba(0, 0, 0, 0.15)" }}
             >
               Find Your Perfect Match
             </h2>
-            <p className="text-lg sm:text-xl font-montserrat max-w-2xl mx-auto" style={{ color: "var(--primary-blue)" }}>
+            <p className="text-base sm:text-lg md:text-xl font-montserrat max-w-2xl mx-auto px-2" style={{ color: "var(--primary-blue)" }}>
               Discover our handpicked profiles of accomplished individuals looking for their life partner.
             </p>
           </div>

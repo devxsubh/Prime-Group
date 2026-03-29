@@ -21,14 +21,14 @@ export function TrustProofSection() {
       </div>
 
       <div className="max-w-7xl mx-auto flex flex-col items-center relative z-10">
-        <h2 className="font-playfair-display text-4xl md:text-7xl font-bold text-white mb-20 text-center leading-[1.1] animate-in fade-in slide-in-from-bottom-4 duration-1000">
+        <h2 className="font-playfair-display text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-12 sm:mb-16 md:mb-20 text-center leading-[1.12] sm:leading-[1.1] px-2 animate-in fade-in slide-in-from-bottom-4 duration-1000">
           Proof That <span className="text-gold-gradient bg-clip-text text-transparent italic">True Love</span> <br />Still Exists.
         </h2>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-12 w-full mb-24">
           {stats.map((stat) => (
             <div key={stat.label} className="text-center group p-8 border border-white/10 rounded-[2rem] hover:border-[#E2C285]/30 transition-all duration-500">
-              <p className="text-[#E2C285] text-5xl font-black mb-4 group-hover:scale-110 transition duration-300 tracking-tighter shadow-sm">
+              <p className="text-[#E2C285] text-2xl sm:text-4xl md:text-5xl font-black mb-3 sm:mb-4 group-hover:scale-110 transition duration-300 tracking-tighter shadow-sm tabular-nums">
                 {stat.value}
               </p>
               <p className="text-white/60 text-[10px] font-black uppercase tracking-[0.3em]">

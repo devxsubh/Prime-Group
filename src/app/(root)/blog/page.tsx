@@ -82,7 +82,7 @@ export default async function BlogPage({
       {/* Content Navigation & Grid */}
       <section className="max-w-7xl mx-auto px-4 py-20">
         <div className="text-center mb-12">
-          <h2 className="font-playfair-display text-4xl md:text-5xl font-bold text-[#003366]">
+          <h2 className="font-playfair-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#003366] px-2">
             {category && category !== "All" ? category : "The Prime Journal"}
           </h2>
           <div className="w-24 h-1.5 bg-[#E2C285] mx-auto mt-6 rounded-full" />
