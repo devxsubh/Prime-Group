@@ -122,7 +122,7 @@ export default function MainNav() {
             aria-label="Main navigation"
           >
             {NAV_LINKS.map(({ href, label }) => (
-              <Link key={href} href={href} className={navLinkClass(href)}>
+              <Link key={href} href={href} prefetch className={navLinkClass(href)}>
                 {label}
               </Link>
             ))}

@@ -50,23 +50,23 @@ export default function MobileNav() {
           </SheetHeader>
 
           <nav className="flex flex-col gap-4">
-            <Link href="/" className="flex items-center" onClick={handleLinkClick}>
+            <Link href="/" prefetch className="flex items-center" onClick={handleLinkClick}>
               <span className="text-lg sm:text-xl font-bold">Prime Group</span>
             </Link>
             <Separator className="my-2" />
-            <Link href="/" className="block py-2 text-lg font-semibold" onClick={handleLinkClick}>
+            <Link href="/" prefetch className="block py-2 text-lg font-semibold" onClick={handleLinkClick}>
               Home
             </Link>
-            <Link href="/discover" className="block py-2 text-lg font-semibold" onClick={handleLinkClick}>
+            <Link href="/discover" prefetch className="block py-2 text-lg font-semibold" onClick={handleLinkClick}>
               Discover
             </Link>
-            <Link href="/faqs" className="block py-2 text-lg font-semibold" onClick={handleLinkClick}>
+            <Link href="/faqs" prefetch className="block py-2 text-lg font-semibold" onClick={handleLinkClick}>
               FAQ&apos;S
             </Link>
-            <Link href="/blog" className="block py-2 text-lg font-semibold" onClick={handleLinkClick}>
+            <Link href="/blog" prefetch className="block py-2 text-lg font-semibold" onClick={handleLinkClick}>
               Blogs
             </Link>
-            <Link href="/contact-us" className="block py-2 text-lg font-semibold" onClick={handleLinkClick}>
+            <Link href="/contact-us" prefetch className="block py-2 text-lg font-semibold" onClick={handleLinkClick}>
               Contact Us
             </Link>
             <Separator className="my-2" />

@@ -18,21 +18,32 @@ const texts = [
 
 export default function BeverageLanding() {
   return (
-    <section className="w-screen relative overflow-hidden bg-white py-16" style={{ backgroundColor: 'var(--pure-white)' }}>
-      <div className="container mx-auto px-4 md:px-8 relative z-10">
-        {/* Background Text */}
-        <div className="absolute top-[-50px] left-[-20px] text-[150px] md:text-[350px] font-playfair-display font-black leading-none z-0 opacity-5 select-none pointer-events-none" style={{ color: 'var(--primary-blue)' }}>
-          CONNECT
-        </div>
-        <div className="absolute bottom-[-50px] right-[-20px] text-[150px] md:text-[350px] font-playfair-display font-black leading-none z-0 opacity-5 select-none pointer-events-none" style={{ color: 'var(--primary-blue)' }}>
-          UNITE
+    <section
+      className="relative w-full max-w-[100vw] overflow-x-clip bg-white py-20 md:py-28 lg:py-32"
+      style={{ backgroundColor: "var(--pure-white)" }}
+    >
+      <div className="container mx-auto px-4 sm:px-6 md:px-8 relative z-10 min-h-0">
+        {/* Background watermarks — kept inside section bounds so nothing is clipped */}
+        <div className="pointer-events-none absolute inset-0 z-0 select-none" aria-hidden>
+          <div
+            className="absolute top-2 sm:top-4 md:top-8 left-1 sm:left-2 md:left-4 font-playfair-display font-black leading-[0.85] opacity-[0.06] text-[clamp(3.25rem,14vw,12rem)] sm:text-[clamp(4rem,16vw,14rem)] md:text-[clamp(5rem,18vw,18rem)]"
+            style={{ color: "var(--primary-blue)" }}
+          >
+            CONNECT
+          </div>
+          <div
+            className="absolute bottom-6 sm:bottom-10 md:bottom-14 right-1 sm:right-2 md:right-4 text-right font-playfair-display font-black leading-[0.85] opacity-[0.06] text-[clamp(3.25rem,14vw,12rem)] sm:text-[clamp(4rem,16vw,14rem)] md:text-[clamp(5rem,18vw,18rem)]"
+            style={{ color: "var(--primary-blue)" }}
+          >
+            UNITE
+          </div>
         </div>
 
         {/* Main Content */}
         <div className="max-w-7xl mx-auto relative z-20">
-          <div className="flex flex-col gap-12 md:gap-20">
+          <div className="flex flex-col gap-12 md:gap-20 lg:gap-24">
             {/* Top Section */}
-            <div className="flex justify-between items-start">
+            <div className="flex justify-between items-start gap-4">
               {/* Polaroid 1 */}
               <div className="hidden md:block transform -rotate-12 bg-white p-2 shadow-2xl border-4 border-white rounded-sm">
                 <div className="relative w-[300px] h-[300px] grayscale hover:grayscale-0 transition-all duration-1000">
@@ -59,10 +70,13 @@ export default function BeverageLanding() {
               </Link>
             </div>
 
-            {/* Main Title Section */}
-            <div className="flex flex-col items-center justify-center space-y-6">
-              <div className="scale-125 md:scale-[1.8] transform-gpu">
-                <MorphingText texts={texts} className="font-playfair-display font-black text-black tracking-tighter" />
+            {/* Main Title Section — room for morph + scale so glyphs aren’t clipped */}
+            <div className="flex flex-col items-center justify-center space-y-8 py-4 md:py-8 overflow-visible">
+              <div className="scale-110 sm:scale-125 md:scale-[1.45] transform-gpu w-full max-w-full flex items-center justify-center min-h-[5.5rem] sm:min-h-[6.5rem] md:min-h-[9rem]">
+                <MorphingText
+                  texts={texts}
+                  className="font-playfair-display font-black text-black tracking-tighter !h-auto min-h-[4.5rem] sm:min-h-28 md:min-h-36 text-4xl sm:text-5xl md:text-6xl lg:text-7xl"
+                />
               </div>
               
               <div className="md:hidden transform rotate-3 bg-white p-2 shadow-xl border-4 border-white rounded-sm">
@@ -78,8 +92,8 @@ export default function BeverageLanding() {
             </div>
 
             {/* Middle Branding */}
-            <div className="text-center md:pt-10">
-              <h2 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-black font-playfair-display text-gold-gradient tracking-tighter leading-[0.95] sm:leading-[0.9]">
+            <div className="text-center md:pt-6 px-2">
+              <h2 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-black font-playfair-display text-gold-gradient tracking-tighter leading-[1.02] sm:leading-[0.98] md:leading-[0.95]">
                 YOUR LIFE<br />PARTNER
               </h2>
             </div>
@@ -101,8 +115,8 @@ export default function BeverageLanding() {
               </CoolMode>
             </div>
 
-            {/* Polaroid 3 */}
-            <div className="hidden lg:block absolute bottom-0 -right-20 transform rotate-6 bg-white p-2 shadow-2xl border-4 border-white rounded-sm">
+            {/* Polaroid 3 — inset so it isn’t cut off by overflow-x-clip */}
+            <div className="hidden lg:block absolute bottom-4 right-0 xl:-right-4 transform rotate-6 bg-white p-2 shadow-2xl border-4 border-white rounded-sm z-30">
               <div className="relative w-[320px] h-[320px] grayscale hover:grayscale-0 transition-all duration-1000">
                 <Image
                   src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=600&h=600&fit=crop"

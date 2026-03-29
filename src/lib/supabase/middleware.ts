@@ -1,7 +1,18 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+/**
+ * Only run Supabase auth in middleware where we enforce server-side rules.
+ * Calling getUser() on every navigation (including RSC/prefetch) adds a round-trip
+ * and makes in-app clicks feel slow; the browser client refreshes the session too.
+ */
 export async function updateSession(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+
+  if (!pathname.startsWith("/onboarding")) {
+    return NextResponse.next();
+  }
+
   let supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(
@@ -29,8 +40,7 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Protect onboarding: require sign-in
-  if (request.nextUrl.pathname.startsWith("/onboarding") && !user) {
+  if (!user) {
     const url = request.nextUrl.clone();
     url.pathname = "/sign-in";
     url.searchParams.set("next", request.nextUrl.pathname);
