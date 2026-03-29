@@ -41,6 +41,10 @@ export default async function DiscoverProfilePage({ params }: PageProps) {
   const { id } = await params;
   const supabase = await createClient();
 
+  const {
+    data: { user: authUser },
+  } = await supabase.auth.getUser();
+
   const { data: profile, error: profileError } = await supabase
     .from("profiles")
     .select("*")
@@ -64,6 +68,17 @@ export default async function DiscoverProfilePage({ params }: PageProps) {
     .eq("profile_id", profile.id)
     .single();
 
+  const isOwn = authUser?.id === profile.user_id;
+
+  let unlockedProfileIds: string[] = [];
+  if (authUser && !isOwn) {
+    const { data: unlocks } = await supabase
+      .from("contact_unlocks")
+      .select("profile_id")
+      .eq("user_id", authUser.id);
+    unlockedProfileIds = (unlocks ?? []).map((u: { profile_id: string }) => u.profile_id);
+  }
+
   return (
     <div className="min-h-screen py-12 px-4" style={{ backgroundColor: "var(--pure-white)" }}>
       <div className="container mx-auto max-w-5xl">
@@ -79,7 +94,10 @@ export default async function DiscoverProfilePage({ params }: PageProps) {
           profile={profile}
           photos={photos ?? []}
           preferences={preferences ?? null}
-          isOwnProfile={false}
+          isOwnProfile={isOwn}
+          userId={isOwn ? authUser?.id : undefined}
+          currentUserId={authUser?.id}
+          unlockedProfileIds={unlockedProfileIds}
         />
       </div>
     </div>

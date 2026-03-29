@@ -5,9 +5,9 @@ import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import CheckoutHero from "@/components/checkout/checkout-hero";
 import { createClient } from "@/lib/supabase/client";
-import { IndianRupee, Loader2, Check, Coins, Sparkles, Zap, Crown } from "lucide-react";
+import { IndianRupee, Loader2, Coins, Sparkles, Zap, Crown, Lock } from "lucide-react";
 
 // Payment method is fetched from API (set in Admin → Settings)
 
@@ -245,23 +245,31 @@ function CheckoutContent() {
 
   if (loading) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin" style={{ color: "var(--primary-blue)" }} />
+      <div className="min-h-screen" style={{ backgroundColor: "var(--pure-white)" }}>
+        <CheckoutHero subtitle="Loading credit packs…" />
+        <div className="flex flex-col items-center justify-center py-24 gap-4">
+          <Loader2 className="w-10 h-10 animate-spin text-[#003366]" aria-hidden />
+          <p className="font-montserrat text-sm text-[#003366]/60">Please wait</p>
+        </div>
       </div>
     );
   }
 
   if (error && !plan && allPlans.length === 0) {
     return (
-      <div className="container max-w-lg mx-auto py-16 px-4">
-        <Card className="rounded-xl border" style={{ borderColor: "rgba(212, 175, 55, 0.3)" }}>
-          <CardContent className="pt-6">
-            <p className="font-montserrat text-red-600">{error}</p>
-            <Button asChild className="mt-4 rounded-xl" style={{ backgroundColor: "var(--primary-blue)" }}>
+      <div className="min-h-screen" style={{ backgroundColor: "var(--pure-white)" }}>
+        <CheckoutHero />
+        <div className="container max-w-lg mx-auto px-4 py-12">
+          <div
+            className="rounded-[2rem] border-2 p-8 text-center shadow-lg"
+            style={{ borderColor: "rgba(226, 194, 133, 0.4)", backgroundColor: "var(--pure-white)" }}
+          >
+            <p className="font-montserrat text-red-600 mb-6">{error}</p>
+            <Button asChild className="rounded-2xl h-12 px-8 bg-gold-gradient text-[#001a33] font-bold border-none hover:scale-[1.02] transition-transform">
               <Link href="/">Back to home</Link>
             </Button>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     );
   }
@@ -269,191 +277,206 @@ function CheckoutContent() {
   // Multi-plan selection view (no plan pre-selected)
   if (!plan && allPlans.length > 0 && !upiOrder) {
     return (
-      <div className="container max-w-4xl mx-auto py-12 px-4">
-        <h1 className="font-playfair-display text-3xl font-bold mb-2" style={{ color: "var(--primary-blue)" }}>
-          Buy Credits
-        </h1>
-        <p className="font-montserrat text-gray-600 mb-8">
-          Choose a credit pack to unlock contact details on profiles
-        </p>
+      <div className="min-h-screen" style={{ backgroundColor: "var(--pure-white)" }}>
+        <CheckoutHero subtitle="Pick the pack that fits how many profiles you want to connect with." />
+        <section className="px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+          <div className="container max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+              {allPlans.map((p) => {
+                const Icon = planIcons[p.slug] || Coins;
+                const isPopular = p.slug === "popular";
+                return (
+                  <div
+                    key={p.id}
+                    className={`relative rounded-[2rem] p-7 sm:p-8 flex flex-col transition-all duration-300 hover:-translate-y-1 ${
+                      isPopular ? "ring-2 ring-[#E2C285]/70 shadow-[0_20px_50px_rgba(226,194,133,0.2)]" : "shadow-[0_12px_40px_rgba(0,51,102,0.08)] hover:shadow-[0_16px_48px_rgba(0,51,102,0.12)]"
+                    }`}
+                    style={{
+                      border: isPopular ? "2px solid rgba(226, 194, 133, 0.55)" : "2px solid rgba(226, 194, 133, 0.22)",
+                      backgroundColor: "var(--pure-white)",
+                    }}
+                  >
+                    {isPopular && (
+                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
+                        <span className="px-5 py-1.5 rounded-full text-[10px] font-black font-general uppercase tracking-[0.2em] text-[#001a33] bg-gold-gradient shadow-lg">
+                          Best value
+                        </span>
+                      </div>
+                    )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {allPlans.map((p) => {
-            const Icon = planIcons[p.slug] || Coins;
-            const isPopular = p.slug === "popular";
-            return (
-              <div
-                key={p.id}
-                className={`relative rounded-2xl p-6 flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
-                  isPopular ? "ring-2" : ""
-                }`}
-                style={{
-                  border: isPopular ? "2px solid var(--accent-gold)" : "1px solid rgba(212, 175, 55, 0.2)",
-                  boxShadow: isPopular ? "0 10px 40px rgba(212, 175, 55, 0.15)" : "0 4px 20px rgba(0, 0, 0, 0.06)",
-                }}
-              >
-                {isPopular && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className="px-4 py-1 rounded-full text-xs font-montserrat font-bold uppercase tracking-wider text-black bg-gold-gradient shadow-lg">
-                      Best Value
-                    </span>
+                    <div className="flex items-center gap-4 mb-5">
+                      <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-[#003366] shrink-0">
+                        <Icon className="w-6 h-6 text-[#E2C285]" />
+                      </div>
+                      <h3 className="text-xl font-outfit font-black text-[#003366] tracking-tight">{p.name}</h3>
+                    </div>
+
+                    <div className="flex items-baseline gap-2 mb-2">
+                      <Coins className="w-6 h-6 text-[#E2C285] shrink-0" />
+                      <span className="text-3xl font-outfit font-black text-[#003366]">{(p.credits ?? 0).toLocaleString()}</span>
+                      <span className="text-sm font-montserrat font-medium text-[#003366]/65">credits</span>
+                    </div>
+
+                    <p className="font-outfit text-2xl font-bold text-[#003366] mb-1">₹{p.price_inr.toLocaleString()}</p>
+
+                    {p.description && (
+                      <p className="text-sm font-montserrat text-[#003366]/70 mb-6 flex-1 leading-relaxed">{p.description}</p>
+                    )}
+
+                    <Button
+                      className={`w-full h-14 py-6 font-bold rounded-2xl border-none transition-all duration-300 hover:scale-[1.02] font-general text-sm uppercase tracking-widest ${
+                        isPopular
+                          ? "bg-gold-gradient text-[#001a33] shadow-[0_0_24px_rgba(226,194,133,0.35)]"
+                          : "bg-[#003366] text-white hover:bg-[#00264d]"
+                      }`}
+                      onClick={() => handlePay(p)}
+                      disabled={payLoading}
+                    >
+                      {payLoading ? (
+                        <span className="inline-flex items-center gap-2 normal-case tracking-normal">
+                          <Loader2 className="w-5 h-5 animate-spin" /> Processing…
+                        </span>
+                      ) : (
+                        `Buy ${(p.credits ?? 0).toLocaleString()} credits`
+                      )}
+                    </Button>
+
+                    <p className="text-center text-xs font-montserrat mt-3 text-[#003366]/45">
+                      ₹{((p.credits ?? 1) > 0 ? (p.price_inr / (p.credits ?? 1)).toFixed(2) : "0")} per credit
+                    </p>
                   </div>
-                )}
+                );
+              })}
+            </div>
 
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "var(--primary-blue)" }}>
-                    <Icon className="w-5 h-5" style={{ color: "var(--accent-gold)" }} />
-                  </div>
-                  <h3 className="text-lg font-playfair-display font-bold" style={{ color: "var(--primary-blue)" }}>
-                    {p.name}
-                  </h3>
-                </div>
+            {error && <p className="font-montserrat text-sm text-red-600 text-center mt-8">{error}</p>}
 
-                <div className="flex items-center gap-2 mb-1">
-                  <Coins className="w-5 h-5" style={{ color: "var(--accent-gold)" }} />
-                  <span className="text-2xl font-bold" style={{ color: "var(--primary-blue)" }}>
-                    {(p.credits ?? 0).toLocaleString()}
-                  </span>
-                  <span className="text-sm font-montserrat" style={{ color: "var(--primary-blue)", opacity: 0.7 }}>
-                    credits
-                  </span>
-                </div>
-
-                <div className="flex items-baseline gap-2 mb-4">
-                  <span className="text-xl font-bold" style={{ color: "var(--primary-blue)" }}>
-                    ₹{p.price_inr.toLocaleString()}
-                  </span>
-                </div>
-
-                {p.description && (
-                  <p className="text-sm font-montserrat text-gray-600 mb-4 flex-1">{p.description}</p>
-                )}
-
-                <Button
-                  className="w-full py-4 font-montserrat font-semibold rounded-xl border-none transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
-                  style={
-                    isPopular
-                      ? { background: "linear-gradient(135deg, #D4AF37, #E8C547)", color: "var(--primary-blue)" }
-                      : { backgroundColor: "var(--primary-blue)", color: "var(--pure-white)" }
-                  }
-                  onClick={() => handlePay(p)}
-                  disabled={payLoading}
-                >
-                  {payLoading ? (
-                    <><Loader2 className="w-4 h-4 animate-spin" /> Processing…</>
-                  ) : (
-                    `Buy ${(p.credits ?? 0).toLocaleString()} Credits`
-                  )}
-                </Button>
-
-                <p className="text-center text-xs font-montserrat mt-2" style={{ color: "var(--primary-blue)", opacity: 0.5 }}>
-                  ₹{((p.credits ?? 1) > 0 ? (p.price_inr / (p.credits ?? 1)).toFixed(2) : "0")} / credit
-                </p>
-              </div>
-            );
-          })}
-        </div>
-
-        {error && <p className="font-montserrat text-sm text-red-600 text-center mt-4">{error}</p>}
-
-        <p className="text-center mt-8">
-          <Link href="/" className="font-montserrat text-sm underline" style={{ color: "var(--primary-blue)" }}>
-            Back to home
-          </Link>
-        </p>
+            <p className="text-center mt-10">
+              <Link href="/" className="font-montserrat text-sm font-medium text-[#003366]/70 hover:text-[#E2C285] transition-colors underline-offset-4 hover:underline">
+                Back to home
+              </Link>
+            </p>
+          </div>
+        </section>
       </div>
     );
   }
 
   return (
-    <div className="container max-w-lg mx-auto py-12 px-4">
-      <h1 className="font-playfair-display text-2xl font-bold mb-6" style={{ color: "var(--primary-blue)" }}>
-        Buy Credits
-      </h1>
+    <div className="min-h-screen" style={{ backgroundColor: "var(--pure-white)" }}>
+      <CheckoutHero
+        subtitle={
+          upiOrder
+            ? "Complete your UPI payment. We’ll add credits when payment is confirmed."
+            : "Review your pack and pay securely. Credits appear in your account right after a successful payment."
+        }
+      />
 
-      {!upiOrder ? (
-        <Card className="rounded-xl border mb-6" style={{ borderColor: "rgba(212, 175, 55, 0.3)" }}>
-          <CardHeader>
-            <CardTitle className="font-playfair-display" style={{ color: "var(--primary-blue)" }}>
-              {plan?.name ?? "Plan"}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {plan?.description && (
-              <p className="font-montserrat text-sm text-gray-600">{plan.description}</p>
-            )}
-            <div className="flex items-baseline gap-2">
-              <IndianRupee className="w-5 h-5" style={{ color: "var(--accent-gold)" }} />
-              <span className="text-2xl font-bold" style={{ color: "var(--primary-blue)" }}>
-                {plan?.price_inr?.toLocaleString() ?? 0}
-              </span>
-              <span className="font-montserrat text-gray-600">
-                · {plan?.credits ?? 0} credits
-              </span>
-            </div>
-            <p className="font-montserrat text-xs text-gray-500">
-              Payment via {paymentMethod === "upi_qr" ? "UPI QR code" : "Razorpay"}.
-            </p>
-            {error && <p className="font-montserrat text-sm text-red-600">{error}</p>}
-            <Button
-              className="w-full rounded-xl font-montserrat"
-              style={{ backgroundColor: "var(--primary-blue)" }}
-              onClick={() => handlePay()}
-              disabled={payLoading}
+      <section className="px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
+        <div className="container max-w-lg mx-auto">
+          {!upiOrder ? (
+            <div
+              className="rounded-[2rem] border-2 p-8 sm:p-10 shadow-[0_24px_60px_rgba(0,51,102,0.1)] mb-8"
+              style={{ borderColor: "rgba(226, 194, 133, 0.4)", backgroundColor: "var(--pure-white)" }}
             >
-              {payLoading ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  Preparing…
-                </>
-              ) : (
-                "Pay now"
+              <div className="flex items-start gap-4 mb-8">
+                <div className="h-14 w-14 rounded-2xl bg-[#003366] flex items-center justify-center shrink-0">
+                  <Coins className="h-7 w-7 text-[#E2C285]" aria-hidden />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#003366]/45 font-general mb-1">
+                    Your pack
+                  </p>
+                  <h2 className="font-outfit text-2xl sm:text-3xl font-black text-[#003366] tracking-tight">
+                    {plan?.name ?? "Plan"}
+                  </h2>
+                </div>
+              </div>
+
+              {plan?.description && (
+                <p className="font-montserrat text-sm text-[#003366]/75 leading-relaxed mb-8">{plan.description}</p>
               )}
-            </Button>
-          </CardContent>
-        </Card>
-      ) : (
-        <Card className="rounded-xl border" style={{ borderColor: "rgba(212, 175, 55, 0.3)" }}>
-          <CardHeader>
-            <CardTitle className="font-playfair-display text-lg" style={{ color: "var(--primary-blue)" }}>
-              Scan to pay via UPI
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <p className="font-montserrat text-sm text-gray-600">
-              Amount: <strong>₹{upiOrder.amount.toLocaleString()}</strong> · {upiOrder.credits} credits
-            </p>
-            {upiOrder.qrDataUrl ? (
-              <div className="flex justify-center p-4 bg-white rounded-lg border">
-                <img src={upiOrder.qrDataUrl} alt="UPI QR Code" width={280} height={280} />
-              </div>
-            ) : (
-              <div className="p-4 bg-gray-100 rounded-lg font-montserrat text-sm break-all">
-                <p className="font-semibold mb-1">UPI link (copy and open in UPI app):</p>
-                <a href={upiOrder.upiUrl} className="text-blue-600 underline">
-                  {upiOrder.upiUrl}
-                </a>
-              </div>
-            )}
-            <p className="font-montserrat text-xs text-gray-500">
-              After paying, we will verify and add credits. This page will update automatically, or check your dashboard in a few minutes.
-            </p>
-            <Button
-              variant="outline"
-              className="w-full rounded-xl font-montserrat"
-              onClick={() => setUpiOrder(null)}
-            >
-              Cancel
-            </Button>
-          </CardContent>
-        </Card>
-      )}
 
-      <p className="text-center">
-        <Link href="/" className="font-montserrat text-sm underline" style={{ color: "var(--primary-blue)" }}>
-          Back to home
-        </Link>
-      </p>
+              <div className="rounded-2xl bg-[#003366]/[0.04] border border-[#003366]/10 p-6 mb-8">
+                <div className="flex flex-wrap items-end gap-2 gap-y-1">
+                  <IndianRupee className="w-7 h-7 text-[#E2C285] mb-1" aria-hidden />
+                  <span className="text-4xl font-outfit font-black text-[#003366] tabular-nums">
+                    {plan?.price_inr?.toLocaleString() ?? 0}
+                  </span>
+                  <span className="text-lg font-montserrat font-semibold text-[#003366]/55 pb-1">INR</span>
+                </div>
+                <p className="font-outfit text-lg font-bold text-[#003366] mt-3">
+                  {(plan?.credits ?? 0).toLocaleString()} credits
+                </p>
+                <div className="mt-4 flex items-center gap-2 text-xs font-montserrat text-[#003366]/55">
+                  <Lock className="w-4 h-4 text-[#E2C285]/80 shrink-0" aria-hidden />
+                  Payment via {paymentMethod === "upi_qr" ? "UPI (QR)" : "Razorpay"} — encrypted checkout
+                </div>
+              </div>
+
+              {error && <p className="font-montserrat text-sm text-red-600 mb-4">{error}</p>}
+
+              <Button
+                className="w-full h-14 rounded-2xl bg-gold-gradient text-[#001a33] font-bold text-base shadow-[0_0_28px_rgba(226,194,133,0.35)] hover:shadow-[0_0_40px_rgba(226,194,133,0.45)] hover:scale-[1.02] transition-all border-none font-general"
+                onClick={() => handlePay()}
+                disabled={payLoading}
+              >
+                {payLoading ? (
+                  <span className="inline-flex items-center gap-2">
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Preparing…
+                  </span>
+                ) : (
+                  "Pay now"
+                )}
+              </Button>
+            </div>
+          ) : (
+            <div
+              className="rounded-[2rem] border-2 p-8 sm:p-10 shadow-[0_24px_60px_rgba(0,51,102,0.1)] mb-8"
+              style={{ borderColor: "rgba(226, 194, 133, 0.4)", backgroundColor: "var(--pure-white)" }}
+            >
+              <h2 className="font-outfit text-2xl font-black text-[#003366] mb-2">Pay with UPI</h2>
+              <p className="font-montserrat text-sm text-[#003366]/70 mb-6">
+                Amount <strong className="text-[#003366]">₹{upiOrder.amount.toLocaleString()}</strong>
+                {" · "}
+                <strong className="text-[#003366]">{upiOrder.credits}</strong> credits
+              </p>
+              {upiOrder.qrDataUrl ? (
+                <div className="flex justify-center p-5 bg-white rounded-2xl border-2 border-[#E2C285]/25 mb-6">
+                  <img src={upiOrder.qrDataUrl} alt="UPI QR code to complete payment" width={280} height={280} className="rounded-lg" />
+                </div>
+              ) : (
+                <div className="p-5 rounded-2xl bg-[#003366]/[0.04] border border-[#003366]/10 font-montserrat text-sm break-all mb-6">
+                  <p className="font-semibold text-[#003366] mb-2">Open in your UPI app</p>
+                  <a href={upiOrder.upiUrl} className="text-[#003366] underline decoration-[#E2C285] underline-offset-2 hover:text-[#E2C285]">
+                    {upiOrder.upiUrl}
+                  </a>
+                </div>
+              )}
+              <p className="font-montserrat text-xs text-[#003366]/55 mb-6 leading-relaxed">
+                After you pay, we verify and add credits. This page refreshes when done—or check your balance in a few minutes.
+              </p>
+              <Button
+                variant="outline"
+                className="w-full h-12 rounded-2xl border-2 border-[#003366]/20 text-[#003366] font-semibold hover:bg-[#003366]/5"
+                onClick={() => setUpiOrder(null)}
+              >
+                Cancel
+              </Button>
+            </div>
+          )}
+
+          <p className="text-center">
+            <Link
+              href="/"
+              className="font-montserrat text-sm font-medium text-[#003366]/65 hover:text-[#E2C285] transition-colors underline-offset-4 hover:underline"
+            >
+              Back to home
+            </Link>
+          </p>
+        </div>
+      </section>
     </div>
   );
 }
@@ -462,8 +485,11 @@ export default function CheckoutPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-[60vh] flex items-center justify-center">
-          <Loader2 className="w-8 h-8 animate-spin" style={{ color: "var(--primary-blue)" }} />
+        <div className="min-h-screen" style={{ backgroundColor: "var(--pure-white)" }}>
+          <div className="h-40 bg-[#003366] animate-pulse" />
+          <div className="flex justify-center py-24">
+            <Loader2 className="w-10 h-10 animate-spin text-[#003366]" aria-hidden />
+          </div>
         </div>
       }
     >

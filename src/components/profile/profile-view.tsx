@@ -160,7 +160,11 @@ export function ProfileView({
   const displayPhoto = sortedPhotos[selectedPhotoIndex] ?? primaryPhoto ?? sortedPhotos[0];
 
   // Credit unlock state
-  const { credits, spendCredits, refreshCredits } = useCredits();
+  const { credits, spendCredits, refreshCredits, loading: creditsLoading } = useCredits();
+
+  useEffect(() => {
+    if (isOwnProfile) void refreshCredits();
+  }, [isOwnProfile, refreshCredits]);
   const [isUnlocked, setIsUnlocked] = useState(unlockedProfileIds.includes(profile.id));
   const [unlocking, setUnlocking] = useState(false);
   const [unlockError, setUnlockError] = useState<string | null>(null);
@@ -297,6 +301,37 @@ export function ProfileView({
               </span>
             )}
           </div>
+
+          {isOwnProfile && (
+            <div className="mb-6 flex justify-center md:justify-start">
+              <div
+                className="inline-flex flex-wrap items-center gap-3 rounded-2xl border-2 px-5 py-3 shadow-sm"
+                style={{
+                  borderColor: "rgba(212, 175, 55, 0.45)",
+                  backgroundColor: "rgba(255, 255, 255, 0.95)",
+                }}
+              >
+                <Coins className="w-6 h-6 shrink-0" style={{ color: "var(--accent-gold)" }} aria-hidden />
+                {creditsLoading ? (
+                  <span className="text-sm font-montserrat text-[var(--primary-blue)]/60">Loading credits…</span>
+                ) : (
+                  <>
+                    <span className="font-outfit font-black text-2xl tabular-nums" style={{ color: "var(--primary-blue)" }}>
+                      {credits.toLocaleString()}
+                    </span>
+                    <span className="font-montserrat font-medium text-[var(--primary-blue)]/75">credits available</span>
+                    <Link
+                      href="/checkout"
+                      className="text-xs font-black uppercase tracking-widest font-general hover:opacity-80"
+                      style={{ color: "var(--accent-gold)" }}
+                    >
+                      Buy more
+                    </Link>
+                  </>
+                )}
+              </div>
+            </div>
+          )}
           
           {/* Quick Contact & Photos Toggle */}
           <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center md:justify-start gap-4 mt-auto">
@@ -411,6 +446,20 @@ export function ProfileView({
               <strong>{profile.profile_completion_pct ?? 0}%</strong> Complete
             </span>
             <span>Status: <strong className="capitalize">{profile.profile_status.replace('_', ' ')}</strong></span>
+            <span className="flex items-center gap-2 border-l border-[var(--primary-blue)]/15 pl-6">
+              <Coins className="w-5 h-5 shrink-0" style={{ color: "var(--accent-gold)" }} aria-hidden />
+              {creditsLoading ? (
+                <span className="opacity-60">…</span>
+              ) : (
+                <>
+                  <strong className="font-outfit text-lg tabular-nums">{credits.toLocaleString()}</strong>
+                  <span className="opacity-80">credits</span>
+                  <Link href="/checkout" className="ml-1 text-xs font-bold uppercase tracking-wide underline-offset-2 hover:underline" style={{ color: "var(--accent-gold)" }}>
+                    Add
+                  </Link>
+                </>
+              )}
+            </span>
           </div>
           <div className="flex gap-2">
             <Button onClick={() => setIsEditing(true)} variant="outline" size="sm" className="rounded-xl border-[var(--primary-blue)]/20 text-[var(--primary-blue)] hover:bg-[var(--accent-gold)]/10 hover:text-[var(--primary-blue)] font-semibold px-6">

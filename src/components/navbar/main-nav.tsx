@@ -161,12 +161,12 @@ export default function MainNav() {
                       </Avatar>
                     </button>
                   </PopoverTrigger>
-                  <PopoverContent
-                    align="end"
-                    sideOffset={12}
-                    className="w-56 p-3 rounded-xl font-sans shadow-2xl border border-[#E2C285]/28"
-                    style={{ backgroundColor: "rgba(0, 51, 102, 0.98)", backdropFilter: "blur(16px)" }}
-                  >
+                    <PopoverContent
+                      align="end"
+                      sideOffset={12}
+                      className="w-56 p-3 rounded-xl font-sans shadow-2xl border border-[#E2C285]/28 !bg-[#003366] text-white [&_a]:text-white [&_a]:no-underline"
+                      style={{ backdropFilter: "blur(16px)" }}
+                    >
                     <div className="space-y-2">
                       <div
                         className="flex items-center justify-between px-4 py-3 rounded-lg border border-[#E2C285]/22"
@@ -187,16 +187,16 @@ export default function MainNav() {
                       <div className="my-1 h-px bg-[#E2C285]/18" />
                       <Link
                         href="/profile"
-                        className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-white/88 hover:text-[#E2C285] hover:bg-[#E2C285]/10 transition-colors duration-200"
+                        className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-white hover:text-[#E2C285] hover:bg-white/10 transition-colors duration-200"
                       >
-                        <User className="h-4 w-4 text-[#E2C285]" />
+                        <User className="h-4 w-4 shrink-0 text-[#F5D78A]" aria-hidden />
                         My Profile
                       </Link>
                       <Link
                         href="/settings"
-                        className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-white/88 hover:text-[#E2C285] hover:bg-[#E2C285]/10 transition-colors duration-200"
+                        className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-white hover:text-[#E2C285] hover:bg-white/10 transition-colors duration-200"
                       >
-                        <Settings className="h-4 w-4 text-[#E2C285]" />
+                        <Settings className="h-4 w-4 shrink-0 text-[#F5D78A]" aria-hidden />
                         Settings
                       </Link>
                       <div className="my-2 h-px bg-[#E2C285]/18" />

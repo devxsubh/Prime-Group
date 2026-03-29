@@ -81,10 +81,21 @@ export async function POST(req: Request) {
         receipt: payment.id,
       });
 
-      await supabase
+      // Must use service role: RLS allows users to INSERT/SELECT own payments but not UPDATE,
+      // so a user-scoped client silently failed to set gateway_transaction_id and verify returned "Order not found".
+      const service = createServiceRoleClient();
+      const { error: linkError } = await service
         .from("payments")
         .update({ gateway_transaction_id: order.id })
         .eq("id", payment.id);
+
+      if (linkError) {
+        console.error("Failed to link Razorpay order to payment row:", linkError);
+        return NextResponse.json(
+          { error: "Failed to link payment order. Please try again or contact support." },
+          { status: 500 }
+        );
+      }
 
       return NextResponse.json({
         method: "razorpay",

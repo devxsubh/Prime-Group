@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 import { createServiceRoleClient } from "@/lib/supabase/server-service";
 import { paymentConfig, getPaymentMethodFromDb } from "@/lib/payment/config";
 import crypto from "crypto";
+import Razorpay from "razorpay";
+
+const UUID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 export const dynamic = "force-dynamic";
 
@@ -41,13 +45,51 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
     }
 
-    const { data: payment, error: fetchError } = await supabase
+    let payment: {
+      id: string;
+      user_id: string | null;
+      credits_added: number | null;
+      status: string | null;
+    } | null = null;
+
+    const { data: byGateway } = await supabase
       .from("payments")
       .select("id, user_id, credits_added, status")
       .eq("gateway_transaction_id", orderId)
-      .single();
+      .maybeSingle();
 
-    if (fetchError || !payment) {
+    if (byGateway) {
+      payment = byGateway;
+    } else {
+      // Legacy / edge case: gateway_transaction_id was never saved (e.g. RLS blocked UPDATE).
+      // Razorpay order.receipt is our internal payment row UUID from create-order.
+      try {
+        const rz = new Razorpay({
+          key_id: paymentConfig.razorpay.keyId,
+          key_secret: secret,
+        });
+        const rzOrder = (await rz.orders.fetch(orderId)) as { receipt?: string };
+        const receipt = rzOrder.receipt?.trim();
+        if (receipt && UUID_RE.test(receipt)) {
+          const { data: byReceipt } = await supabase
+            .from("payments")
+            .select("id, user_id, credits_added, status, gateway_transaction_id")
+            .eq("id", receipt)
+            .maybeSingle();
+          if (byReceipt && byReceipt.status === "pending") {
+            payment = byReceipt;
+            await supabase
+              .from("payments")
+              .update({ gateway_transaction_id: orderId })
+              .eq("id", byReceipt.id);
+          }
+        }
+      } catch (e) {
+        console.error("verify: Razorpay order fetch fallback failed:", e);
+      }
+    }
+
+    if (!payment) {
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
     }
     if (payment.status === "success") {
