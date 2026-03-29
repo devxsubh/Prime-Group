@@ -2,7 +2,22 @@ import Image from "next/image";
 import { getDiscoverProfiles } from "@/lib/discover";
 import DiscoverGrid from "@/components/discover/discover-grid";
 
-export default async function DiscoverPage() {
+type DiscoverSearchParams = {
+  city?: string;
+  religion?: string;
+  intent?: string;
+};
+
+export default async function DiscoverPage({
+  searchParams,
+}: {
+  searchParams: Promise<DiscoverSearchParams>;
+}) {
+  const params = await searchParams;
+  const city = typeof params.city === "string" ? params.city : undefined;
+  const religion = typeof params.religion === "string" ? params.religion : undefined;
+  const intent = typeof params.intent === "string" ? params.intent : undefined;
+
   const profiles = await getDiscoverProfiles();
 
   return (
@@ -73,7 +88,12 @@ export default async function DiscoverPage() {
             </p>
           </div>
 
-          <DiscoverGrid profiles={profiles} />
+          <DiscoverGrid
+            profiles={profiles}
+            initialCity={city}
+            initialReligion={religion}
+            initialIntent={intent}
+          />
         </div>
       </section>
     </>
