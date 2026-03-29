@@ -112,12 +112,10 @@ const DiscoverHero = () => {
           >
             {/* Main Heading */}
             <motion.h1 
-              className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-playfair-display font-bold mb-5 sm:mb-6 md:mb-8 leading-[1.15] text-gold-gradient ${isMobile ? '' : 'whitespace-nowrap'}`}
+              className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-outfit font-black mb-5 sm:mb-6 md:mb-8 leading-[0.9] text-gold-gradient ${isMobile ? '' : 'whitespace-nowrap'} tracking-tighter`}
               variants={itemVariants}
               style={{ 
                 textShadow: '3px 3px 12px rgba(0, 0, 0, 0.7), 0 0 30px rgba(0, 0, 0, 0.4), 0 0 60px rgba(226, 194, 133, 0.2)',
-                letterSpacing: '0.03em',
-                fontWeight: 700
               }}
             >
               Discover Your Soulmate
@@ -141,14 +139,13 @@ const DiscoverHero = () => {
                 }}
               />
               <p 
-                className="relative text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-montserrat font-semibold leading-relaxed px-6 sm:px-8 md:px-10 py-3 sm:py-4 md:py-5 rounded-full backdrop-blur-lg transition-all duration-300"
+                className="relative text-xs sm:text-sm font-general font-black uppercase leading-relaxed px-8 sm:px-10 py-4 sm:py-5 rounded-full backdrop-blur-lg transition-all duration-300 tracking-[0.3em]"
                 style={{ 
                   color: 'var(--pure-white)',
-                  backgroundColor: 'rgba(0, 51, 102, 0.6)',
+                  backgroundColor: 'rgba(0, 51, 102, 0.8)',
                   textShadow: '2px 2px 6px rgba(0, 0, 0, 0.9), 0 0 12px rgba(0, 0, 0, 0.6)',
                   border: '2px solid rgba(226, 194, 133, 0.4)',
                   boxShadow: '0 8px 24px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 0 40px rgba(226, 194, 133, 0.15)',
-                  letterSpacing: '0.02em'
                 }}
               >
                 Where Hearts Meet & Dreams Begin
@@ -157,12 +154,11 @@ const DiscoverHero = () => {
 
             {/* Additional catchy tagline */}
             <motion.p
-              className="mt-6 sm:mt-8 text-sm sm:text-base md:text-lg lg:text-xl font-montserrat font-medium leading-relaxed max-w-3xl mx-auto"
+              className="mt-6 sm:mt-8 text-sm sm:text-base md:text-lg font-general font-medium leading-relaxed max-w-3xl mx-auto uppercase tracking-widest opacity-80"
               variants={itemVariants}
               style={{
                 color: 'var(--pure-white)',
                 textShadow: '1px 1px 4px rgba(0, 0, 0, 0.8), 0 0 8px rgba(0, 0, 0, 0.5)',
-                letterSpacing: '0.01em'
               }}
             >
               Connect with verified profiles and find your perfect life partner

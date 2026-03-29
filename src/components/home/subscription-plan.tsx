@@ -71,15 +71,15 @@ export default function SubscriptionPlan() {
           transition={{ duration: 0.6 }}
           className="text-center mb-14"
         >
-          <div className="inline-block mb-4 px-6 py-2 rounded-full" style={{ backgroundColor: 'var(--primary-blue)' }}>
-            <span className="text-sm font-montserrat font-semibold uppercase tracking-wide text-gold-gradient">
+          <div className="inline-block mb-4 px-6 py-2 rounded-full font-general" style={{ backgroundColor: 'var(--primary-blue)' }}>
+            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-gold-gradient">
               Credits
             </span>
           </div>
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-playfair-display font-bold mb-4 text-gold-gradient" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.15)' }}>
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-outfit font-black mb-4 text-gold-gradient tracking-tighter" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.15)' }}>
             Buy Credits
           </h2>
-          <p className="text-lg sm:text-xl font-montserrat max-w-2xl mx-auto" style={{ color: 'var(--primary-blue)' }}>
+          <p className="text-lg sm:text-xl font-general font-medium max-w-2xl mx-auto" style={{ color: 'var(--primary-blue)', opacity: 0.8 }}>
             Purchase credits to instantly unlock contact details — phone, address & email — on any profile
           </p>
         </motion.div>
@@ -94,10 +94,10 @@ export default function SubscriptionPlan() {
               transition={{ duration: 0.5, delay: 0.15 * index }}
               className="relative group"
             >
-              {/* Badge */}
+               {/* Badge */}
               {plan.badge && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
-                  <span className="px-4 py-1.5 rounded-full text-xs font-montserrat font-bold uppercase tracking-wider text-black bg-gold-gradient shadow-lg">
+                  <span className="px-5 py-2 rounded-full text-[10px] font-general font-black uppercase tracking-[0.2em] text-black bg-gold-gradient shadow-lg">
                     {plan.badge}
                   </span>
                 </div>
@@ -119,40 +119,40 @@ export default function SubscriptionPlan() {
                   <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{ backgroundColor: 'var(--primary-blue)' }}>
                     <plan.icon className="w-5 h-5" style={{ color: 'var(--accent-gold)' }} />
                   </div>
-                  <h3 className="text-xl font-playfair-display font-bold" style={{ color: 'var(--primary-blue)' }}>
+                  <h3 className="text-xl font-outfit font-black uppercase tracking-widest" style={{ color: 'var(--primary-blue)' }}>
                     {plan.name}
                   </h3>
                 </div>
 
                 {/* Credits */}
-                <div className="flex items-center gap-2 mb-2">
+                <div className="flex items-center gap-2 mb-2 font-general">
                   <Coins className="w-5 h-5" style={{ color: 'var(--accent-gold)' }} />
-                  <span className="text-3xl font-playfair-display font-bold" style={{ color: 'var(--primary-blue)' }}>
+                  <span className="text-4xl font-outfit font-black tracking-tighter" style={{ color: 'var(--primary-blue)' }}>
                     {plan.credits.toLocaleString()}
                   </span>
-                  <span className="text-sm font-montserrat font-medium" style={{ color: 'var(--primary-blue)', opacity: 0.7 }}>
+                  <span className="text-[10px] font-black uppercase tracking-widest" style={{ color: 'var(--primary-blue)', opacity: 0.7 }}>
                     credits
                   </span>
                 </div>
 
                 {/* Price */}
-                <div className="flex items-baseline gap-2 mb-6">
-                  <span className="text-sm font-montserrat line-through" style={{ color: 'var(--primary-blue)', opacity: 0.5 }}>
+                <div className="flex items-baseline gap-2 mb-6 font-general">
+                  <span className="text-xs font-medium line-through" style={{ color: 'var(--primary-blue)', opacity: 0.5 }}>
                     ₹{plan.originalPrice.toLocaleString()}
                   </span>
-                  <span className="text-2xl font-playfair-display font-bold" style={{ color: 'var(--primary-blue)' }}>
+                  <span className="text-2xl font-outfit font-black tracking-tighter" style={{ color: 'var(--primary-blue)' }}>
                     ₹{plan.price.toLocaleString()}
                   </span>
                 </div>
 
                 {/* Features */}
-                <div className="flex-1 space-y-3 mb-8">
+                <div className="flex-1 space-y-3 mb-8 font-general">
                   {plan.features.map((feature, idx) => (
                     <div key={idx} className="flex items-center gap-3">
                       <div className="flex-shrink-0 w-5 h-5 rounded-full bg-gold-gradient flex items-center justify-center">
                         <Check className="w-3 h-3 text-black" />
                       </div>
-                      <span className="text-sm font-montserrat font-medium" style={{ color: 'var(--primary-blue)' }}>
+                      <span className="text-xs font-semibold" style={{ color: 'var(--primary-blue)' }}>
                         {feature}
                       </span>
                     </div>
@@ -162,7 +162,7 @@ export default function SubscriptionPlan() {
                 {/* CTA */}
                 <Link href={`/checkout?plan=${plan.slug}`}>
                   <Button
-                    className={`w-full py-5 text-base font-montserrat font-semibold rounded-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-xl border-none ${
+                    className={`w-full py-7 text-xs font-general font-black uppercase tracking-[0.2em] rounded-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-xl border-none ${
                       plan.badge
                         ? 'bg-gold-gradient text-black'
                         : ''
@@ -173,7 +173,7 @@ export default function SubscriptionPlan() {
                         : undefined
                     }
                   >
-                    Buy {plan.credits} Credits
+                    SELECT {plan.name}
                   </Button>
                 </Link>
 
@@ -194,8 +194,8 @@ export default function SubscriptionPlan() {
           transition={{ duration: 0.5, delay: 0.6 }}
           className="mt-12 text-center"
         >
-          <p className="text-sm font-montserrat" style={{ color: 'var(--primary-blue)', opacity: 0.6 }}>
-            ✓ Secure Payment &nbsp; ✓ Credits Never Expire &nbsp; ✓ Instant Activation
+          <p className="text-[10px] font-general font-black uppercase tracking-[0.4em]" style={{ color: 'var(--primary-blue)', opacity: 0.6 }}>
+            ✓ Secure Payment &nbsp; • &nbsp; ✓ Credits Never Expire &nbsp; • &nbsp; ✓ Instant Activation
           </p>
         </motion.div>
       </div>

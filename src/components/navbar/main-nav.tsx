@@ -47,7 +47,7 @@ export default function MainNav() {
 
    const navLinkClass = (href: string) =>
      cn(
-       "px-4 py-2 text-sm font-montserrat font-medium transition-colors rounded-lg duration-200",
+       "px-4 py-2 text-sm font-sans font-medium transition-colors rounded-lg duration-200",
        pathname === href
          ? "text-white bg-white/15"
          : "text-white/80 hover:text-white hover:bg-white/10"
@@ -104,7 +104,7 @@ export default function MainNav() {
                   height={56}
                   className="object-contain group-hover:scale-105 transition-transform duration-300 h-14 w-14"
                 />
-                <span className="hidden sm:block font-playfair text-lg sm:text-xl font-bold text-gold-gradient group-hover:opacity-80 transition-opacity">
+                <span className="hidden sm:block font-playfair-display text-lg sm:text-xl font-black text-gold-gradient group-hover:opacity-80 transition-opacity uppercase tracking-wider">
                   Prime Group
                 </span>
               </Link>
@@ -169,7 +169,7 @@ export default function MainNav() {
                       >
                         <Avatar className="h-10 w-10 border border-white/30">
                           <AvatarImage src={profilePhotoUrl ?? undefined} alt="Profile" />
-                          <AvatarFallback className="bg-gradient-to-br from-yellow-400/20 to-yellow-500/20 text-white font-montserrat font-semibold">
+                          <AvatarFallback className="bg-gradient-to-br from-yellow-400/20 to-yellow-500/20 text-white font-sans font-semibold">
                             {user.email?.charAt(0).toUpperCase() ?? "U"}
                           </AvatarFallback>
                         </Avatar>
@@ -178,7 +178,7 @@ export default function MainNav() {
                     <PopoverContent
                       align="end"
                       sideOffset={12}
-                      className="w-56 p-3 rounded-xl font-montserrat shadow-2xl border border-white/10"
+                      className="w-56 p-3 rounded-xl font-sans shadow-2xl border border-white/10"
                       style={{ backgroundColor: "rgba(15, 25, 55, 0.95)", backdropFilter: "blur(16px)" }}
                     >
                       <div className="space-y-2">
@@ -232,7 +232,7 @@ export default function MainNav() {
                 !pathname?.startsWith("/sign-in") && !pathname?.startsWith("/sign-up") && (
                   <Link href="/sign-in">
                     <Button
-                      className="rounded-full px-6 py-2 bg-gradient-to-r from-yellow-400 to-yellow-500 text-slate-900 font-montserrat font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200 border-none"
+                      className="rounded-full px-6 py-2 bg-gradient-to-r from-yellow-400 to-yellow-500 text-slate-900 font-sans font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200 border-none"
                     >
                       Sign In
                     </Button>

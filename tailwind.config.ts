@@ -18,7 +18,7 @@ export default {
   				'sans-serif'
   			],
   			general: [
-  				'general',
+  				'General Sans',
   				'sans-serif'
   			],
   			'circular-web': [
@@ -39,6 +39,10 @@ export default {
   			],
   			montserrat: [
   				'Montserrat',
+  				'sans-serif'
+  			],
+  			outfit: [
+  				'Outfit',
   				'sans-serif'
   			]
   		},

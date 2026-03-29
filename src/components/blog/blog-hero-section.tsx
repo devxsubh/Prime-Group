@@ -22,37 +22,37 @@ export function BlogHeroSection({ featuredPost }: BlogHeroSectionProps) {
 
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="text-center mb-20 animate-in fade-in slide-in-from-top-4 duration-700">
-          <h1 className="font-playfair-display text-5xl md:text-8xl font-black text-[#003366] mb-8 leading-[1.1] tracking-tight">
+          <h1 className="font-outfit text-5xl md:text-8xl lg:text-9xl font-black text-[#003366] mb-8 leading-[0.9] tracking-tighter">
             Real Stories. <span className="text-gold-gradient bg-clip-text text-transparent">Real Matches.</span> <br />
             Real Love.
           </h1>
-          <p className="text-xl text-gray-700 max-w-2xl mx-auto mb-10 font-medium leading-relaxed">
+          <p className="text-xl text-gray-700 max-w-2xl mx-auto mb-10 font-general font-medium leading-relaxed">
             Discover how thousands of families found their perfect life partners through Prime Group's trusted platform.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-6">
-            <Link 
-              href="#success-stories" 
-              className="px-10 py-5 bg-[#003366] text-white rounded-full font-bold text-lg hover:scale-105 transition-all shadow-xl shadow-[#003366]/20"
+            <Link
+              href="#success-stories"
+              className="px-10 py-5 bg-[#003366] text-white rounded-full font-general font-black text-xs uppercase tracking-[0.2em] hover:scale-105 transition-all shadow-xl shadow-[#003366]/20"
             >
               Browse Success Stories
             </Link>
-            <Link 
-              href="#guidance" 
-              className="px-10 py-5 border-2 border-[#E2C285] text-[#003366] rounded-full font-bold text-lg hover:bg-[#E2C285]/10 transition-all"
+            <Link
+              href="#guidance"
+              className="px-10 py-5 border-2 border-[#E2C285] text-[#003366] rounded-full font-general font-black text-xs uppercase tracking-[0.2em] hover:bg-[#E2C285]/10 transition-all"
             >
               Get Relationship Guidance
             </Link>
           </div>
 
-          <div className="mt-16 flex items-center justify-center gap-5 py-4">
+          <div className="mt-16 flex items-center justify-center gap-5 py-4 font-general">
             <div className="flex -space-x-5">
               {[1, 2, 3, 4, 5].map((i) => (
                 <div key={i} className="w-12 h-12 rounded-full border-4 border-white overflow-hidden bg-gray-200 shadow-md">
-                   <div className="w-full h-full bg-gold-gradient" />
+                  <div className="w-full h-full bg-gold-gradient" />
                 </div>
               ))}
             </div>
-            <p className="text-xs font-bold text-[#003366] uppercase tracking-[0.25em]">
+            <p className="text-[10px] font-black text-[#003366] uppercase tracking-[0.4em]">
               25,000+ Successful Matches
             </p>
           </div>
@@ -77,19 +77,19 @@ export function BlogHeroSection({ featuredPost }: BlogHeroSectionProps) {
           <div className="lg:w-1/2 p-12 md:p-20 flex flex-col justify-center bg-white relative">
             {/* Corner decoration */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-[#E2C285]/5 rounded-bl-[100%] pointer-events-none" />
-            
-            <span className="text-[#E2C285] font-black text-xs uppercase tracking-[0.3em] mb-6">
+
+            <span className="text-[#E2C285] font-black text-[10px] uppercase tracking-[0.3em] mb-6 font-general">
               {featuredPost.category}
             </span>
-            <h2 className="font-playfair-display text-4xl md:text-5xl font-bold text-[#003366] mb-8 leading-tight">
+            <h2 className="font-playfair-display text-4xl md:text-5xl font-black text-[#003366] mb-8 leading-tight">
               {featuredPost.title}
             </h2>
-            <p className="text-gray-600 text-lg leading-relaxed mb-10 line-clamp-4 font-normal">
+            <p className="text-gray-600 text-lg leading-relaxed mb-10 line-clamp-4 font-general font-normal">
               {featuredPost.excerpt}
             </p>
-            <Link 
+            <Link
               href={`/blog/${featuredPost.slug}`}
-              className="inline-flex items-center text-[#003366] font-black text-sm uppercase tracking-widest group/btn border-b-2 border-[#E2C285] pb-2 w-fit transition-all hover:border-[#003366]"
+              className="inline-flex items-center text-[#003366] font-black text-[10px] uppercase tracking-[0.3em] group/btn border-b-2 border-[#E2C285] pb-2 w-fit transition-all hover:border-[#003366] font-general"
             >
               Read Their Journey
               <span className="ml-3 transform group-hover/btn:translate-x-2 transition-transform duration-300">→</span>

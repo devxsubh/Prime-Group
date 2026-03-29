@@ -70,22 +70,22 @@ export default function ProfileCard({ data, index }: ProfileCardProps) {
               boxShadow: "0 4px 12px rgba(217, 170, 72, 0.3)",
             }}
           >
-            <span className="text-sm font-montserrat font-semibold text-black tracking-wide">{data.age} Years</span>
+            <span className="text-[10px] font-general font-black text-black tracking-[0.2em] uppercase">{data.age} Years</span>
           </div>
         </div>
 
         {/* Profile Info */}
         <div className="p-7" style={{ backgroundColor: "var(--pure-white)" }}>
-          <h3 className="text-2xl font-playfair-display font-bold mb-1 text-gray-900 leading-tight">{data.name}</h3>
+          <h3 className="text-2xl font-outfit font-black mb-1 text-gray-900 leading-tight tracking-tight uppercase">{data.name}</h3>
           <div className="w-10 h-1 rounded-full mb-5" style={{ backgroundColor: "var(--accent-gold)" }} />
 
-          <div className="space-y-3.5">
+          <div className="space-y-3.5 font-general">
             <div className="flex items-start gap-3 group/item">
               <MapPin
                 className="h-4 w-4 flex-shrink-0 mt-0.5 transition-all duration-300"
                 style={{ color: "var(--primary-blue)" }}
               />
-              <span className="text-sm font-montserrat text-gray-700 group-hover/item:text-gray-900 transition-colors">
+              <span className="text-xs font-medium text-gray-700 group-hover/item:text-gray-900 transition-colors">
                 {data.location}
               </span>
             </div>
@@ -95,7 +95,7 @@ export default function ProfileCard({ data, index }: ProfileCardProps) {
                 className="h-4 w-4 flex-shrink-0 mt-0.5 transition-all duration-300"
                 style={{ color: "var(--primary-blue)" }}
               />
-              <span className="text-sm font-montserrat text-gray-700 group-hover/item:text-gray-900 transition-colors line-clamp-1">
+              <span className="text-xs font-medium text-gray-700 group-hover/item:text-gray-900 transition-colors line-clamp-1">
                 {data.profession}
               </span>
             </div>
@@ -105,7 +105,7 @@ export default function ProfileCard({ data, index }: ProfileCardProps) {
                 className="h-4 w-4 flex-shrink-0 mt-0.5 transition-all duration-300"
                 style={{ color: "var(--primary-blue)" }}
               />
-              <span className="text-sm font-montserrat text-gray-700 group-hover/item:text-gray-900 transition-colors line-clamp-1">
+              <span className="text-xs font-medium text-gray-700 group-hover/item:text-gray-900 transition-colors line-clamp-1">
                 {data.education}
               </span>
             </div>
@@ -113,7 +113,7 @@ export default function ProfileCard({ data, index }: ProfileCardProps) {
 
           {/* View Profile Button */}
           <div
-            className="w-full mt-7 py-3 rounded-xl font-montserrat font-semibold transition-all duration-300 hover:shadow-lg text-white text-center cursor-pointer tracking-wide"
+            className="w-full mt-7 py-3 rounded-xl font-general font-black text-[10px] uppercase transition-all duration-300 hover:shadow-lg text-white text-center cursor-pointer tracking-[0.3em]"
             style={{
               backgroundColor: "var(--primary-blue)",
               boxShadow: "0 4px 12px rgba(0, 51, 102, 0.2)",

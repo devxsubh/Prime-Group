@@ -80,15 +80,15 @@ const Faq3 = ({
     <section className="py-20 px-4 sm:px-6 lg:px-8" style={{ backgroundColor: 'var(--pure-white)' }}>
       <div className="container mx-auto max-w-7xl space-y-16">
         <div className="mx-auto flex max-w-3xl flex-col text-center">
-          <div className="inline-block mb-4 px-6 py-2 rounded-full w-fit mx-auto" style={{ backgroundColor: 'var(--primary-blue)' }}>
-            <span className="text-sm font-montserrat font-semibold uppercase tracking-wide text-gold-gradient">
+          <div className="inline-block mb-4 px-6 py-2 rounded-full w-fit mx-auto font-general" style={{ backgroundColor: 'var(--primary-blue)' }}>
+            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-gold-gradient">
               Help Center
             </span>
           </div>
-          <h2 className="mb-4 text-4xl sm:text-5xl md:text-6xl font-playfair-display font-bold text-gold-gradient" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.15)' }}>
+          <h2 className="mb-4 text-4xl sm:text-5xl md:text-6xl font-outfit font-black text-gold-gradient tracking-tighter" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.15)' }}>
             {heading}
           </h2>
-          <p className="text-lg sm:text-xl font-montserrat" style={{ color: 'var(--primary-blue)' }}>{description}</p>
+          <p className="text-lg sm:text-xl font-general font-medium" style={{ color: 'var(--primary-blue)', opacity: 0.8 }}>{description}</p>
         </div>
         <Accordion
           type="single"
@@ -106,12 +106,12 @@ const Faq3 = ({
               }}
             >
               <AccordionTrigger className="transition-all duration-200 hover:no-underline py-4">
-                <div className="font-playfair-display font-bold text-left text-lg sm:text-xl" style={{ color: 'var(--primary-blue)' }}>
+                <div className="font-playfair-display font-black text-left text-lg sm:text-xl" style={{ color: 'var(--primary-blue)' }}>
                   {item.question}
                 </div>
               </AccordionTrigger>
               <AccordionContent className="pb-4">
-                <div className="font-montserrat text-base sm:text-lg leading-relaxed" style={{ color: 'var(--primary-blue)' }}>
+                <div className="font-general font-medium text-base sm:text-lg leading-relaxed" style={{ color: 'var(--primary-blue)', opacity: 0.9 }}>
                   {item.answer}
                 </div>
               </AccordionContent>
@@ -133,15 +133,15 @@ const Faq3 = ({
               <AvatarFallback>SU</AvatarFallback>
             </Avatar>
           </div>
-          <h3 className="mb-3 max-w-3xl font-playfair-display font-bold text-2xl sm:text-3xl" style={{ color: 'var(--primary-blue)', textShadow: '2px 2px 4px rgba(0, 0, 0, 0.15)' }}>
+          <h3 className="mb-3 max-w-3xl font-outfit font-black text-2xl sm:text-3xl uppercase tracking-widest" style={{ color: 'var(--primary-blue)', textShadow: '2px 2px 4px rgba(0, 0, 0, 0.15)' }}>
             {supportHeading}
           </h3>
-          <p className="mb-8 max-w-3xl font-montserrat text-base sm:text-lg" style={{ color: 'var(--primary-blue)' }}>
+          <p className="mb-8 max-w-3xl font-general font-medium text-base sm:text-lg" style={{ color: 'var(--primary-blue)', opacity: 0.9 }}>
             {supportDescription}
           </p>
           <div className="flex w-full flex-col justify-center gap-2 sm:flex-row">
             <Button 
-              className="w-full sm:w-auto px-8 py-6 text-base font-montserrat font-semibold rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-xl border-none" 
+              className="w-full sm:w-auto px-10 py-7 text-xs font-general font-black uppercase tracking-[0.2em] rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-xl border-none" 
               style={{ 
                 backgroundColor: 'var(--primary-blue)',
                 color: 'var(--pure-white)'
