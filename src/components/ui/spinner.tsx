@@ -37,7 +37,7 @@ export function Spinner({ className, label, size = "md" }: SpinnerProps) {
         />
       </svg>
       {label && size === "md" && (
-        <p className="font-montserrat text-sm" style={{ color: "var(--primary-blue)" }}>
+        <p className="font-general text-sm" style={{ color: "var(--primary-blue)" }}>
           {label}
         </p>
       )}

@@ -67,7 +67,7 @@ function BarChartSection({
         <div className="space-y-3">
           {data.map((item, i) => (
             <div key={item.name} className="space-y-1">
-              <div className="flex justify-between text-sm font-montserrat">
+              <div className="flex justify-between text-sm font-general">
                 <span className="font-medium truncate max-w-[180px]" title={item.name}>{item.name}</span>
                 <span className="text-gray-600 shrink-0">
                   {item.count} <span className="text-gray-400">({item.pct}%)</span>
@@ -86,7 +86,7 @@ function BarChartSection({
           ))}
         </div>
         {data.length === 0 && (
-          <p className="text-sm font-montserrat text-gray-500">No data</p>
+          <p className="text-sm font-general text-gray-500">No data</p>
         )}
       </CardContent>
     </Card>
@@ -99,14 +99,14 @@ function CategoryTable({ title, data }: { title: string; data: CategoryItem[] })
       <Table>
         <TableHeader>
           <TableRow className="bg-gray-50">
-            <TableHead className="font-montserrat">{title}</TableHead>
-            <TableHead className="font-montserrat text-right">Count</TableHead>
-            <TableHead className="font-montserrat text-right">Share</TableHead>
+            <TableHead className="font-general">{title}</TableHead>
+            <TableHead className="font-general text-right">Count</TableHead>
+            <TableHead className="font-general text-right">Share</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {data.map((row) => (
-            <TableRow key={row.name} className="font-montserrat">
+            <TableRow key={row.name} className="font-general">
               <TableCell className="font-medium">{row.name}</TableCell>
               <TableCell className="text-right">{row.count}</TableCell>
               <TableCell className="text-right">
@@ -233,13 +233,13 @@ export default function AdminCategoriesPage() {
             <PieChart className="w-7 h-7" style={{ color: "var(--accent-gold)" }} />
             Category breakdown
           </h1>
-          <p className="font-montserrat text-sm mt-1 text-gray-600">
+          <p className="font-general text-sm mt-1 text-gray-600">
             Profile distribution by gender, religion, location, status and more.
           </p>
         </div>
         <Button
           variant="outline"
-          className="gap-2 rounded-xl font-montserrat"
+          className="gap-2 rounded-xl font-general"
           style={{ borderColor: "var(--accent-gold)" }}
           onClick={() => {
             setRefreshing(true);
@@ -258,7 +258,7 @@ export default function AdminCategoriesPage() {
             <Users className="w-6 h-6" style={{ color: "var(--primary-blue)" }} />
           </div>
           <div>
-            <p className="text-sm font-montserrat text-gray-600">Total profiles</p>
+            <p className="text-sm font-general text-gray-600">Total profiles</p>
             <p className="text-2xl font-bold font-playfair-display" style={{ color: "var(--primary-blue)" }}>
               {loading ? "..." : total.toLocaleString()}
             </p>
@@ -287,27 +287,27 @@ export default function AdminCategoriesPage() {
         </h2>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div>
-            <h3 className="font-montserrat font-semibold mb-2 text-gray-700">Gender</h3>
+            <h3 className="font-general font-semibold mb-2 text-gray-700">Gender</h3>
             <CategoryTable title="Gender" data={byGender} />
           </div>
           <div>
-            <h3 className="font-montserrat font-semibold mb-2 text-gray-700">Profile status</h3>
+            <h3 className="font-general font-semibold mb-2 text-gray-700">Profile status</h3>
             <CategoryTable title="Status" data={byStatus} />
           </div>
           <div>
-            <h3 className="font-montserrat font-semibold mb-2 text-gray-700">Religion</h3>
+            <h3 className="font-general font-semibold mb-2 text-gray-700">Religion</h3>
             <CategoryTable title="Religion" data={byReligion} />
           </div>
           <div>
-            <h3 className="font-montserrat font-semibold mb-2 text-gray-700">City</h3>
+            <h3 className="font-general font-semibold mb-2 text-gray-700">City</h3>
             <CategoryTable title="City" data={byCity} />
           </div>
           <div>
-            <h3 className="font-montserrat font-semibold mb-2 text-gray-700">State</h3>
+            <h3 className="font-general font-semibold mb-2 text-gray-700">State</h3>
             <CategoryTable title="State" data={byState} />
           </div>
           <div>
-            <h3 className="font-montserrat font-semibold mb-2 text-gray-700">Mother tongue</h3>
+            <h3 className="font-general font-semibold mb-2 text-gray-700">Mother tongue</h3>
             <CategoryTable title="Mother tongue" data={byMotherTongue} />
           </div>
         </div>

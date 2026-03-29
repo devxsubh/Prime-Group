@@ -249,7 +249,7 @@ function CheckoutContent() {
         <CheckoutHero subtitle="Loading credit packs…" />
         <div className="flex flex-col items-center justify-center py-24 gap-4">
           <Loader2 className="w-10 h-10 animate-spin text-[#003366]" aria-hidden />
-          <p className="font-montserrat text-sm text-[#003366]/60">Please wait</p>
+          <p className="font-general text-sm text-[#003366]/60">Please wait</p>
         </div>
       </div>
     );
@@ -264,7 +264,7 @@ function CheckoutContent() {
             className="rounded-[2rem] border-2 p-8 text-center shadow-lg"
             style={{ borderColor: "rgba(226, 194, 133, 0.4)", backgroundColor: "var(--pure-white)" }}
           >
-            <p className="font-montserrat text-red-600 mb-6">{error}</p>
+            <p className="font-general text-red-600 mb-6">{error}</p>
             <Button asChild className="rounded-2xl h-12 px-8 bg-gold-gradient text-[#001a33] font-bold border-none hover:scale-[1.02] transition-transform">
               <Link href="/">Back to home</Link>
             </Button>
@@ -308,19 +308,19 @@ function CheckoutContent() {
                       <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-[#003366] shrink-0">
                         <Icon className="w-6 h-6 text-[#E2C285]" />
                       </div>
-                      <h3 className="text-xl font-outfit font-black text-[#003366] tracking-tight">{p.name}</h3>
+                      <h3 className="text-xl font-playfair-display font-black text-[#003366] tracking-tight">{p.name}</h3>
                     </div>
 
                     <div className="flex items-baseline gap-2 mb-2">
                       <Coins className="w-6 h-6 text-[#E2C285] shrink-0" />
-                      <span className="text-2xl sm:text-3xl font-outfit font-black text-[#003366] tabular-nums">{(p.credits ?? 0).toLocaleString()}</span>
-                      <span className="text-sm font-montserrat font-medium text-[#003366]/65">credits</span>
+                      <span className="text-2xl sm:text-3xl font-general font-black text-[#003366] tabular-nums">{(p.credits ?? 0).toLocaleString()}</span>
+                      <span className="text-sm font-general font-medium text-[#003366]/65">credits</span>
                     </div>
 
-                    <p className="font-outfit text-xl sm:text-2xl font-bold text-[#003366] mb-1 tabular-nums">₹{p.price_inr.toLocaleString()}</p>
+                    <p className="font-general text-xl sm:text-2xl font-bold text-[#003366] mb-1 tabular-nums">₹{p.price_inr.toLocaleString()}</p>
 
                     {p.description && (
-                      <p className="text-sm font-montserrat text-[#003366]/70 mb-6 flex-1 leading-relaxed">{p.description}</p>
+                      <p className="text-sm font-general text-[#003366]/70 mb-6 flex-1 leading-relaxed">{p.description}</p>
                     )}
 
                     <Button
@@ -341,7 +341,7 @@ function CheckoutContent() {
                       )}
                     </Button>
 
-                    <p className="text-center text-xs font-montserrat mt-3 text-[#003366]/45">
+                    <p className="text-center text-xs font-general mt-3 text-[#003366]/45">
                       ₹{((p.credits ?? 1) > 0 ? (p.price_inr / (p.credits ?? 1)).toFixed(2) : "0")} per credit
                     </p>
                   </div>
@@ -349,10 +349,10 @@ function CheckoutContent() {
               })}
             </div>
 
-            {error && <p className="font-montserrat text-sm text-red-600 text-center mt-8">{error}</p>}
+            {error && <p className="font-general text-sm text-red-600 text-center mt-8">{error}</p>}
 
             <p className="text-center mt-10">
-              <Link href="/" className="font-montserrat text-sm font-medium text-[#003366]/70 hover:text-[#E2C285] transition-colors underline-offset-4 hover:underline">
+              <Link href="/" className="font-general text-sm font-medium text-[#003366]/70 hover:text-[#E2C285] transition-colors underline-offset-4 hover:underline">
                 Back to home
               </Link>
             </p>
@@ -387,34 +387,34 @@ function CheckoutContent() {
                   <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#003366]/45 font-general mb-1">
                     Your pack
                   </p>
-                  <h2 className="font-outfit text-xl sm:text-2xl md:text-3xl font-black text-[#003366] tracking-tight">
+                  <h2 className="font-playfair-display text-xl sm:text-2xl md:text-3xl font-black text-[#003366] tracking-tight">
                     {plan?.name ?? "Plan"}
                   </h2>
                 </div>
               </div>
 
               {plan?.description && (
-                <p className="font-montserrat text-sm text-[#003366]/75 leading-relaxed mb-8">{plan.description}</p>
+                <p className="font-general text-sm text-[#003366]/75 leading-relaxed mb-8">{plan.description}</p>
               )}
 
               <div className="rounded-2xl bg-[#003366]/[0.04] border border-[#003366]/10 p-6 mb-8">
                 <div className="flex flex-wrap items-end gap-2 gap-y-1">
                   <IndianRupee className="w-7 h-7 text-[#E2C285] mb-1" aria-hidden />
-                  <span className="text-2xl sm:text-3xl md:text-4xl font-outfit font-black text-[#003366] tabular-nums">
+                  <span className="text-2xl sm:text-3xl md:text-4xl font-general font-black text-[#003366] tabular-nums">
                     {plan?.price_inr?.toLocaleString() ?? 0}
                   </span>
-                  <span className="text-lg font-montserrat font-semibold text-[#003366]/55 pb-1">INR</span>
+                  <span className="text-lg font-general font-semibold text-[#003366]/55 pb-1">INR</span>
                 </div>
-                <p className="font-outfit text-lg font-bold text-[#003366] mt-3">
+                <p className="font-general text-lg font-bold text-[#003366] mt-3">
                   {(plan?.credits ?? 0).toLocaleString()} credits
                 </p>
-                <div className="mt-4 flex items-center gap-2 text-xs font-montserrat text-[#003366]/55">
+                <div className="mt-4 flex items-center gap-2 text-xs font-general text-[#003366]/55">
                   <Lock className="w-4 h-4 text-[#E2C285]/80 shrink-0" aria-hidden />
                   Payment via {paymentMethod === "upi_qr" ? "UPI (QR)" : "Razorpay"} — encrypted checkout
                 </div>
               </div>
 
-              {error && <p className="font-montserrat text-sm text-red-600 mb-4">{error}</p>}
+              {error && <p className="font-general text-sm text-red-600 mb-4">{error}</p>}
 
               <Button
                 className="w-full h-14 rounded-2xl bg-gold-gradient text-[#001a33] font-bold text-base shadow-[0_0_28px_rgba(226,194,133,0.35)] hover:shadow-[0_0_40px_rgba(226,194,133,0.45)] hover:scale-[1.02] transition-all border-none font-general"
@@ -436,8 +436,8 @@ function CheckoutContent() {
               className="rounded-[2rem] border-2 p-8 sm:p-10 shadow-[0_24px_60px_rgba(0,51,102,0.1)] mb-8"
               style={{ borderColor: "rgba(226, 194, 133, 0.4)", backgroundColor: "var(--pure-white)" }}
             >
-              <h2 className="font-outfit text-2xl font-black text-[#003366] mb-2">Pay with UPI</h2>
-              <p className="font-montserrat text-sm text-[#003366]/70 mb-6">
+              <h2 className="font-playfair-display text-2xl font-black text-[#003366] mb-2">Pay with UPI</h2>
+              <p className="font-general text-sm text-[#003366]/70 mb-6">
                 Amount <strong className="text-[#003366]">₹{upiOrder.amount.toLocaleString()}</strong>
                 {" · "}
                 <strong className="text-[#003366]">{upiOrder.credits}</strong> credits
@@ -447,14 +447,14 @@ function CheckoutContent() {
                   <img src={upiOrder.qrDataUrl} alt="UPI QR code to complete payment" width={280} height={280} className="rounded-lg" />
                 </div>
               ) : (
-                <div className="p-5 rounded-2xl bg-[#003366]/[0.04] border border-[#003366]/10 font-montserrat text-sm break-all mb-6">
+                <div className="p-5 rounded-2xl bg-[#003366]/[0.04] border border-[#003366]/10 font-general text-sm break-all mb-6">
                   <p className="font-semibold text-[#003366] mb-2">Open in your UPI app</p>
                   <a href={upiOrder.upiUrl} className="text-[#003366] underline decoration-[#E2C285] underline-offset-2 hover:text-[#E2C285]">
                     {upiOrder.upiUrl}
                   </a>
                 </div>
               )}
-              <p className="font-montserrat text-xs text-[#003366]/55 mb-6 leading-relaxed">
+              <p className="font-general text-xs text-[#003366]/55 mb-6 leading-relaxed">
                 After you pay, we verify and add credits. This page refreshes when done—or check your balance in a few minutes.
               </p>
               <Button
@@ -470,7 +470,7 @@ function CheckoutContent() {
           <p className="text-center">
             <Link
               href="/"
-              className="font-montserrat text-sm font-medium text-[#003366]/65 hover:text-[#E2C285] transition-colors underline-offset-4 hover:underline"
+              className="font-general text-sm font-medium text-[#003366]/65 hover:text-[#E2C285] transition-colors underline-offset-4 hover:underline"
             >
               Back to home
             </Link>

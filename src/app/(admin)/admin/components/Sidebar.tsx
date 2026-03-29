@@ -88,7 +88,7 @@ export function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
               <h1 className="text-lg font-bold font-playfair-display" style={{ color: "var(--primary-blue)" }}>
                 Prime Group
               </h1>
-              <p className="text-sm font-montserrat font-medium opacity-90" style={{ color: "var(--primary-blue)" }}>
+              <p className="text-sm font-general font-medium opacity-90" style={{ color: "var(--primary-blue)" }}>
                 Admin Panel
               </p>
             </div>
@@ -99,7 +99,7 @@ export function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
       <nav className="flex-1 overflow-y-auto px-3 py-6 space-y-2">
         {!collapsed && (
           <div className="mb-4">
-            <h3 className="text-sm font-semibold font-montserrat uppercase tracking-wider px-3 opacity-90" style={{ color: "var(--primary-blue)" }}>
+            <h3 className="text-sm font-semibold font-general uppercase tracking-wider px-3 opacity-90" style={{ color: "var(--primary-blue)" }}>
               Navigation
             </h3>
           </div>
@@ -112,7 +112,7 @@ export function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
               key={item.href}
               href={item.href}
               className={cn(
-                "group relative flex items-center rounded-xl text-sm font-semibold font-montserrat transition-all duration-200",
+                "group relative flex items-center rounded-xl text-sm font-semibold font-general transition-all duration-200",
                 collapsed ? "justify-center px-3 py-3" : "gap-3 px-4 py-3",
                 isActive
                   ? "text-white shadow-md"
@@ -156,7 +156,7 @@ export function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
       <div className={cn("border-t transition-all duration-300", collapsed ? "p-3" : "p-4")} style={{ borderColor: "rgba(212, 175, 55, 0.2)" }}>
         {!collapsed && (
           <div
-            className="rounded-xl p-3 mb-3 font-montserrat text-sm font-medium"
+            className="rounded-xl p-3 mb-3 font-general text-sm font-medium"
             style={{ backgroundColor: "rgba(226, 194, 133, 0.2)", color: "var(--primary-blue)" }}
           >
             <div className="flex items-center gap-2 mb-1 font-semibold">
@@ -169,7 +169,7 @@ export function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
         <button
           onClick={handleLogout}
           className={cn(
-            "flex items-center w-full rounded-xl text-sm font-semibold font-montserrat text-red-600 hover:bg-red-50 transition-all duration-200",
+            "flex items-center w-full rounded-xl text-sm font-semibold font-general text-red-600 hover:bg-red-50 transition-all duration-200",
             collapsed ? "justify-center px-3 py-3" : "gap-3 px-4 py-3"
           )}
           title={collapsed ? "Logout" : undefined}

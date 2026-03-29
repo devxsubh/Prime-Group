@@ -27,7 +27,7 @@ export function AuthHeader() {
         <Link
           href="/"
           className={cn(
-            "flex items-center gap-2 font-playfair text-lg font-bold tracking-tight",
+            "flex items-center gap-2 font-playfair-display text-lg font-bold tracking-tight",
             "transition-opacity hover:opacity-90"
           )}
           style={{ color: "var(--primary-blue)" }}

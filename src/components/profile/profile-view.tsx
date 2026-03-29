@@ -134,7 +134,7 @@ function Section({
         {title}
       </h3>
       <div className="w-12 h-0.5 rounded-full mb-4" style={{ backgroundColor: "var(--accent-gold)" }} />
-      <div className="font-montserrat text-base leading-relaxed" style={{ color: "var(--primary-blue)" }}>
+      <div className="font-general text-base leading-relaxed" style={{ color: "var(--primary-blue)" }}>
         {children}
       </div>
     </div>
@@ -281,7 +281,7 @@ export function ProfileView({
             {profile.full_name}
           </h1>
           
-          <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 sm:gap-6 text-base sm:text-lg font-montserrat text-[var(--primary-blue)]/90 mb-6">
+          <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 sm:gap-6 text-base sm:text-lg font-general text-[var(--primary-blue)]/90 mb-6">
             <span className="flex items-center gap-2 shrink-0">
               <Calendar className="w-5 h-5 text-[var(--accent-gold)]" />
               {age} years
@@ -313,13 +313,13 @@ export function ProfileView({
               >
                 <Coins className="w-6 h-6 shrink-0" style={{ color: "var(--accent-gold)" }} aria-hidden />
                 {creditsLoading ? (
-                  <span className="text-sm font-montserrat text-[var(--primary-blue)]/60">Loading credits…</span>
+                  <span className="text-sm font-general text-[var(--primary-blue)]/60">Loading credits…</span>
                 ) : (
                   <>
-                    <span className="font-outfit font-black text-2xl tabular-nums" style={{ color: "var(--primary-blue)" }}>
+                    <span className="font-general font-bold text-2xl tabular-nums" style={{ color: "var(--primary-blue)" }}>
                       {credits.toLocaleString()}
                     </span>
-                    <span className="font-montserrat font-medium text-[var(--primary-blue)]/75">credits available</span>
+                    <span className="font-general font-medium text-[var(--primary-blue)]/75">credits available</span>
                     <Link
                       href="/checkout"
                       className="text-xs font-black uppercase tracking-widest font-general hover:opacity-80"
@@ -380,7 +380,7 @@ export function ProfileView({
                 <Button
                   onClick={handleUnlock}
                   disabled={unlocking}
-                  className="rounded-full px-6 py-2.5 font-montserrat font-semibold transition-all duration-300 hover:scale-105 hover:shadow-xl border-none gap-2"
+                  className="rounded-full px-6 py-2.5 font-general font-semibold transition-all duration-300 hover:scale-105 hover:shadow-xl border-none gap-2"
                   style={{ backgroundColor: 'var(--accent-gold)', color: 'var(--primary-blue)' }}
                 >
                   {unlocking ? (
@@ -389,7 +389,7 @@ export function ProfileView({
                     <><Unlock className="w-4 h-4" /> Unlock Contact · 1 Credit</>
                   )}
                 </Button>
-                <div className="flex items-center gap-2 text-sm font-montserrat" style={{ color: 'var(--primary-blue)', opacity: 0.7 }}>
+                <div className="flex items-center gap-2 text-sm font-general" style={{ color: 'var(--primary-blue)', opacity: 0.7 }}>
                   <Coins className="w-4 h-4" style={{ color: 'var(--accent-gold)' }} />
                   {credits} credits available
                   {credits === 0 && (
@@ -399,7 +399,7 @@ export function ProfileView({
                   )}
                 </div>
                 {unlockError && (
-                  <p className="text-sm text-red-600 font-montserrat">{unlockError}</p>
+                  <p className="text-sm text-red-600 font-general">{unlockError}</p>
                 )}
               </div>
             ) : (
@@ -438,7 +438,7 @@ export function ProfileView({
           className="flex flex-wrap items-center justify-between gap-4 rounded-3xl px-6 py-5 bg-white shadow-sm"
           style={{ border: "1px solid rgba(212, 175, 55, 0.4)" }}
         >
-          <div className="flex flex-wrap items-center gap-6 font-montserrat text-sm" style={{ color: "var(--primary-blue)" }}>
+          <div className="flex flex-wrap items-center gap-6 font-general text-sm" style={{ color: "var(--primary-blue)" }}>
             <span className="flex items-center gap-3">
               <div className="w-24 h-2 bg-gray-100 rounded-full overflow-hidden">
                 <div className="h-full bg-[var(--accent-gold)]" style={{ width: `${profile.profile_completion_pct ?? 0}%` }} />
@@ -452,7 +452,7 @@ export function ProfileView({
                 <span className="opacity-60">…</span>
               ) : (
                 <>
-                  <strong className="font-outfit text-lg tabular-nums">{credits.toLocaleString()}</strong>
+                  <strong className="font-general text-lg font-bold tabular-nums">{credits.toLocaleString()}</strong>
                   <span className="opacity-80">credits</span>
                   <Link href="/checkout" className="ml-1 text-xs font-bold uppercase tracking-wide underline-offset-2 hover:underline" style={{ color: "var(--accent-gold)" }}>
                     Add

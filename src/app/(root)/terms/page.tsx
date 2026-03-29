@@ -14,7 +14,7 @@ export default function TermsPage() {
       style={{ backgroundColor: "var(--pure-white)" }}
     >
       <div className="container mx-auto max-w-3xl">
-        <p className="font-montserrat text-sm mb-4" style={{ color: "var(--primary-blue)" }}>
+        <p className="font-general text-sm mb-4" style={{ color: "var(--primary-blue)" }}>
           Last updated: February 2025
         </p>
         <h1
@@ -28,7 +28,7 @@ export default function TermsPage() {
           style={{ backgroundColor: "var(--accent-gold)" }}
         />
         <div
-          className="font-montserrat space-y-6 text-base leading-relaxed"
+          className="font-general space-y-6 text-base leading-relaxed"
           style={{ color: "var(--primary-blue)" }}
         >
           <p>

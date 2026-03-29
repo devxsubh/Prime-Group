@@ -149,7 +149,7 @@ function ProfileMatchCard({
       <div className="p-5 sm:p-6 space-y-3 font-general">
         <div className="flex justify-between items-end gap-2">
           <div className="space-y-0.5 min-w-0">
-            <h3 className="text-lg sm:text-xl font-outfit font-black text-[#003366] tracking-tight truncate">
+            <h3 className="text-lg sm:text-xl font-playfair-display font-black text-[#003366] tracking-tight truncate">
               {profile.name}, {profile.age}
             </h3>
             <p className="text-[9px] sm:text-[10px] text-[#003366]/50 uppercase tracking-[0.18em] font-black line-clamp-2">
@@ -276,7 +276,7 @@ const GuidedHero = ({ featuredProfiles }: GuidedHeroProps) => {
               transition={reduceMotion ? instant : { duration: 0.8 }}
               className="space-y-4"
             >
-              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-outfit font-black text-white leading-[1.08] sm:leading-[1.05] md:leading-[1.02] tracking-tight max-w-3xl">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-playfair-display font-black text-white leading-[1.08] sm:leading-[1.05] md:leading-[1.02] tracking-tight max-w-3xl">
                 Where Families Connect, <br />
                 <span className="text-gold-gradient bg-clip-text text-transparent">Stories Begin.</span>
               </h1>

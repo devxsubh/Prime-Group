@@ -156,13 +156,13 @@ export default function AdminRevenuePage() {
             <IndianRupee className="w-7 h-7" style={{ color: "var(--accent-gold)" }} />
             Revenue
           </h1>
-          <p className="font-montserrat text-sm mt-1 text-gray-600">
+          <p className="font-general text-sm mt-1 text-gray-600">
             Revenue stats, breakdown by plan and monthly trend.
           </p>
         </div>
         <Button
           variant="outline"
-          className="gap-2 rounded-xl font-montserrat"
+          className="gap-2 rounded-xl font-general"
           style={{ borderColor: "var(--accent-gold)" }}
           onClick={() => {
             setRefreshing(true);
@@ -180,11 +180,11 @@ export default function AdminRevenuePage() {
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-montserrat text-gray-600">Total revenue</p>
+                <p className="text-sm font-general text-gray-600">Total revenue</p>
                 <p className="text-2xl font-bold font-playfair-display mt-1" style={{ color: "var(--primary-blue)" }}>
                   {loading ? "..." : `₹${totalRevenue.toLocaleString()}`}
                 </p>
-                <p className="text-xs font-montserrat text-gray-500 mt-1">{payments.length} successful payments</p>
+                <p className="text-xs font-general text-gray-500 mt-1">{payments.length} successful payments</p>
               </div>
               <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: "rgba(0, 51, 102, 0.1)" }}>
                 <IndianRupee className="w-6 h-6" style={{ color: "var(--primary-blue)" }} />
@@ -197,13 +197,13 @@ export default function AdminRevenuePage() {
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-montserrat text-gray-600 flex items-center gap-1">
+                <p className="text-sm font-general text-gray-600 flex items-center gap-1">
                   <TrendingUp className="w-4 h-4" /> This month
                 </p>
                 <p className="text-2xl font-bold font-playfair-display mt-1" style={{ color: "var(--primary-blue)" }}>
                   {loading ? "..." : `₹${thisMonthRevenue.toLocaleString()}`}
                 </p>
-                <p className="text-xs font-montserrat text-gray-500 mt-1">{thisMonthPayments.length} payments</p>
+                <p className="text-xs font-general text-gray-500 mt-1">{thisMonthPayments.length} payments</p>
               </div>
               <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-emerald-50">
                 <BarChart3 className="w-6 h-6 text-emerald-600" />
@@ -216,11 +216,11 @@ export default function AdminRevenuePage() {
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-montserrat text-gray-600">Last month</p>
+                <p className="text-sm font-general text-gray-600">Last month</p>
                 <p className="text-2xl font-bold font-playfair-display mt-1" style={{ color: "var(--primary-blue)" }}>
                   {loading ? "..." : `₹${lastMonthRevenue.toLocaleString()}`}
                 </p>
-                <p className="text-xs font-montserrat text-gray-500 mt-1">{lastMonthPayments.length} payments</p>
+                <p className="text-xs font-general text-gray-500 mt-1">{lastMonthPayments.length} payments</p>
               </div>
               <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-gray-100">
                 <Calendar className="w-6 h-6 text-gray-600" />
@@ -233,7 +233,7 @@ export default function AdminRevenuePage() {
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-montserrat text-gray-600">Avg. payment</p>
+                <p className="text-sm font-general text-gray-600">Avg. payment</p>
                 <p className="text-2xl font-bold font-playfair-display mt-1" style={{ color: "var(--primary-blue)" }}>
                   {loading ? "..." : payments.length ? `₹${Math.round(totalRevenue / payments.length).toLocaleString()}` : "—"}
                 </p>
@@ -252,7 +252,7 @@ export default function AdminRevenuePage() {
             <BarChart3 className="w-5 h-5" style={{ color: "var(--accent-gold)" }} />
             Revenue by plan
           </CardTitle>
-          <p className="text-sm font-montserrat text-gray-600">Share of total revenue per plan</p>
+          <p className="text-sm font-general text-gray-600">Share of total revenue per plan</p>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-3">
@@ -263,7 +263,7 @@ export default function AdminRevenuePage() {
             ) : (
               byPlan.map((row) => (
                 <div key={row.planId ?? "other"} className="space-y-1">
-                  <div className="flex justify-between text-sm font-montserrat">
+                  <div className="flex justify-between text-sm font-general">
                     <span className="font-medium">{row.planName}</span>
                     <span className="text-gray-600">
                       ₹{row.sum.toLocaleString()} ({row.count} payments · {row.pct}%)
@@ -291,34 +291,34 @@ export default function AdminRevenuePage() {
             <Calendar className="w-5 h-5" style={{ color: "var(--accent-gold)" }} />
             Monthly trend
           </CardTitle>
-          <p className="text-sm font-montserrat text-gray-600">Revenue and payment count by month</p>
+          <p className="text-sm font-general text-gray-600">Revenue and payment count by month</p>
         </CardHeader>
         <CardContent>
           <div className="rounded-lg border overflow-hidden" style={{ borderColor: "rgba(212, 175, 55, 0.2)" }}>
             <Table>
               <TableHeader>
                 <TableRow className="bg-gray-50">
-                  <TableHead className="font-montserrat">Month</TableHead>
-                  <TableHead className="font-montserrat text-right">Revenue</TableHead>
-                  <TableHead className="font-montserrat text-right">Payments</TableHead>
+                  <TableHead className="font-general">Month</TableHead>
+                  <TableHead className="font-general text-right">Revenue</TableHead>
+                  <TableHead className="font-general text-right">Payments</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {loading ? (
                   <TableRow>
-                    <TableCell colSpan={3} className="text-center py-6 text-gray-500 font-montserrat">
+                    <TableCell colSpan={3} className="text-center py-6 text-gray-500 font-general">
                       Loading...
                     </TableCell>
                   </TableRow>
                 ) : byMonth.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={3} className="text-center py-6 text-gray-500 font-montserrat">
+                    <TableCell colSpan={3} className="text-center py-6 text-gray-500 font-general">
                       No data yet.
                     </TableCell>
                   </TableRow>
                 ) : (
                   byMonth.map((row) => (
-                    <TableRow key={`${row.year}-${row.month}`} className="font-montserrat">
+                    <TableRow key={`${row.year}-${row.month}`} className="font-general">
                       <TableCell className="font-medium">
                         {row.month} {row.year}
                       </TableCell>
@@ -339,7 +339,7 @@ export default function AdminRevenuePage() {
             <CardTitle className="font-playfair-display" style={{ color: "var(--primary-blue)" }}>
               Pending UPI payments
             </CardTitle>
-            <p className="text-sm font-montserrat text-gray-600">
+            <p className="text-sm font-general text-gray-600">
               After the user pays via UPI QR, confirm here to add credits to their account.
             </p>
           </CardHeader>
@@ -348,15 +348,15 @@ export default function AdminRevenuePage() {
               <Table>
                 <TableHeader>
                   <TableRow className="bg-gray-50">
-                    <TableHead className="font-montserrat">Order ID</TableHead>
-                    <TableHead className="font-montserrat text-right">Amount</TableHead>
-                    <TableHead className="font-montserrat">Created</TableHead>
-                    <TableHead className="font-montserrat w-[120px]">Action</TableHead>
+                    <TableHead className="font-general">Order ID</TableHead>
+                    <TableHead className="font-general text-right">Amount</TableHead>
+                    <TableHead className="font-general">Created</TableHead>
+                    <TableHead className="font-general w-[120px]">Action</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {pendingUpi.map((row) => (
-                    <TableRow key={row.id} className="font-montserrat">
+                    <TableRow key={row.id} className="font-general">
                       <TableCell className="font-mono text-sm">{row.id.slice(0, 8)}…</TableCell>
                       <TableCell className="text-right">₹{row.amount?.toLocaleString() ?? 0}</TableCell>
                       <TableCell className="text-gray-600">
@@ -365,7 +365,7 @@ export default function AdminRevenuePage() {
                       <TableCell>
                         <Button
                           size="sm"
-                          className="rounded-lg font-montserrat"
+                          className="rounded-lg font-general"
                           style={{ backgroundColor: "var(--primary-blue)" }}
                           disabled={confirmingId === row.id}
                           onClick={async () => {

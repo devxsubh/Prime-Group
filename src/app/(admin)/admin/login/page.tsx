@@ -69,13 +69,13 @@ export default function AdminLoginPage() {
         <h1 className="text-2xl font-playfair-display font-bold mb-2 text-center" style={{ color: "var(--primary-blue)" }}>
           Admin Login
         </h1>
-        <p className="text-sm font-montserrat font-medium text-center mb-8 opacity-90" style={{ color: "var(--primary-blue)" }}>
+        <p className="text-sm font-general font-medium text-center mb-8 opacity-90" style={{ color: "var(--primary-blue)" }}>
           Prime Group Admin Panel
         </p>
 
         {error && (
           <div
-            className="rounded-xl mb-6 p-4 text-sm font-montserrat font-medium flex items-center gap-2 border border-red-200 bg-red-50 text-red-700"
+            className="rounded-xl mb-6 p-4 text-sm font-general font-medium flex items-center gap-2 border border-red-200 bg-red-50 text-red-700"
           >
             <span aria-hidden>⚠️</span>
             {error}
@@ -84,7 +84,7 @@ export default function AdminLoginPage() {
 
         <form onSubmit={handleLogin} className="space-y-6">
           <div>
-            <label htmlFor="admin-email" className="block text-sm font-semibold font-montserrat mb-2" style={{ color: "var(--primary-blue)" }}>
+            <label htmlFor="admin-email" className="block text-sm font-semibold font-general mb-2" style={{ color: "var(--primary-blue)" }}>
               Email
             </label>
             <Input
@@ -100,7 +100,7 @@ export default function AdminLoginPage() {
           </div>
 
           <div>
-            <label htmlFor="admin-password" className="block text-sm font-semibold font-montserrat mb-2" style={{ color: "var(--primary-blue)" }}>
+            <label htmlFor="admin-password" className="block text-sm font-semibold font-general mb-2" style={{ color: "var(--primary-blue)" }}>
               Password
             </label>
             <div className="relative">
@@ -127,7 +127,7 @@ export default function AdminLoginPage() {
 
           <Button
             type="submit"
-            className="w-full rounded-xl h-11 font-montserrat font-medium text-white"
+            className="w-full rounded-xl h-11 font-general font-medium text-white"
             style={{ backgroundColor: "var(--primary-blue)" }}
             disabled={loading}
           >
@@ -143,7 +143,7 @@ export default function AdminLoginPage() {
         </form>
 
         <div className="mt-8 pt-6 border-t border-gray-200">
-          <p className="text-sm text-center font-montserrat text-gray-600 mb-4">
+          <p className="text-sm text-center font-general text-gray-600 mb-4">
             Can&apos;t log in? Contact the administrator
           </p>
           <a

@@ -168,7 +168,7 @@ export function AddAdminModal({ open, onOpenChange, onSuccess }: AddAdminModalPr
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="rounded-2xl max-w-2xl max-h-[90vh] overflow-hidden flex flex-col font-montserrat"
+        className="rounded-2xl max-w-2xl max-h-[90vh] overflow-hidden flex flex-col font-general"
         style={{ borderColor: cardBorder }}
       >
         <DialogHeader className="flex-shrink-0">

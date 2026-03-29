@@ -70,7 +70,7 @@ export default function DiscoverGrid({
   if (!profiles.length) {
     return (
       <div className="text-center py-16" style={{ color: "var(--primary-blue)" }}>
-        <p className="text-lg font-montserrat">No profiles to show yet. Check back soon for new matches.</p>
+        <p className="text-lg font-general">No profiles to show yet. Check back soon for new matches.</p>
       </div>
     );
   }
@@ -79,14 +79,14 @@ export default function DiscoverGrid({
     return (
       <div className="space-y-6">
         {hasActiveFilters && (
-          <p className="text-center text-base font-montserrat" style={{ color: "var(--primary-blue)" }}>
+          <p className="text-center text-base font-general" style={{ color: "var(--primary-blue)" }}>
             No profiles match your filters yet. Try browsing all profiles or adjust filters later in your account.
           </p>
         )}
         <div className="flex justify-center">
           <Link
             href="/discover"
-            className="inline-flex items-center justify-center px-8 py-4 rounded-lg font-montserrat font-semibold text-sm uppercase tracking-wide border-2 transition-all hover:scale-105"
+            className="inline-flex items-center justify-center px-8 py-4 rounded-lg font-general font-semibold text-sm uppercase tracking-wide border-2 transition-all hover:scale-105"
             style={{ borderColor: "var(--primary-blue)", color: "var(--primary-blue)" }}
           >
             View all profiles
@@ -103,7 +103,7 @@ export default function DiscoverGrid({
           {labelParts.map((label) => (
             <span
               key={label}
-              className="inline-block px-4 py-1.5 rounded-full text-xs font-montserrat font-medium uppercase tracking-wide bg-white/80 border"
+              className="inline-block px-4 py-1.5 rounded-full text-xs font-general font-medium uppercase tracking-wide bg-white/80 border"
               style={{ borderColor: "rgba(217, 170, 72, 0.35)", color: "var(--primary-blue)" }}
             >
               {label}
@@ -111,7 +111,7 @@ export default function DiscoverGrid({
           ))}
           <Link
             href="/discover"
-            className="inline-flex items-center text-xs font-montserrat underline-offset-4 hover:underline ml-2"
+            className="inline-flex items-center text-xs font-general underline-offset-4 hover:underline ml-2"
             style={{ color: "var(--primary-blue)" }}
           >
             Clear filters

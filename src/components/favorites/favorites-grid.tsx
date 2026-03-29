@@ -20,10 +20,10 @@ export default function FavoritesGrid({ profiles }: FavoritesGridProps) {
         className="text-center py-20"
       >
         <Heart className="h-24 w-24 mx-auto mb-6 opacity-20" style={{ color: "var(--accent-gold)" }} />
-        <p className="text-xl font-montserrat" style={{ color: "var(--primary-blue)" }}>
+        <p className="text-xl font-general" style={{ color: "var(--primary-blue)" }}>
           Explore profiles and click the heart icon to add them to your favorites.
         </p>
-        <Link href="/discover" className="inline-block mt-6 text-gold-gradient font-montserrat font-semibold hover:underline">
+        <Link href="/discover" className="inline-block mt-6 text-gold-gradient font-general font-semibold hover:underline">
           Discover profiles
         </Link>
       </motion.div>

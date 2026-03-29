@@ -88,7 +88,7 @@ export default function CheckoutHero({ subtitle }: CheckoutHeroProps) {
           </p>
           <h1
             id="checkout-hero-heading"
-            className="font-outfit font-black text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl leading-[1.1] sm:leading-[1.08] tracking-tight"
+            className="font-playfair-display font-black text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl leading-[1.1] sm:leading-[1.08] tracking-tight"
           >
             Buy{" "}
             <span className="text-gold-gradient bg-clip-text text-transparent">credits</span>
@@ -106,19 +106,19 @@ export default function CheckoutHero({ subtitle }: CheckoutHeroProps) {
             >
               <Coins className="h-6 w-6 shrink-0 text-[#F5D78A]" aria-hidden />
               {creditsLoading ? (
-                <span className="inline-flex items-center gap-2 text-sm font-montserrat text-white/80">
+                <span className="inline-flex items-center gap-2 text-sm font-general text-white/80">
                   <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
                   Loading balance…
                 </span>
               ) : (
-                <span className="font-montserrat text-sm sm:text-base">
+                <span className="font-general text-sm sm:text-base">
                   <span className="text-white/75">Your balance:</span>{" "}
-                  <strong className="text-xl font-outfit tabular-nums text-white">{credits.toLocaleString()}</strong>{" "}
+                  <strong className="text-xl font-general font-bold tabular-nums text-white">{credits.toLocaleString()}</strong>{" "}
                   <span className="text-white/80">credits</span>
                 </span>
               )}
             </div>
-            <span className="inline-flex items-center justify-center gap-2 text-white/65 text-sm font-montserrat">
+            <span className="inline-flex items-center justify-center gap-2 text-white/65 text-sm font-general">
               <ShieldCheck className="h-5 w-5 text-[#E2C285] shrink-0" aria-hidden />
               Secure checkout
             </span>

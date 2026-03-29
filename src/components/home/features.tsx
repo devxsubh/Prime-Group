@@ -8,13 +8,13 @@ export const Feature6 = () => (
       <div className="flex flex-col gap-10">
         <div className="flex gap-4 flex-col items-start">
           <div>
-            <Badge className="font-montserrat" style={{ backgroundColor: 'var(--primary-blue)', color: 'var(--pure-white)' }}>Our Services</Badge>
+            <Badge className="font-general" style={{ backgroundColor: 'var(--primary-blue)', color: 'var(--pure-white)' }}>Our Services</Badge>
           </div>
           <div className="flex gap-2 flex-col">
             <h2 className="text-3xl md:text-5xl tracking-tighter max-w-xl font-playfair-display font-bold text-left text-gold-gradient" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.15)' }}>
               See what we have to offer
             </h2>
-            <p className="text-lg max-w-xl lg:max-w-lg leading-relaxed tracking-tight text-left font-montserrat" style={{ color: 'var(--primary-blue)' }}>
+            <p className="text-lg max-w-xl lg:max-w-lg leading-relaxed tracking-tight text-left font-general" style={{ color: 'var(--primary-blue)' }}>
               Discover our comprehensive matrimonial services designed to help you find your perfect life partner.
             </p>
           </div>
@@ -35,7 +35,7 @@ export const Feature6 = () => (
             </div>
             <div className="flex flex-col mt-4 relative z-10">
               <h3 className="text-xl tracking-tight text-white font-playfair-display font-bold" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.15)' }}>Verified Profiles</h3>
-              <p className="text-white/80 max-w-xs text-base font-montserrat">
+              <p className="text-white/80 max-w-xs text-base font-general">
                 Browse through verified profiles of eligible matches with complete background checks and authentic information.
               </p>
             </div>
@@ -55,7 +55,7 @@ export const Feature6 = () => (
             </div>
             <div className="flex flex-col mt-4 relative z-10">
               <h3 className="text-xl tracking-tight text-white font-playfair-display font-bold" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.15)' }}>Smart Matching</h3>
-              <p className="text-white/80 max-w-xs text-base font-montserrat">
+              <p className="text-white/80 max-w-xs text-base font-general">
                 Our advanced matching algorithm connects you with compatible partners based on preferences, values, and lifestyle.
               </p>
             </div>
@@ -75,7 +75,7 @@ export const Feature6 = () => (
             </div>
             <div className="flex flex-col mt-4 relative z-10">
               <h3 className="text-xl tracking-tight text-white font-playfair-display font-bold" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.15)' }}>Privacy & Security</h3>
-              <p className="text-white/80 max-w-xs text-base font-montserrat">
+              <p className="text-white/80 max-w-xs text-base font-general">
                 Your privacy is our priority. We ensure secure communication and protect your personal information with advanced encryption.
               </p>
             </div>
@@ -95,7 +95,7 @@ export const Feature6 = () => (
             </div>
             <div className="flex flex-col mt-4 relative z-10">
               <h3 className="text-xl tracking-tight text-white font-playfair-display font-bold" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.15)' }}>Personalized Assistance</h3>
-              <p className="text-white/80 max-w-xs text-base font-montserrat">
+              <p className="text-white/80 max-w-xs text-base font-general">
                 Get dedicated support from our relationship experts who guide you through every step of your matrimonial journey.
               </p>
             </div>

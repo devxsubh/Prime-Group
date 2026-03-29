@@ -62,12 +62,12 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           </div>
         )}
         {post.excerpt && (
-          <p className="text-lg text-gray-600 leading-relaxed mb-8 font-montserrat">
+          <p className="text-lg text-gray-600 leading-relaxed mb-8 font-general">
             {post.excerpt}
           </p>
         )}
         <div
-          className="blog-content font-montserrat text-gray-700 leading-relaxed [&_h2]:font-playfair-display [&_h2]:text-2xl [&_h2]:mt-8 [&_h2]:mb-4 [&_h2]:font-bold [&_h2]:text-[var(--primary-blue)] [&_p]:mb-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:mb-2 [&_blockquote]:border-l-4 [&_blockquote]:border-[var(--accent-gold)] [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-gray-600 [&_pre]:bg-gray-100 [&_pre]:p-4 [&_pre]:rounded-lg [&_pre]:overflow-x-auto [&_img]:rounded-lg [&_img]:my-4 [&_a]:underline [&_a]:text-[var(--primary-blue)]"
+          className="blog-content font-general text-gray-700 leading-relaxed [&_h2]:font-playfair-display [&_h2]:text-2xl [&_h2]:mt-8 [&_h2]:mb-4 [&_h2]:font-bold [&_h2]:text-[var(--primary-blue)] [&_p]:mb-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:mb-2 [&_blockquote]:border-l-4 [&_blockquote]:border-[var(--accent-gold)] [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-gray-600 [&_pre]:bg-gray-100 [&_pre]:p-4 [&_pre]:rounded-lg [&_pre]:overflow-x-auto [&_img]:rounded-lg [&_img]:my-4 [&_a]:underline [&_a]:text-[var(--primary-blue)]"
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
       </article>

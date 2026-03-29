@@ -132,7 +132,7 @@ export default async function SignInPage({
 
               {/* Bottom text overlay */}
               <div className="absolute bottom-8 left-8 right-8 z-30 space-y-2">
-                <p className="text-2xl font-montserrat font-bold leading-tight" style={{ color: "var(--primary-blue)" }}>
+                <p className="text-2xl font-general font-bold leading-tight" style={{ color: "var(--primary-blue)" }}>
                   Real stories, real matches.
                 </p>
                 <p className="text-sm text-gray-600 font-light leading-relaxed">
@@ -171,7 +171,7 @@ export default async function SignInPage({
                   </p>
                 </div>
                 <div className="space-y-1.5 sm:space-y-2">
-                  <h1 className="text-2xl sm:text-3xl md:text-4xl font-montserrat font-bold tracking-tight" style={{ color: "var(--primary-blue)" }}>
+                  <h1 className="text-2xl sm:text-3xl md:text-4xl font-general font-bold tracking-tight" style={{ color: "var(--primary-blue)" }}>
                     Welcome back
                   </h1>
                   <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
@@ -181,7 +181,7 @@ export default async function SignInPage({
               </div>
 
               {showPasswordResetSuccess && (
-                <div className="mb-4 p-3 rounded-lg bg-green-50 text-green-800 text-sm font-montserrat">
+                <div className="mb-4 p-3 rounded-lg bg-green-50 text-green-800 text-sm font-general">
                   Password reset successfully. Sign in with your new password.
                 </div>
               )}

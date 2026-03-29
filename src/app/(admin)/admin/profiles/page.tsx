@@ -134,13 +134,13 @@ export default function AdminProfilesPage() {
             <Users className="w-7 h-7" style={{ color: "var(--accent-gold)" }} />
             Profiles
           </h1>
-          <p className="font-montserrat text-sm mt-1 text-gray-600">
+          <p className="font-general text-sm mt-1 text-gray-600">
             View and manage user profiles.
           </p>
         </div>
         <Button
           variant="outline"
-          className="gap-2 rounded-xl font-montserrat"
+          className="gap-2 rounded-xl font-general"
           style={{ borderColor: "var(--accent-gold)" }}
           onClick={() => fetchProfiles()}
           disabled={loading}
@@ -170,7 +170,7 @@ export default function AdminProfilesPage() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="rounded-lg border border-gray-200 px-3 py-2 text-sm font-montserrat"
+              className="rounded-lg border border-gray-200 px-3 py-2 text-sm font-general"
             >
               <option value="all">All statuses</option>
               <option value="pending">Pending</option>
@@ -184,32 +184,32 @@ export default function AdminProfilesPage() {
             <Table>
               <TableHeader>
                 <TableRow className="bg-gray-50">
-                  <TableHead className="font-montserrat">Name</TableHead>
-                  <TableHead className="font-montserrat">Gender</TableHead>
-                  <TableHead className="font-montserrat">City</TableHead>
-                  <TableHead className="font-montserrat">Status</TableHead>
-                  <TableHead className="font-montserrat">Change status</TableHead>
-                  <TableHead className="font-montserrat">Completion</TableHead>
-                  <TableHead className="font-montserrat">Created</TableHead>
-                  <TableHead className="font-montserrat w-[100px]">Action</TableHead>
+                  <TableHead className="font-general">Name</TableHead>
+                  <TableHead className="font-general">Gender</TableHead>
+                  <TableHead className="font-general">City</TableHead>
+                  <TableHead className="font-general">Status</TableHead>
+                  <TableHead className="font-general">Change status</TableHead>
+                  <TableHead className="font-general">Completion</TableHead>
+                  <TableHead className="font-general">Created</TableHead>
+                  <TableHead className="font-general w-[100px]">Action</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {loading ? (
                   <TableRow>
-                    <TableCell colSpan={8} className="text-center py-8 text-gray-500 font-montserrat">
+                    <TableCell colSpan={8} className="text-center py-8 text-gray-500 font-general">
                       Loading...
                     </TableCell>
                   </TableRow>
                 ) : filtered.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={8} className="text-center py-8 text-gray-500 font-montserrat">
+                    <TableCell colSpan={8} className="text-center py-8 text-gray-500 font-general">
                       No profiles found.
                     </TableCell>
                   </TableRow>
                 ) : (
                   filtered.map((p) => (
-                    <TableRow key={p.id} className="font-montserrat">
+                    <TableRow key={p.id} className="font-general">
                       <TableCell className="font-medium" style={{ color: "var(--primary-blue)" }}>
                         {p.full_name}
                       </TableCell>
@@ -235,12 +235,12 @@ export default function AdminProfilesPage() {
                           onValueChange={(value) => updateStatus(p.id, value)}
                           disabled={updatingId === p.id}
                         >
-                          <SelectTrigger className="w-[140px] h-8 text-xs font-montserrat">
+                          <SelectTrigger className="w-[140px] h-8 text-xs font-general">
                             <SelectValue placeholder="Change status" />
                           </SelectTrigger>
                           <SelectContent>
                             {STATUS_OPTIONS.map((opt) => (
-                              <SelectItem key={opt.value} value={opt.value} className="font-montserrat text-sm">
+                              <SelectItem key={opt.value} value={opt.value} className="font-general text-sm">
                                 {opt.label}
                               </SelectItem>
                             ))}

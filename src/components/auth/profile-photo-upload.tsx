@@ -65,7 +65,7 @@ export function ProfilePhotoUpload() {
 
   return (
     <div className="space-y-4">
-      <p className="font-montserrat text-sm" style={{ color: "var(--primary-blue)" }}>
+      <p className="font-general text-sm" style={{ color: "var(--primary-blue)" }}>
         Add up to {MAX_PROFILE_PHOTOS} photos. They will be compressed to save space.
       </p>
       <div className="flex flex-wrap gap-4">
@@ -109,7 +109,7 @@ export function ProfilePhotoUpload() {
             ) : (
               <Upload className="h-8 w-8 mb-1" style={{ color: "var(--primary-blue)" }} />
             )}
-            <span className="text-xs font-montserrat" style={{ color: "var(--primary-blue)" }}>
+            <span className="text-xs font-general" style={{ color: "var(--primary-blue)" }}>
               {photos.length}/{MAX_PROFILE_PHOTOS}
             </span>
           </div>

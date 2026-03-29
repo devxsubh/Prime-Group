@@ -81,7 +81,7 @@ export default function ResetPasswordPage() {
         <h2 className="text-2xl font-playfair-display font-bold text-center mb-2" style={{ color: "var(--primary-blue)" }}>
           Set new password
         </h2>
-        <p className="text-sm font-montserrat text-center mb-6 text-gray-600">
+        <p className="text-sm font-general text-center mb-6 text-gray-600">
           Enter your new password below. You&apos;ll be signed out and can sign in with it.
         </p>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -89,7 +89,7 @@ export default function ResetPasswordPage() {
             <div
               role="status"
               aria-live="polite"
-              className={`p-3 rounded-lg text-sm font-montserrat ${
+              className={`p-3 rounded-lg text-sm font-general ${
                 message.type === "error" ? "bg-red-50 text-red-700" : "bg-green-50 text-green-800"
               }`}
             >
@@ -118,13 +118,13 @@ export default function ResetPasswordPage() {
             type="submit"
             disabled={isSubmitting}
             aria-label="Update password"
-            className="w-full py-2.5 px-4 rounded-lg font-montserrat font-medium text-white flex items-center justify-center gap-2 disabled:opacity-50 transition-colors hover:opacity-95"
+            className="w-full py-2.5 px-4 rounded-lg font-general font-medium text-white flex items-center justify-center gap-2 disabled:opacity-50 transition-colors hover:opacity-95"
             style={{ backgroundColor: "var(--primary-blue)" }}
           >
             {isSubmitting ? <Spinner size="sm" /> : "Update password"}
           </button>
         </form>
-        <p className="text-center text-sm mt-6 font-montserrat" style={{ color: "var(--primary-blue)" }}>
+        <p className="text-center text-sm mt-6 font-general" style={{ color: "var(--primary-blue)" }}>
           <Link href="/sign-in" className="font-medium underline hover:opacity-90" style={{ color: "var(--accent-gold)" }}>
             Back to sign in
           </Link>

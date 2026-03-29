@@ -76,7 +76,7 @@ export default function SubscriptionPlan() {
               Credits
             </span>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-outfit font-black mb-3 sm:mb-4 text-gold-gradient tracking-tighter px-2" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.15)' }}>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-playfair-display font-black mb-3 sm:mb-4 text-gold-gradient tracking-tighter px-2" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.15)' }}>
             Buy Credits
           </h2>
           <p className="text-base sm:text-lg md:text-xl font-general font-medium max-w-2xl mx-auto px-2" style={{ color: 'var(--primary-blue)', opacity: 0.8 }}>
@@ -119,7 +119,7 @@ export default function SubscriptionPlan() {
                   <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{ backgroundColor: 'var(--primary-blue)' }}>
                     <plan.icon className="w-5 h-5" style={{ color: 'var(--accent-gold)' }} />
                   </div>
-                  <h3 className="text-xl font-outfit font-black uppercase tracking-widest" style={{ color: 'var(--primary-blue)' }}>
+                  <h3 className="text-xl font-playfair-display font-black uppercase tracking-widest" style={{ color: 'var(--primary-blue)' }}>
                     {plan.name}
                   </h3>
                 </div>
@@ -127,7 +127,7 @@ export default function SubscriptionPlan() {
                 {/* Credits */}
                 <div className="flex items-center gap-2 mb-2 font-general">
                   <Coins className="w-5 h-5" style={{ color: 'var(--accent-gold)' }} />
-                  <span className="text-4xl font-outfit font-black tracking-tighter" style={{ color: 'var(--primary-blue)' }}>
+                  <span className="text-4xl font-general font-black tracking-tighter tabular-nums" style={{ color: 'var(--primary-blue)' }}>
                     {plan.credits.toLocaleString()}
                   </span>
                   <span className="text-[10px] font-black uppercase tracking-widest" style={{ color: 'var(--primary-blue)', opacity: 0.7 }}>
@@ -140,7 +140,7 @@ export default function SubscriptionPlan() {
                   <span className="text-xs font-medium line-through" style={{ color: 'var(--primary-blue)', opacity: 0.5 }}>
                     ₹{plan.originalPrice.toLocaleString()}
                   </span>
-                  <span className="text-2xl font-outfit font-black tracking-tighter" style={{ color: 'var(--primary-blue)' }}>
+                  <span className="text-2xl font-general font-black tracking-tighter tabular-nums" style={{ color: 'var(--primary-blue)' }}>
                     ₹{plan.price.toLocaleString()}
                   </span>
                 </div>
@@ -178,7 +178,7 @@ export default function SubscriptionPlan() {
                 </Link>
 
                 {/* Per-credit price */}
-                <p className="text-center text-xs font-montserrat mt-3" style={{ color: 'var(--primary-blue)', opacity: 0.6 }}>
+                <p className="text-center text-xs font-general mt-3" style={{ color: 'var(--primary-blue)', opacity: 0.6 }}>
                   ₹{(plan.price / plan.credits).toFixed(2)} per credit
                 </p>
               </div>

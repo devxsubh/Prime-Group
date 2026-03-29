@@ -25,14 +25,14 @@ const HeroGsap = () => {
         <div className="mx-auto w-full max-w-[1600px] px-5 sm:px-8 lg:px-14">
           <div className="max-w-2xl space-y-8">
             <div className="space-y-4">
-              <h1 className="font-playfair text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight text-gold-gradient">
+              <h1 className="font-playfair-display text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight text-gold-gradient">
                 Find Your Perfect
                 <br />
                 Match
               </h1>
             </div>
 
-            <p className="font-montserrat text-lg sm:text-xl leading-relaxed text-white/85 max-w-xl font-light">
+            <p className="font-general text-lg sm:text-xl leading-relaxed text-white/85 max-w-xl font-light">
               Prime Group brings together natural souls creating beautiful, meaningful relationships built on trust and shared values.
             </p>
 
@@ -40,7 +40,7 @@ const HeroGsap = () => {
               <Link href="/sign-up" className="inline-block">
                 <Button
                   size="lg"
-                  className="px-8 py-6 text-base font-montserrat font-semibold rounded-lg bg-gold-gradient text-black shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 border-none"
+                  className="px-8 py-6 text-base font-general font-semibold rounded-lg bg-gold-gradient text-black shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 border-none"
                 >
                   Join Now
                 </Button>
@@ -48,7 +48,7 @@ const HeroGsap = () => {
               <Link href="/sign-in" className="inline-block">
                 <Button
                   size="lg"
-                  className="px-8 py-6 text-base font-montserrat font-semibold rounded-lg border border-white/40 bg-white/5 hover:bg-white/10 text-white transition-all duration-300 backdrop-blur-sm"
+                  className="px-8 py-6 text-base font-general font-semibold rounded-lg border border-white/40 bg-white/5 hover:bg-white/10 text-white transition-all duration-300 backdrop-blur-sm"
                 >
                   Sign In
                 </Button>
@@ -57,7 +57,7 @@ const HeroGsap = () => {
                 <Button
                   size="lg"
                   variant="ghost"
-                  className="px-8 py-6 text-base font-montserrat font-semibold rounded-lg text-white/90 hover:text-white hover:bg-white/10 transition-all duration-300"
+                  className="px-8 py-6 text-base font-general font-semibold rounded-lg text-white/90 hover:text-white hover:bg-white/10 transition-all duration-300"
                 >
                   Search Profiles
                 </Button>
@@ -67,13 +67,13 @@ const HeroGsap = () => {
             {/* Trust Indicators */}
             <div className="flex items-center gap-6 pt-6 text-white/70">
               <div className="flex flex-col">
-                <span className="font-playfair text-2xl font-bold text-white">5K+</span>
-                <span className="text-sm font-montserrat">Happy Matches</span>
+                <span className="font-playfair-display text-2xl font-bold text-white">5K+</span>
+                <span className="text-sm font-general">Happy Matches</span>
               </div>
               <div className="w-px h-10 bg-white/20"></div>
               <div className="flex flex-col">
-                <span className="font-playfair text-2xl font-bold text-white">98%</span>
-                <span className="text-sm font-montserrat">Satisfaction</span>
+                <span className="font-playfair-display text-2xl font-bold text-white">98%</span>
+                <span className="text-sm font-general">Satisfaction</span>
               </div>
             </div>
           </div>

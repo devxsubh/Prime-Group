@@ -72,7 +72,7 @@ export default function AboutHero() {
           </p>
           <h1
             id="about-hero-heading"
-            className="font-outfit font-black text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-[1.08] sm:leading-[1.05] tracking-tight"
+            className="font-playfair-display font-black text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-[1.08] sm:leading-[1.05] tracking-tight"
           >
             About{" "}
             <span className="text-gold-gradient bg-clip-text text-transparent">
@@ -81,7 +81,7 @@ export default function AboutHero() {
             <br className="hidden sm:block" />
             <span className="sm:ml-2">Matrimony</span>
           </h1>
-          <p className="mt-5 sm:mt-6 text-base sm:text-lg md:text-xl text-white/75 font-general font-medium max-w-2xl md:mx-0 mx-auto leading-relaxed">
+          <p className="mt-4 sm:mt-5 text-sm sm:text-base md:text-lg lg:text-xl text-white/75 font-general font-medium max-w-2xl md:mx-0 mx-auto leading-relaxed">
             Where traditional values meet a secure, modern experience—so
             families and individuals can connect with confidence.
           </p>
@@ -89,7 +89,7 @@ export default function AboutHero() {
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center md:justify-start items-stretch sm:items-center">
             <Button
               asChild
-              className="h-14 px-8 rounded-2xl bg-gold-gradient text-[#001a33] font-bold text-base shadow-[0_0_24px_rgba(226,194,133,0.25)] hover:shadow-[0_0_32px_rgba(226,194,133,0.35)] border-none hover:scale-[1.02] transition-transform"
+              className="h-12 sm:h-14 px-8 rounded-2xl bg-gold-gradient text-[#001a33] font-bold text-sm sm:text-base shadow-[0_0_24px_rgba(226,194,133,0.25)] hover:shadow-[0_0_32px_rgba(226,194,133,0.35)] border-none hover:scale-[1.02] transition-transform"
             >
               <Link href="/discover" className="inline-flex items-center justify-center gap-2">
                 Browse profiles
@@ -99,7 +99,7 @@ export default function AboutHero() {
             <Button
               asChild
               variant="outline"
-              className="h-14 px-8 rounded-2xl border-2 border-white/25 bg-white/5 text-white font-semibold backdrop-blur-sm hover:bg-white/10 hover:text-white"
+              className="h-12 sm:h-14 px-8 rounded-2xl border-2 border-white/25 bg-white/5 text-white text-sm sm:text-base font-semibold backdrop-blur-sm hover:bg-white/10 hover:text-white"
             >
               <Link href="/contact-us" className="inline-flex items-center justify-center gap-2">
                 <MessageCircle className="w-5 h-5" aria-hidden />

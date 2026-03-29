@@ -176,7 +176,7 @@ export function EditProfileForm({ profile, photos, preferences, userId, onClose 
           <h1 className="font-playfair-display text-3xl font-bold" style={{ color: "var(--primary-blue)" }}>
             Edit Profile
           </h1>
-          <p className="font-montserrat text-sm mt-2 opacity-80" style={{ color: "var(--primary-blue)" }}>
+          <p className="font-general text-sm mt-2 opacity-80" style={{ color: "var(--primary-blue)" }}>
             Update your details, photos, and preferences inline.
           </p>
         </div>

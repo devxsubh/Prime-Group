@@ -22,7 +22,7 @@ export function BlogHeroSection({ featuredPost }: BlogHeroSectionProps) {
 
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="text-center mb-12 sm:mb-16 md:mb-20 animate-in fade-in slide-in-from-top-4 duration-700">
-          <h1 className="font-outfit text-3xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-black text-[#003366] mb-5 sm:mb-8 leading-[1.02] sm:leading-[0.95] md:leading-[0.9] tracking-tighter px-1">
+          <h1 className="font-playfair-display text-3xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-black text-[#003366] mb-5 sm:mb-8 leading-[1.02] sm:leading-[0.95] md:leading-[0.9] tracking-tighter px-1">
             Real Stories. <span className="text-gold-gradient bg-clip-text text-transparent">Real Matches.</span> <br />
             Real Love.
           </h1>

@@ -125,13 +125,13 @@ export default function AdminPricingPage() {
             <IndianRupee className="w-7 h-7" style={{ color: "var(--accent-gold)" }} />
             Pricing & Plans
           </h1>
-          <p className="font-montserrat text-sm mt-1 text-gray-600">
+          <p className="font-general text-sm mt-1 text-gray-600">
             Edit plan prices and visibility.
           </p>
         </div>
         <Button
           variant="outline"
-          className="gap-2 rounded-xl font-montserrat"
+          className="gap-2 rounded-xl font-general"
           style={{ borderColor: "var(--accent-gold)" }}
           onClick={fetchPlans}
           disabled={loading}
@@ -152,31 +152,31 @@ export default function AdminPricingPage() {
             <Table>
               <TableHeader>
                 <TableRow className="bg-gray-50">
-                  <TableHead className="font-montserrat">Name</TableHead>
-                  <TableHead className="font-montserrat">Price (₹)</TableHead>
-                  <TableHead className="font-montserrat">Price ($)</TableHead>
-                  <TableHead className="font-montserrat">Duration</TableHead>
-                  <TableHead className="font-montserrat">Credits</TableHead>
-                  <TableHead className="font-montserrat">Active</TableHead>
-                  <TableHead className="font-montserrat w-[100px]">Action</TableHead>
+                  <TableHead className="font-general">Name</TableHead>
+                  <TableHead className="font-general">Price (₹)</TableHead>
+                  <TableHead className="font-general">Price ($)</TableHead>
+                  <TableHead className="font-general">Duration</TableHead>
+                  <TableHead className="font-general">Credits</TableHead>
+                  <TableHead className="font-general">Active</TableHead>
+                  <TableHead className="font-general w-[100px]">Action</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {loading ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center py-8 text-gray-500 font-montserrat">
+                    <TableCell colSpan={7} className="text-center py-8 text-gray-500 font-general">
                       Loading...
                     </TableCell>
                   </TableRow>
                 ) : plans.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center py-8 text-gray-500 font-montserrat">
+                    <TableCell colSpan={7} className="text-center py-8 text-gray-500 font-general">
                       No plans. Run the plans migration (20250212000000_plans_and_payments.sql) to seed default plans.
                     </TableCell>
                   </TableRow>
                 ) : (
                   plans.map((p) => (
-                    <TableRow key={p.id} className="font-montserrat">
+                    <TableRow key={p.id} className="font-general">
                       <TableCell className="font-medium" style={{ color: "var(--primary-blue)" }}>
                         {p.name}
                       </TableCell>
@@ -213,7 +213,7 @@ export default function AdminPricingPage() {
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label className="font-montserrat">Name</Label>
+              <Label className="font-general">Name</Label>
               <Input
                 value={form.name}
                 onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
@@ -222,7 +222,7 @@ export default function AdminPricingPage() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
-                <Label className="font-montserrat">Price (₹)</Label>
+                <Label className="font-general">Price (₹)</Label>
                 <Input
                   type="number"
                   min={0}
@@ -232,7 +232,7 @@ export default function AdminPricingPage() {
                 />
               </div>
               <div className="grid gap-2">
-                <Label className="font-montserrat">Price ($)</Label>
+                <Label className="font-general">Price ($)</Label>
                 <Input
                   type="number"
                   min={0}
@@ -244,7 +244,7 @@ export default function AdminPricingPage() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
-                <Label className="font-montserrat">Duration (days)</Label>
+                <Label className="font-general">Duration (days)</Label>
                 <Input
                   type="number"
                   min={0}
@@ -254,7 +254,7 @@ export default function AdminPricingPage() {
                 />
               </div>
               <div className="grid gap-2">
-                <Label className="font-montserrat">Credits</Label>
+                <Label className="font-general">Credits</Label>
                 <Input
                   type="number"
                   min={0}
@@ -272,7 +272,7 @@ export default function AdminPricingPage() {
                 onChange={(e) => setForm((f) => ({ ...f, is_active: e.target.checked }))}
                 className="rounded"
               />
-              <Label htmlFor="is_active" className="font-montserrat">Active (visible on site)</Label>
+              <Label htmlFor="is_active" className="font-general">Active (visible on site)</Label>
             </div>
           </div>
           <DialogFooter>

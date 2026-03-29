@@ -226,7 +226,7 @@ export function AuthForm({ mode, hideTitle = false, submitLabel, className, next
           type="submit"
           disabled={isSubmitting}
           aria-label={submitLabel ?? (isSignUp ? "Sign up" : "Sign in")}
-          className="w-full py-2.5 px-4 rounded-lg font-montserrat font-medium text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          className="w-full py-2.5 px-4 rounded-lg font-general font-medium text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           style={{ backgroundColor: "var(--primary-blue)" }}
         >
           {isSubmitting ? (

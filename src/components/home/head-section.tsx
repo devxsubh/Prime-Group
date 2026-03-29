@@ -86,14 +86,14 @@ export default function HeadSection() {
           className="flex items-center justify-center gap-4 p-5 md:p-10 flex-col text-center mb-12"
         >
           <div className="inline-block mb-4 px-6 py-2 rounded-full" style={{ backgroundColor: 'var(--primary-blue)' }}>
-            <span className="text-sm font-montserrat font-semibold uppercase tracking-wide text-gold-gradient">
+            <span className="text-sm font-general font-semibold uppercase tracking-wide text-gold-gradient">
               Gallery
             </span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-playfair-display font-bold text-gold-gradient px-2" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.15)' }}>
           {heading.title}
           </h2>
-          <p className="text-base sm:text-lg md:text-xl font-montserrat max-w-3xl mx-auto mt-3 sm:mt-4 px-2" style={{ color: 'var(--primary-blue)' }}>
+          <p className="text-base sm:text-lg md:text-xl font-general max-w-3xl mx-auto mt-3 sm:mt-4 px-2" style={{ color: 'var(--primary-blue)' }}>
             {heading.subtitle}
           </p>
         </motion.div>
@@ -120,7 +120,7 @@ export default function HeadSection() {
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       <div className="absolute bottom-0 left-0 right-0 p-4 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                        <p className="text-white font-montserrat font-semibold text-sm">
+                        <p className="text-white font-general font-semibold text-sm">
                           A Beautiful Union
                         </p>
               </div>

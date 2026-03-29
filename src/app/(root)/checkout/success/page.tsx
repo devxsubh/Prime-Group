@@ -16,10 +16,10 @@ export default function CheckoutSuccessPage() {
         <div className="mx-auto w-16 h-16 rounded-full bg-[#E2C285]/20 flex items-center justify-center mb-4">
           <CheckCircle2 className="w-10 h-10 text-[#E2C285]" strokeWidth={2} aria-hidden />
         </div>
-        <h1 className="font-outfit font-black text-2xl sm:text-3xl md:text-4xl text-white tracking-tight px-2">
+        <h1 className="font-playfair-display font-black text-2xl sm:text-3xl md:text-4xl text-white tracking-tight px-2">
           Payment <span className="text-gold-gradient bg-clip-text text-transparent">successful</span>
         </h1>
-        <p className="mt-3 font-montserrat text-white/75 text-sm sm:text-base max-w-md mx-auto">
+        <p className="mt-3 font-general text-white/75 text-sm sm:text-base max-w-md mx-auto">
           Your credits are ready. Start unlocking contact details on profiles you like.
         </p>
       </div>
@@ -29,7 +29,7 @@ export default function CheckoutSuccessPage() {
           className="rounded-[2rem] border-2 p-5 sm:p-8 text-center shadow-[0_20px_50px_rgba(0,51,102,0.08)]"
           style={{ borderColor: "rgba(226, 194, 133, 0.35)", backgroundColor: "var(--pure-white)" }}
         >
-          <div className="inline-flex items-center gap-2 text-[#003366]/70 font-montserrat text-sm mb-4">
+          <div className="inline-flex items-center gap-2 text-[#003366]/70 font-general text-sm mb-4">
             <Sparkles className="w-5 h-5 text-[#E2C285]" aria-hidden />
             You&apos;re all set
           </div>

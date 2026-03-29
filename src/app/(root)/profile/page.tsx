@@ -24,7 +24,7 @@ export default async function ProfilePage() {
           <h1 className="font-playfair-display text-2xl font-bold mb-4" style={{ color: "var(--primary-blue)" }}>
             No profile yet
           </h1>
-          <p className="font-montserrat mb-6" style={{ color: "var(--primary-blue)" }}>
+          <p className="font-general mb-6" style={{ color: "var(--primary-blue)" }}>
             Complete your profile to appear in search and get matches.
           </p>
           <Button asChild style={{ backgroundColor: "var(--primary-blue)" }}>

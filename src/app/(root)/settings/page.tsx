@@ -32,7 +32,7 @@ export default async function SettingsPage() {
         <h1 className="font-playfair-display text-3xl font-bold mb-2" style={{ color: "var(--primary-blue)" }}>
           Settings
         </h1>
-        <p className="font-montserrat text-sm mb-8" style={{ color: "var(--primary-blue)" }}>
+        <p className="font-general text-sm mb-8" style={{ color: "var(--primary-blue)" }}>
           Privacy and account settings.
         </p>
         <SettingsClient

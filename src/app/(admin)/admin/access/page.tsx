@@ -66,7 +66,7 @@ export default function AdminAccessPage() {
             <Shield className="w-7 h-7" style={{ color: "var(--accent-gold)" }} />
             Admin Access
           </h1>
-          <p className="font-montserrat text-sm mt-1 text-gray-600">
+          <p className="font-general text-sm mt-1 text-gray-600">
             Manage who has admin access. Admins have both user and admin permissions.
           </p>
         </div>
@@ -82,7 +82,7 @@ export default function AdminAccessPage() {
             <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
           </Button>
           <Button
-            className="rounded-xl gap-2 font-montserrat"
+            className="rounded-xl gap-2 font-general"
             style={{ backgroundColor: "var(--primary-blue)" }}
             onClick={() => setAddOpen(true)}
           >
@@ -98,7 +98,7 @@ export default function AdminAccessPage() {
         </div>
       ) : admins.length === 0 ? (
         <Card className="rounded-xl border shadow-sm" style={cardStyle}>
-          <CardContent className="py-12 text-center font-montserrat text-gray-500">
+          <CardContent className="py-12 text-center font-general text-gray-500">
             No admins yet. Use &quot;Add admin&quot; to grant a user admin access and set their role and permissions.
           </CardContent>
         </Card>
@@ -124,12 +124,12 @@ export default function AdminAccessPage() {
                         <CardTitle className="font-playfair-display text-lg truncate" style={{ color: "var(--primary-blue)" }}>
                           {name}
                         </CardTitle>
-                        <p className="font-montserrat text-sm text-gray-500 truncate">{admin.email}</p>
+                        <p className="font-general text-sm text-gray-500 truncate">{admin.email}</p>
                       </div>
                     </div>
                     <Badge
                       variant="secondary"
-                      className="flex-shrink-0 rounded-lg font-montserrat"
+                      className="flex-shrink-0 rounded-lg font-general"
                       style={{
                         backgroundColor: admin.role === "super_admin" ? "rgba(212, 175, 55, 0.2)" : "rgba(0, 82, 155, 0.1)",
                         color: "var(--primary-blue)",
@@ -140,20 +140,20 @@ export default function AdminAccessPage() {
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm text-gray-600 font-montserrat">
+                  <div className="flex items-center gap-2 text-sm text-gray-600 font-general">
                     <Mail className="w-4 h-4 flex-shrink-0" />
                     <span className="truncate">{admin.email}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-gray-600 font-montserrat">
+                  <div className="flex items-center gap-2 text-sm text-gray-600 font-general">
                     <MapPin className="w-4 h-4 flex-shrink-0" />
                     <span className="truncate">{city}</span>
                   </div>
                   {perms.length > 0 && (
                     <div className="pt-2 border-t" style={{ borderColor: "rgba(212, 175, 55, 0.2)" }}>
-                      <p className="text-xs font-montserrat font-medium text-gray-500 mb-1">Permissions</p>
+                      <p className="text-xs font-general font-medium text-gray-500 mb-1">Permissions</p>
                       <div className="flex flex-wrap gap-1">
                         {perms.map((p) => (
-                          <Badge key={p} variant="outline" className="text-xs rounded-md font-montserrat">
+                          <Badge key={p} variant="outline" className="text-xs rounded-md font-general">
                             {p.replace(/_/g, " ")}
                           </Badge>
                         ))}
@@ -161,7 +161,7 @@ export default function AdminAccessPage() {
                     </div>
                   )}
                   {admin.role === "super_admin" && (
-                    <p className="text-xs font-montserrat text-gray-500">Full system access</p>
+                    <p className="text-xs font-general text-gray-500">Full system access</p>
                   )}
                 </CardContent>
               </Card>

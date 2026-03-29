@@ -21,10 +21,10 @@ export default function BeverageLanding() {
     <section className="w-screen relative overflow-hidden bg-white py-16" style={{ backgroundColor: 'var(--pure-white)' }}>
       <div className="container mx-auto px-4 md:px-8 relative z-10">
         {/* Background Text */}
-        <div className="absolute top-[-50px] left-[-20px] text-[150px] md:text-[350px] font-outfit font-black leading-none z-0 opacity-5 select-none pointer-events-none" style={{ color: 'var(--primary-blue)' }}>
+        <div className="absolute top-[-50px] left-[-20px] text-[150px] md:text-[350px] font-playfair-display font-black leading-none z-0 opacity-5 select-none pointer-events-none" style={{ color: 'var(--primary-blue)' }}>
           CONNECT
         </div>
-        <div className="absolute bottom-[-50px] right-[-20px] text-[150px] md:text-[350px] font-outfit font-black leading-none z-0 opacity-5 select-none pointer-events-none" style={{ color: 'var(--primary-blue)' }}>
+        <div className="absolute bottom-[-50px] right-[-20px] text-[150px] md:text-[350px] font-playfair-display font-black leading-none z-0 opacity-5 select-none pointer-events-none" style={{ color: 'var(--primary-blue)' }}>
           UNITE
         </div>
 
@@ -62,7 +62,7 @@ export default function BeverageLanding() {
             {/* Main Title Section */}
             <div className="flex flex-col items-center justify-center space-y-6">
               <div className="scale-125 md:scale-[1.8] transform-gpu">
-                <MorphingText texts={texts} className="font-outfit font-black text-black tracking-tighter" />
+                <MorphingText texts={texts} className="font-playfair-display font-black text-black tracking-tighter" />
               </div>
               
               <div className="md:hidden transform rotate-3 bg-white p-2 shadow-xl border-4 border-white rounded-sm">
@@ -79,7 +79,7 @@ export default function BeverageLanding() {
 
             {/* Middle Branding */}
             <div className="text-center md:pt-10">
-              <h2 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-black font-outfit text-gold-gradient tracking-tighter leading-[0.95] sm:leading-[0.9]">
+              <h2 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-black font-playfair-display text-gold-gradient tracking-tighter leading-[0.95] sm:leading-[0.9]">
                 YOUR LIFE<br />PARTNER
               </h2>
             </div>

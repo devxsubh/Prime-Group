@@ -71,7 +71,7 @@ export default function ContactHero() {
           </p>
           <h1
             id="contact-hero-heading"
-            className="font-outfit font-black text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-[1.08] sm:leading-[1.05] tracking-tight"
+            className="font-playfair-display font-black text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-[1.08] sm:leading-[1.05] tracking-tight"
           >
             Let&apos;s{" "}
             <span className="text-gold-gradient bg-clip-text text-transparent">connect</span>

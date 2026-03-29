@@ -85,12 +85,12 @@ export function SettingsClient({
           <h2 className="font-playfair-display text-lg font-bold" style={{ color: "var(--primary-blue)" }}>
             Privacy controls
           </h2>
-          <p className="font-montserrat text-sm opacity-80" style={{ color: "var(--primary-blue)" }}>
+          <p className="font-general text-sm opacity-80" style={{ color: "var(--primary-blue)" }}>
             Choose what information is visible on your public profile.
           </p>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <Label htmlFor="is_visible" className="font-montserrat cursor-pointer">
+              <Label htmlFor="is_visible" className="font-general cursor-pointer">
                 Profile visible in discover
               </Label>
               <Switch
@@ -100,7 +100,7 @@ export function SettingsClient({
               />
             </div>
             <div className="flex items-center justify-between">
-              <Label htmlFor="show_location" className="font-montserrat cursor-pointer">
+              <Label htmlFor="show_location" className="font-general cursor-pointer">
                 Show location (city, state, country)
               </Label>
               <Switch
@@ -110,7 +110,7 @@ export function SettingsClient({
               />
             </div>
             <div className="flex items-center justify-between">
-              <Label htmlFor="show_education" className="font-montserrat cursor-pointer">
+              <Label htmlFor="show_education" className="font-general cursor-pointer">
                 Show education
               </Label>
               <Switch
@@ -120,7 +120,7 @@ export function SettingsClient({
               />
             </div>
             <div className="flex items-center justify-between">
-              <Label htmlFor="show_occupation" className="font-montserrat cursor-pointer">
+              <Label htmlFor="show_occupation" className="font-general cursor-pointer">
                 Show occupation
               </Label>
               <Switch
@@ -130,7 +130,7 @@ export function SettingsClient({
               />
             </div>
             <div className="flex items-center justify-between">
-              <Label htmlFor="show_family" className="font-montserrat cursor-pointer">
+              <Label htmlFor="show_family" className="font-general cursor-pointer">
                 Show family details
               </Label>
               <Switch
@@ -155,7 +155,7 @@ export function SettingsClient({
         <h2 className="font-playfair-display text-lg font-bold mb-2" style={{ color: "var(--primary-blue)" }}>
           Sign out
         </h2>
-        <p className="font-montserrat text-sm opacity-80 mb-4" style={{ color: "var(--primary-blue)" }}>
+        <p className="font-general text-sm opacity-80 mb-4" style={{ color: "var(--primary-blue)" }}>
           Securely sign out of your account on this device.
         </p>
         <Button

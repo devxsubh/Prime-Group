@@ -92,7 +92,7 @@ const Faq3 = ({
                 Help Center
               </span>
             </div>
-            <h2 className="mb-3 sm:mb-4 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-outfit font-black text-gold-gradient tracking-tighter px-1" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.15)' }}>
+            <h2 className="mb-3 sm:mb-4 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-playfair-display font-black text-gold-gradient tracking-tighter px-1" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.15)' }}>
               {heading}
             </h2>
             <p className="text-base sm:text-lg md:text-xl font-general font-medium px-1" style={{ color: 'var(--primary-blue)', opacity: 0.8 }}>{description}</p>
@@ -154,7 +154,7 @@ const Faq3 = ({
               <AvatarFallback>SU</AvatarFallback>
             </Avatar>
           </div>
-          <h3 className="mb-3 max-w-3xl font-outfit font-black text-2xl sm:text-3xl uppercase tracking-widest" style={{ color: 'var(--primary-blue)', textShadow: '2px 2px 4px rgba(0, 0, 0, 0.15)' }}>
+          <h3 className="mb-3 max-w-3xl font-playfair-display font-black text-2xl sm:text-3xl uppercase tracking-widest" style={{ color: 'var(--primary-blue)', textShadow: '2px 2px 4px rgba(0, 0, 0, 0.15)' }}>
             {supportHeading}
           </h3>
           <p className="mb-8 max-w-3xl font-general font-medium text-base sm:text-lg" style={{ color: 'var(--primary-blue)', opacity: 0.9 }}>

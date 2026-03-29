@@ -126,7 +126,7 @@ export function ProfilePhotoManager({
         <h3 className="font-playfair-display text-2xl font-bold" style={{ color: "var(--primary-blue)" }}>
           Profile Photos
         </h3>
-        <span className="text-sm font-montserrat px-3 py-1 bg-gray-100 rounded-full text-gray-600 font-medium">
+        <span className="text-sm font-general px-3 py-1 bg-gray-100 rounded-full text-gray-600 font-medium">
           {photos.length} / {MAX_PROFILE_PHOTOS} uploaded
         </span>
       </div>
@@ -200,7 +200,7 @@ export function ProfilePhotoManager({
             ) : (
               <Plus className="h-7 w-7 mb-2 text-gray-400 group-hover:text-[var(--primary-blue)] transition-colors" />
             )}
-            <span className="text-sm font-montserrat text-center px-3 text-gray-500 font-semibold">
+            <span className="text-sm font-general text-center px-3 text-gray-500 font-semibold">
               {adding ? "Uploading..." : "Add Photo"}
             </span>
           </div>

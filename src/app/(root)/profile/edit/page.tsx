@@ -25,7 +25,7 @@ export default async function ProfileEditPage() {
           <h1 className="font-playfair-display text-2xl font-bold mb-4" style={{ color: "var(--primary-blue)" }}>
             No profile yet
           </h1>
-          <p className="font-montserrat mb-6" style={{ color: "var(--primary-blue)" }}>
+          <p className="font-general mb-6" style={{ color: "var(--primary-blue)" }}>
             Complete onboarding first to create your profile.
           </p>
           <Button asChild style={{ backgroundColor: "var(--primary-blue)" }}>
@@ -62,7 +62,7 @@ export default async function ProfileEditPage() {
         <h1 className="font-playfair-display text-3xl font-bold mb-2" style={{ color: "var(--primary-blue)" }}>
           Edit profile
         </h1>
-        <p className="font-montserrat text-sm mb-8" style={{ color: "var(--primary-blue)" }}>
+        <p className="font-general text-sm mb-8" style={{ color: "var(--primary-blue)" }}>
           Update your details, photos, and preferences.
         </p>
         <EditProfileForm

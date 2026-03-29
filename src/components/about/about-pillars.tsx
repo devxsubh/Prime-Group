@@ -43,10 +43,10 @@ export default function AboutPillars() {
           >
             <Icon className="h-6 w-6" style={{ color: "var(--accent-gold)" }} aria-hidden />
           </div>
-          <h3 className="font-outfit text-xl font-bold tracking-tight mb-2" style={{ color: "var(--primary-blue)" }}>
+          <h3 className="font-playfair-display text-lg sm:text-xl font-bold tracking-tight mb-2" style={{ color: "var(--primary-blue)" }}>
             {title}
           </h3>
-          <p className="font-montserrat text-sm leading-relaxed mb-4" style={{ color: "var(--primary-blue)", opacity: 0.85 }}>
+          <p className="font-general text-sm font-medium leading-relaxed mb-4" style={{ color: "var(--primary-blue)", opacity: 0.82 }}>
             {blurb}
           </p>
           {external ? (

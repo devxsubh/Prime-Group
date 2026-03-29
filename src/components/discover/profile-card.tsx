@@ -76,7 +76,7 @@ export default function ProfileCard({ data, index }: ProfileCardProps) {
 
         {/* Profile Info */}
         <div className="p-7" style={{ backgroundColor: "var(--pure-white)" }}>
-          <h3 className="text-2xl font-outfit font-black mb-1 text-gray-900 leading-tight tracking-tight uppercase">{data.name}</h3>
+          <h3 className="text-2xl font-playfair-display font-black mb-1 text-gray-900 leading-tight tracking-tight uppercase">{data.name}</h3>
           <div className="w-10 h-1 rounded-full mb-5" style={{ backgroundColor: "var(--accent-gold)" }} />
 
           <div className="space-y-3.5 font-general">

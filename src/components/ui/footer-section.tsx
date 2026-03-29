@@ -20,7 +20,7 @@ function Footerdemo() {
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-5">
           <div className="relative">
             <h2 className="mb-4 text-3xl font-playfair-display font-bold tracking-tight text-gold-gradient">Stay Connected</h2>
-            <p className="mb-6 font-montserrat" style={{ color: 'var(--pure-white)' }}>
+            <p className="mb-6 font-general" style={{ color: 'var(--pure-white)' }}>
               Subscribe to our newsletter for the latest matches, success stories, and matrimonial updates.
             </p>
             <form className="relative">
@@ -43,7 +43,7 @@ function Footerdemo() {
           </div>
           <div>
             <h3 className="mb-4 text-lg font-playfair-display font-bold text-gold-gradient">Quick Links</h3>
-            <nav className="space-y-2 text-sm font-montserrat">
+            <nav className="space-y-2 text-sm font-general">
               <Link href="/" className="block transition-colors duration-300" style={{ color: 'var(--pure-white)' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-gold)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--pure-white)'}>
                 Home
               </Link>
@@ -69,7 +69,7 @@ function Footerdemo() {
           </div>
           <div>
             <h3 className="mb-4 text-lg font-playfair-display font-bold text-gold-gradient">Legal</h3>
-            <nav className="space-y-2 text-sm font-montserrat">
+            <nav className="space-y-2 text-sm font-general">
               <Link href="/privacy" className="block transition-colors duration-300" style={{ color: 'var(--pure-white)' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-gold)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--pure-white)'}>
                 Privacy Policy
               </Link>
@@ -89,7 +89,7 @@ function Footerdemo() {
           </div>
           <div>
             <h3 className="mb-4 text-lg font-playfair-display font-bold text-gold-gradient">Contact Us</h3>
-            <address className="space-y-2 text-sm not-italic font-montserrat" style={{ color: 'var(--pure-white)' }}>
+            <address className="space-y-2 text-sm not-italic font-general" style={{ color: 'var(--pure-white)' }}>
               <p>Prime Group Matrimony</p>
               <p>123 Matrimony Avenue</p>
               <p>Mumbai, Maharashtra 400001</p>
@@ -224,10 +224,10 @@ function Footerdemo() {
           </div>
         </div>
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t pt-8 text-center md:flex-row" style={{ borderColor: 'var(--accent-gold)' }}>
-          <p className="text-sm font-montserrat" style={{ color: 'var(--pure-white)' }}>
+          <p className="text-sm font-general" style={{ color: 'var(--pure-white)' }}>
             © 2024 Prime Group Matrimony. All rights reserved.
           </p>
-          <nav className="flex flex-wrap justify-center gap-4 text-sm font-montserrat">
+          <nav className="flex flex-wrap justify-center gap-4 text-sm font-general">
             <Link href="/privacy" className="transition-colors duration-300" style={{ color: 'var(--pure-white)' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-gold)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--pure-white)'}>
               Privacy Policy
             </Link>

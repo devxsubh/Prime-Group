@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Send, CheckCircle2 } from "lucide-react";
 
 const fieldClass =
-  "h-12 rounded-2xl border-2 border-[#003366]/12 bg-white font-montserrat text-[#003366] placeholder:text-[#003366]/35 focus-visible:border-[#E2C285]/60 focus-visible:ring-2 focus-visible:ring-[#E2C285]/40 focus-visible:ring-offset-0 transition-shadow";
+  "h-12 rounded-2xl border-2 border-[#003366]/12 bg-white font-general text-[#003366] placeholder:text-[#003366]/35 focus-visible:border-[#E2C285]/60 focus-visible:ring-2 focus-visible:ring-[#E2C285]/40 focus-visible:ring-offset-0 transition-shadow";
 
 const labelClass =
   "font-general text-[10px] font-black uppercase tracking-[0.2em] text-[#003366]/50 ml-1";
@@ -64,10 +64,10 @@ export default function ContactForm() {
         >
           <CheckCircle2 className="h-9 w-9 text-[#003366]" strokeWidth={2} aria-hidden />
         </div>
-        <p className="text-2xl sm:text-3xl font-outfit font-black mb-2 text-gold-gradient" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.06)" }}>
+        <p className="text-2xl sm:text-3xl font-playfair-display font-black mb-2 text-gold-gradient" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.06)" }}>
           Message received
         </p>
-        <p className="font-montserrat text-base max-w-md mx-auto" style={{ color: "var(--primary-blue)", opacity: 0.88 }}>
+        <p className="font-general text-base max-w-md mx-auto" style={{ color: "var(--primary-blue)", opacity: 0.88 }}>
           Thank you for reaching out. We&apos;ll get back to you as soon as we can.
         </p>
       </div>
@@ -87,10 +87,10 @@ export default function ContactForm() {
         <p className="font-general text-[10px] font-black uppercase tracking-[0.3em] text-[#003366]/45 mb-2">
           Send a message
         </p>
-        <h2 className="font-outfit text-2xl sm:text-3xl font-black tracking-tight" style={{ color: "var(--primary-blue)" }}>
+        <h2 className="font-playfair-display text-2xl sm:text-3xl font-black tracking-tight" style={{ color: "var(--primary-blue)" }}>
           Contact form
         </h2>
-        <p className="font-montserrat text-sm mt-2 leading-relaxed" style={{ color: "var(--primary-blue)", opacity: 0.75 }}>
+        <p className="font-general text-sm mt-2 leading-relaxed" style={{ color: "var(--primary-blue)", opacity: 0.75 }}>
           Fields marked * are required.
         </p>
       </div>
@@ -148,7 +148,7 @@ export default function ContactForm() {
             placeholder="Tell us how we can help..."
           />
         </div>
-        {errorText && <p className="text-sm font-montserrat text-red-600">{errorText}</p>}
+        {errorText && <p className="text-sm font-general text-red-600">{errorText}</p>}
         <Button
           type="submit"
           disabled={status === "loading"}

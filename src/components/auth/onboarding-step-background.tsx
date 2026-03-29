@@ -108,7 +108,7 @@ export function OnboardingStepBackground() {
             <text
               x="180"
               y="480"
-              fontFamily="Playfair Display, serif"
+              fontFamily="Playfair Display, Georgia, serif"
               fontSize="220"
               fill="#1E2A44"
               opacity="0.14"
@@ -120,7 +120,7 @@ export function OnboardingStepBackground() {
             <text
               x="980"
               y="620"
-              fontFamily="Playfair Display, serif"
+              fontFamily="Playfair Display, Georgia, serif"
               fontSize="220"
               fill="#1E2A44"
               opacity="0.14"

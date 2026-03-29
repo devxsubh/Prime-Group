@@ -131,7 +131,7 @@ export function AdminProfileModal({ profileId, open, onOpenChange, onStatusUpdat
           ) : profile ? (
             <ProfileView profile={profile} photos={photos} preferences={preferences} isOwnProfile={false} />
           ) : (
-            <div className="text-center py-12 font-montserrat" style={{ color: "var(--primary-blue)" }}>
+            <div className="text-center py-12 font-general" style={{ color: "var(--primary-blue)" }}>
               Profile not found
             </div>
           )}
@@ -143,7 +143,7 @@ export function AdminProfileModal({ profileId, open, onOpenChange, onStatusUpdat
               variant="outline"
               onClick={() => onOpenChange(false)}
               disabled={updating}
-              className="font-montserrat"
+              className="font-general"
             >
               Close
             </Button>
@@ -152,7 +152,7 @@ export function AdminProfileModal({ profileId, open, onOpenChange, onStatusUpdat
                 variant="outline"
                 onClick={handleReject}
                 disabled={updating || profile.profile_status === "rejected"}
-                className="font-montserrat border-red-300 text-red-700 hover:bg-red-50"
+                className="font-general border-red-300 text-red-700 hover:bg-red-50"
               >
                 {updating ? (
                   <Loader2 className="h-4 w-4 animate-spin mr-2" />
@@ -166,7 +166,7 @@ export function AdminProfileModal({ profileId, open, onOpenChange, onStatusUpdat
               <Button
                 onClick={handleApprove}
                 disabled={updating || profile.profile_status === "active"}
-                className="font-montserrat bg-green-600 hover:bg-green-700 text-white"
+                className="font-general bg-green-600 hover:bg-green-700 text-white"
               >
                 {updating ? (
                   <Loader2 className="h-4 w-4 animate-spin mr-2" />

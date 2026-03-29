@@ -55,7 +55,7 @@ export default function AdminSettingsPage() {
           <Settings className="w-7 h-7" style={{ color: "var(--accent-gold)" }} />
           Settings
         </h1>
-        <p className="font-montserrat text-sm mt-1 text-gray-600">
+        <p className="font-general text-sm mt-1 text-gray-600">
           Admin panel configuration.
         </p>
       </div>
@@ -66,22 +66,22 @@ export default function AdminSettingsPage() {
             <CreditCard className="w-5 h-5" style={{ color: "var(--accent-gold)" }} />
             Payment method
           </CardTitle>
-          <p className="font-montserrat text-sm text-gray-600">
+          <p className="font-general text-sm text-gray-600">
             Choose how users pay on checkout. Razorpay opens the gateway; UPI QR shows a scan-to-pay code.
           </p>
         </CardHeader>
         <CardContent className="space-y-4">
           {loading ? (
-            <div className="flex items-center gap-2 text-gray-500 font-montserrat">
+            <div className="flex items-center gap-2 text-gray-500 font-general">
               <Loader2 className="w-4 h-4 animate-spin" />
               Loading…
             </div>
           ) : (
             <>
               <div className="space-y-2">
-                <Label className="font-montserrat">Active payment method</Label>
+                <Label className="font-general">Active payment method</Label>
                 <select
-                  className="w-full max-w-xs rounded-lg border px-3 py-2 font-montserrat text-sm"
+                  className="w-full max-w-xs rounded-lg border px-3 py-2 font-general text-sm"
                   style={{ borderColor: "rgba(212, 175, 55, 0.4)" }}
                   value={paymentMethod}
                   onChange={(e) => setPaymentMethod(e.target.value as PaymentMethodValue)}
@@ -91,7 +91,7 @@ export default function AdminSettingsPage() {
                 </select>
               </div>
               <Button
-                className="rounded-xl font-montserrat"
+                className="rounded-xl font-general"
                 style={{ backgroundColor: "var(--primary-blue)" }}
                 onClick={handleSavePayment}
                 disabled={saving}
@@ -116,7 +116,7 @@ export default function AdminSettingsPage() {
             General
           </CardTitle>
         </CardHeader>
-        <CardContent className="font-montserrat text-sm text-gray-600">
+        <CardContent className="font-general text-sm text-gray-600">
           <p>Other settings (e.g. site name, approval workflow, email templates) can be added here.</p>
         </CardContent>
       </Card>

@@ -112,7 +112,7 @@ const DiscoverHero = () => {
           >
             {/* Main Heading */}
             <motion.h1 
-              className={`text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-outfit font-black mb-4 sm:mb-6 md:mb-8 leading-[0.92] sm:leading-[0.9] text-gold-gradient ${isMobile ? '' : 'whitespace-nowrap'} tracking-tighter`}
+              className={`text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-playfair-display font-black mb-4 sm:mb-6 md:mb-8 leading-[0.92] sm:leading-[0.9] text-gold-gradient ${isMobile ? '' : 'whitespace-nowrap'} tracking-tighter`}
               variants={itemVariants}
               style={{ 
                 textShadow: '3px 3px 12px rgba(0, 0, 0, 0.7), 0 0 30px rgba(0, 0, 0, 0.4), 0 0 60px rgba(226, 194, 133, 0.2)',

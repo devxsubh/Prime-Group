@@ -122,7 +122,7 @@ export default function SignUpPage() {
 
               {/* Bottom text overlay */}
               <div className="absolute bottom-8 left-8 right-8 z-30 space-y-2">
-                <p className="text-2xl font-montserrat font-bold leading-tight" style={{ color: "var(--primary-blue)" }}>
+                <p className="text-2xl font-general font-bold leading-tight" style={{ color: "var(--primary-blue)" }}>
                   Find your special someone.
                 </p>
                 <p className="text-sm text-gray-600 font-light leading-relaxed">
@@ -161,7 +161,7 @@ export default function SignUpPage() {
                   </p>
                 </div>
                 <div className="space-y-1.5 sm:space-y-2">
-                  <h1 className="text-2xl sm:text-3xl md:text-4xl font-montserrat font-bold tracking-tight" style={{ color: "var(--primary-blue)" }}>
+                  <h1 className="text-2xl sm:text-3xl md:text-4xl font-general font-bold tracking-tight" style={{ color: "var(--primary-blue)" }}>
                     Create your account
                   </h1>
                   <p className="text-gray-600 text-sm sm:text-base leading-relaxed">

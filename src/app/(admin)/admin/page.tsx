@@ -179,18 +179,18 @@ export default function AdminDashboardPage() {
             <BarChart3 className="w-7 h-7" style={{ color: "var(--accent-gold)" }} />
             Prime Group — Admin Dashboard
           </h1>
-          <p className="font-montserrat text-sm mt-1 text-gray-600">
+          <p className="font-general text-sm mt-1 text-gray-600">
             Live overview of profiles, revenue, and platform activity.
           </p>
           {lastUpdated && (
-            <p className="font-montserrat text-xs mt-1 text-gray-500">
+            <p className="font-general text-xs mt-1 text-gray-500">
               Last updated: {lastUpdated.toLocaleTimeString()} — {lastUpdated.toLocaleDateString()}
             </p>
           )}
         </div>
         <Button
           variant="outline"
-          className="gap-2 rounded-xl font-montserrat"
+          className="gap-2 rounded-xl font-general"
           style={{ borderColor: "var(--accent-gold)" }}
           onClick={handleRefresh}
           disabled={refreshing}
@@ -201,7 +201,7 @@ export default function AdminDashboardPage() {
       </div>
 
       {fetchError && (
-        <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 font-montserrat text-sm text-amber-800">
+        <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 font-general text-sm text-amber-800">
           {fetchError}
         </div>
       )}
@@ -213,7 +213,7 @@ export default function AdminDashboardPage() {
             <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-amber-50">
               <Sparkles className="w-5 h-5 text-amber-600" />
             </div>
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-1 font-montserrat text-sm font-medium">
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-1 font-general text-sm font-medium">
               <span style={{ color: "var(--primary-blue)" }}>This week</span>
               <span className="text-gray-700">{stats.newUsersLast7} new user{stats.newUsersLast7 !== 1 ? "s" : ""}</span>
               <span className="text-gray-700">{stats.newProfilesLast7} new profile{stats.newProfilesLast7 !== 1 ? "s" : ""}</span>
@@ -227,7 +227,7 @@ export default function AdminDashboardPage() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-montserrat text-gray-600">Total Users</p>
+                <p className="text-sm font-general text-gray-600">Total Users</p>
                 <p className="text-2xl font-bold font-playfair-display" style={{ color: "var(--primary-blue)" }}>
                   {loading ? "..." : stats.totalUsers}
                 </p>
@@ -243,7 +243,7 @@ export default function AdminDashboardPage() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-montserrat text-gray-600">Total Profiles</p>
+                <p className="text-sm font-general text-gray-600">Total Profiles</p>
                 <p className="text-2xl font-bold font-playfair-display" style={{ color: "var(--primary-blue)" }}>
                   {loading ? "..." : stats.totalProfiles}
                 </p>
@@ -259,7 +259,7 @@ export default function AdminDashboardPage() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-montserrat text-gray-600">Pending</p>
+                <p className="text-sm font-general text-gray-600">Pending</p>
                 <p className="text-2xl font-bold font-playfair-display" style={{ color: "var(--primary-blue)" }}>
                   {loading ? "..." : stats.pendingProfiles}
                 </p>
@@ -275,7 +275,7 @@ export default function AdminDashboardPage() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-montserrat text-gray-600">Active</p>
+                <p className="text-sm font-general text-gray-600">Active</p>
                 <p className="text-2xl font-bold font-playfair-display" style={{ color: "var(--primary-blue)" }}>
                   {loading ? "..." : stats.activeProfiles}
                 </p>
@@ -295,18 +295,18 @@ export default function AdminDashboardPage() {
             <IndianRupee className="w-5 h-5" style={{ color: "var(--accent-gold)" }} />
             Revenue
           </CardTitle>
-          <p className="text-sm font-montserrat text-gray-600">Payment totals and breakdown by plan</p>
+          <p className="text-sm font-general text-gray-600">Payment totals and breakdown by plan</p>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <div className="rounded-lg p-4 bg-gray-50 border border-gray-100">
-              <p className="text-sm font-montserrat font-medium text-gray-600">Total revenue</p>
+              <p className="text-sm font-general font-medium text-gray-600">Total revenue</p>
               <p className="text-xl font-bold font-playfair-display" style={{ color: "var(--primary-blue)" }}>
                 {loading ? "..." : `₹${revenue.total.toLocaleString()}`}
               </p>
             </div>
             <div className="rounded-lg p-4 bg-gray-50 border border-gray-100">
-              <p className="text-sm font-montserrat font-medium text-gray-600 flex items-center gap-1">
+              <p className="text-sm font-general font-medium text-gray-600 flex items-center gap-1">
                 <TrendingUp className="w-4 h-4" /> This month
               </p>
               <p className="text-xl font-bold font-playfair-display" style={{ color: "var(--primary-blue)" }}>
@@ -314,8 +314,8 @@ export default function AdminDashboardPage() {
               </p>
             </div>
             <div className="rounded-lg p-4 bg-gray-50 border border-gray-100">
-              <p className="text-sm font-montserrat font-medium text-gray-600">By plan</p>
-              <div className="text-sm font-montserrat mt-1 space-y-0.5">
+              <p className="text-sm font-general font-medium text-gray-600">By plan</p>
+              <div className="text-sm font-general mt-1 space-y-0.5">
                 {loading ? "..." : revenue.byPlan.length === 0 ? "No payments yet" : revenue.byPlan.map(({ plan_id, sum }) => (
                   <div key={plan_id ?? "none"}>
                     {planName(plan_id)}: ₹{sum.toLocaleString()}
@@ -330,21 +330,21 @@ export default function AdminDashboardPage() {
       {/* Category breakdown: four separate cards with clear tables */}
       <section className="space-y-4">
         <div>
-          <h2 className="text-lg font-semibold font-montserrat flex items-center gap-2" style={{ color: "var(--primary-blue)" }}>
+          <h2 className="text-lg font-semibold font-general flex items-center gap-2" style={{ color: "var(--primary-blue)" }}>
             <PieChart className="w-5 h-5" style={{ color: "var(--accent-gold)" }} />
             Category breakdown
           </h2>
-          <p className="text-sm font-montserrat text-gray-600 mt-0.5">Profile counts by different dimensions. Each block is a separate summary.</p>
+          <p className="text-sm font-general text-gray-600 mt-0.5">Profile counts by different dimensions. Each block is a separate summary.</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
           <Card className="rounded-xl border shadow-sm overflow-hidden" style={cardStyle}>
             <CardHeader className="py-3 px-4 border-b bg-gray-50/80" style={{ borderColor: "rgba(212, 175, 55, 0.2)" }}>
-              <CardTitle className="text-sm font-semibold font-montserrat" style={{ color: "var(--primary-blue)" }}>
+              <CardTitle className="text-sm font-semibold font-general" style={{ color: "var(--primary-blue)" }}>
                 By gender
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
-              <table className="w-full text-sm font-montserrat">
+              <table className="w-full text-sm font-general">
                 <thead>
                   <tr className="border-b bg-gray-50/50" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
                     <th className="text-left py-2.5 px-4 font-semibold text-gray-700">Category</th>
@@ -373,12 +373,12 @@ export default function AdminDashboardPage() {
 
           <Card className="rounded-xl border shadow-sm overflow-hidden" style={cardStyle}>
             <CardHeader className="py-3 px-4 border-b bg-gray-50/80" style={{ borderColor: "rgba(212, 175, 55, 0.2)" }}>
-              <CardTitle className="text-sm font-semibold font-montserrat" style={{ color: "var(--primary-blue)" }}>
+              <CardTitle className="text-sm font-semibold font-general" style={{ color: "var(--primary-blue)" }}>
                 By religion
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
-              <table className="w-full text-sm font-montserrat">
+              <table className="w-full text-sm font-general">
                 <thead>
                   <tr className="border-b bg-gray-50/50" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
                     <th className="text-left py-2.5 px-4 font-semibold text-gray-700">Category</th>
@@ -407,12 +407,12 @@ export default function AdminDashboardPage() {
 
           <Card className="rounded-xl border shadow-sm overflow-hidden" style={cardStyle}>
             <CardHeader className="py-3 px-4 border-b bg-gray-50/80" style={{ borderColor: "rgba(212, 175, 55, 0.2)" }}>
-              <CardTitle className="text-sm font-semibold font-montserrat" style={{ color: "var(--primary-blue)" }}>
+              <CardTitle className="text-sm font-semibold font-general" style={{ color: "var(--primary-blue)" }}>
                 By status
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
-              <table className="w-full text-sm font-montserrat">
+              <table className="w-full text-sm font-general">
                 <thead>
                   <tr className="border-b bg-gray-50/50" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
                     <th className="text-left py-2.5 px-4 font-semibold text-gray-700">Status</th>
@@ -441,12 +441,12 @@ export default function AdminDashboardPage() {
 
           <Card className="rounded-xl border shadow-sm overflow-hidden" style={cardStyle}>
             <CardHeader className="py-3 px-4 border-b bg-gray-50/80" style={{ borderColor: "rgba(212, 175, 55, 0.2)" }}>
-              <CardTitle className="text-sm font-semibold font-montserrat" style={{ color: "var(--primary-blue)" }}>
+              <CardTitle className="text-sm font-semibold font-general" style={{ color: "var(--primary-blue)" }}>
                 By city (top 6)
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
-              <table className="w-full text-sm font-montserrat">
+              <table className="w-full text-sm font-general">
                 <thead>
                   <tr className="border-b bg-gray-50/50" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
                     <th className="text-left py-2.5 px-4 font-semibold text-gray-700">City</th>
@@ -481,13 +481,13 @@ export default function AdminDashboardPage() {
             <Image className="w-5 h-5" style={{ color: "var(--accent-gold)" }} />
             Quick Actions
           </CardTitle>
-          <p className="text-sm font-montserrat text-gray-600">Shortcuts to main admin sections</p>
+          <p className="text-sm font-general text-gray-600">Shortcuts to main admin sections</p>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
             <Button
               variant="outline"
-              className="h-14 flex-col gap-2 rounded-xl font-montserrat hover:scale-[1.02] transition-transform"
+              className="h-14 flex-col gap-2 rounded-xl font-general hover:scale-[1.02] transition-transform"
               style={{ borderColor: "var(--accent-gold)" }}
               asChild
             >
@@ -499,7 +499,7 @@ export default function AdminDashboardPage() {
             </Button>
             <Button
               variant="outline"
-              className="h-14 flex-col gap-2 rounded-xl font-montserrat hover:scale-[1.02] transition-transform"
+              className="h-14 flex-col gap-2 rounded-xl font-general hover:scale-[1.02] transition-transform"
               style={{ borderColor: "var(--accent-gold)" }}
               asChild
             >
@@ -511,7 +511,7 @@ export default function AdminDashboardPage() {
             </Button>
             <Button
               variant="outline"
-              className="h-14 flex-col gap-2 rounded-xl font-montserrat hover:scale-[1.02] transition-transform"
+              className="h-14 flex-col gap-2 rounded-xl font-general hover:scale-[1.02] transition-transform"
               style={{ borderColor: "var(--accent-gold)" }}
               asChild
             >
@@ -523,7 +523,7 @@ export default function AdminDashboardPage() {
             </Button>
             <Button
               variant="outline"
-              className="h-14 flex-col gap-2 rounded-xl font-montserrat hover:scale-[1.02] transition-transform"
+              className="h-14 flex-col gap-2 rounded-xl font-general hover:scale-[1.02] transition-transform"
               style={{ borderColor: "var(--accent-gold)" }}
               asChild
             >
@@ -535,7 +535,7 @@ export default function AdminDashboardPage() {
             </Button>
             <Button
               variant="outline"
-              className="h-14 flex-col gap-2 rounded-xl font-montserrat hover:scale-[1.02] transition-transform"
+              className="h-14 flex-col gap-2 rounded-xl font-general hover:scale-[1.02] transition-transform"
               style={{ borderColor: "var(--accent-gold)" }}
               asChild
             >

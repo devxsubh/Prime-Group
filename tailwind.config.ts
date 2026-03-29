@@ -35,10 +35,12 @@ export default {
   			],
   			'playfair-display': [
   				'Playfair Display',
+  				'Georgia',
   				'serif'
   			],
   			montserrat: [
-  				'Montserrat',
+  				'General Sans',
+  				'system-ui',
   				'sans-serif'
   			],
   			outfit: [
