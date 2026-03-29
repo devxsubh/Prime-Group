@@ -1,24 +1,31 @@
+import type { Metadata } from "next";
+import ContactHero from "@/components/contact/contact-hero";
+import ContactAside from "@/components/contact/contact-aside";
 import ContactForm from "@/components/contact/contact-form";
+
+export const metadata: Metadata = {
+  title: "Contact Us | Prime Group Matrimony",
+  description:
+    "Get in touch with Prime Group Matrimony for support, questions about profiles, privacy, or your account.",
+};
 
 export default function ContactUsPage() {
   return (
-    <div className="min-h-screen py-16 px-4">
-      <div className="container mx-auto max-w-xl">
-        <div className="text-center mb-12">
-          <div className="inline-block px-8 py-4 rounded-full mb-6" style={{ backgroundColor: "var(--primary-blue)" }}>
-            <span className="text-lg font-montserrat font-semibold uppercase tracking-wide text-gold-gradient">
-              Contact Us
-            </span>
+    <div className="min-h-screen" style={{ backgroundColor: "var(--pure-white)" }}>
+      <ContactHero />
+
+      <section className="px-4 sm:px-6 lg:px-8 py-14 lg:py-20">
+        <div className="container mx-auto max-w-6xl">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+            <div className="lg:col-span-5">
+              <ContactAside />
+            </div>
+            <div className="lg:col-span-7">
+              <ContactForm />
+            </div>
           </div>
-          <h1 className="text-4xl sm:text-5xl font-playfair-display font-bold mb-4 text-gold-gradient" style={{ textShadow: "2px 2px 4px rgba(0, 0, 0, 0.15)" }}>
-            Get in Touch
-          </h1>
-          <p className="text-lg font-montserrat max-w-md mx-auto" style={{ color: "var(--primary-blue)" }}>
-            Have a question or need help? Send us a message and we&apos;ll get back to you shortly.
-          </p>
         </div>
-        <ContactForm />
-      </div>
+      </section>
     </div>
   );
 }

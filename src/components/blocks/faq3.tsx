@@ -21,9 +21,12 @@ interface Faq3Props {
   supportDescription: string;
   supportButtonText: string;
   supportButtonUrl: string;
+  /** When true, skip the top badge/heading block (e.g. when a page hero already shows the title). */
+  hideIntro?: boolean;
 }
 
-const faqItems = [
+/** Shown when CMS/API returns no FAQs; also used for client-side search source. */
+export const FAQ_FALLBACK_ITEMS = [
   {
     id: "faq-1",
     question: "What is the return policy?",
@@ -70,32 +73,49 @@ const faqItems = [
 const Faq3 = ({
   heading = "Frequently asked questions",
   description = "Find answers to common questions about our products. Can't find what you're looking for? Contact our support team.",
-  items = faqItems,
+  items = FAQ_FALLBACK_ITEMS,
   supportHeading = "Need more support?",
   supportDescription = "Our dedicated support team is here to help you with any questions or concerns. Get in touch with us for personalized assistance.",
   supportButtonText = "Contact Support",
   supportButtonUrl = "https://www.shadcnblocks.com",
+  hideIntro = false,
 }: Faq3Props) => {
+  const list = items ?? FAQ_FALLBACK_ITEMS;
+
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8" style={{ backgroundColor: 'var(--pure-white)' }}>
+    <section className="py-16 md:py-20 px-4 sm:px-6 lg:px-8" style={{ backgroundColor: 'var(--pure-white)' }}>
       <div className="container mx-auto max-w-7xl space-y-16">
-        <div className="mx-auto flex max-w-3xl flex-col text-center">
-          <div className="inline-block mb-4 px-6 py-2 rounded-full w-fit mx-auto font-general" style={{ backgroundColor: 'var(--primary-blue)' }}>
-            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-gold-gradient">
-              Help Center
-            </span>
+        {!hideIntro && (
+          <div className="mx-auto flex max-w-3xl flex-col text-center">
+            <div className="inline-block mb-4 px-6 py-2 rounded-full w-fit mx-auto font-general" style={{ backgroundColor: 'var(--primary-blue)' }}>
+              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-gold-gradient">
+                Help Center
+              </span>
+            </div>
+            <h2 className="mb-4 text-4xl sm:text-5xl md:text-6xl font-outfit font-black text-gold-gradient tracking-tighter" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.15)' }}>
+              {heading}
+            </h2>
+            <p className="text-lg sm:text-xl font-general font-medium" style={{ color: 'var(--primary-blue)', opacity: 0.8 }}>{description}</p>
           </div>
-          <h2 className="mb-4 text-4xl sm:text-5xl md:text-6xl font-outfit font-black text-gold-gradient tracking-tighter" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.15)' }}>
-            {heading}
-          </h2>
-          <p className="text-lg sm:text-xl font-general font-medium" style={{ color: 'var(--primary-blue)', opacity: 0.8 }}>{description}</p>
-        </div>
+        )}
+        {list.length === 0 ? (
+          <p
+            className="mx-auto max-w-2xl text-center text-lg font-general font-medium py-8"
+            style={{ color: "var(--primary-blue)", opacity: 0.85 }}
+          >
+            No questions match your search. Try different keywords or{" "}
+            <a href="/contact-us" className="underline font-semibold" style={{ color: "var(--accent-gold)" }}>
+              contact us
+            </a>
+            .
+          </p>
+        ) : (
         <Accordion
           type="single"
           collapsible
           className="mx-auto w-full lg:max-w-4xl space-y-4"
         >
-          {items.map((item) => (
+          {list.map((item) => (
             <AccordionItem 
               key={item.id} 
               value={item.id}
@@ -118,6 +138,7 @@ const Faq3 = ({
             </AccordionItem>
           ))}
         </Accordion>
+        )}
         <div className="mx-auto flex max-w-4xl flex-col items-center rounded-xl p-6 md:p-8 lg:p-10 text-center shadow-lg bg-gold-gradient">
           <div className="relative mb-6">
             <Avatar className="absolute mb-4 size-16 origin-bottom -translate-x-[60%] scale-[80%] border-2" style={{ borderColor: 'var(--primary-blue)' }}>
