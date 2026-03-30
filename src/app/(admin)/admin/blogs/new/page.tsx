@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { BlogEditor, type BlogFormData } from "@/components/admin/blog-editor";
-import { createClient } from "@/lib/supabase/client";
+import { createAdminBrowserClient } from "@/lib/supabase/client-admin";
 import { ArrowLeft } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -13,7 +13,7 @@ export default function NewBlogPage() {
   const [previousPosts, setPreviousPosts] = useState<{ id: string; title: string; slug: string }[]>([]);
 
   useEffect(() => {
-    const supabase = createClient();
+    const supabase = createAdminBrowserClient();
     supabase
       .from("blogs")
       .select("id, title, slug")
@@ -25,7 +25,7 @@ export default function NewBlogPage() {
   const handleSave = async (data: BlogFormData) => {
     setSaving(true);
     try {
-      const supabase = createClient();
+      const supabase = createAdminBrowserClient();
       const { error } = await supabase.from("blogs").insert({
         title: data.title,
         slug: data.slug || data.title.toLowerCase().replace(/\s+/g, "-"),

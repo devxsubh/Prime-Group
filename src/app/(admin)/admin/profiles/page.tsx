@@ -14,7 +14,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Users, Search, RefreshCw, Eye, Trash2 } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { createAdminBrowserClient } from "@/lib/supabase/client-admin";
 import { AdminProfileModal } from "@/components/admin/admin-profile-modal";
 import {
   Select,
@@ -52,7 +52,7 @@ export default function AdminProfilesPage() {
   const [viewingProfileId, setViewingProfileId] = useState<string | null>(null);
 
   const fetchProfiles = async () => {
-    const supabase = createClient();
+    const supabase = createAdminBrowserClient();
     setLoading(true);
     try {
       const { data, error } = await supabase
@@ -83,7 +83,7 @@ export default function AdminProfilesPage() {
   });
 
   const updateStatus = async (profileId: string, newStatus: string) => {
-    const supabase = createClient();
+    const supabase = createAdminBrowserClient();
     setUpdatingId(profileId);
     try {
       const { error } = await supabase
@@ -107,7 +107,7 @@ export default function AdminProfilesPage() {
 
   const deleteProfile = async (profileId: string) => {
     if (!confirm("Are you sure you want to delete this profile? This will hide it from the site.")) return;
-    const supabase = createClient();
+    const supabase = createAdminBrowserClient();
     setDeletingId(profileId);
     try {
       const { error } = await supabase

@@ -3,7 +3,7 @@
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { BlogEditor, type BlogFormData } from "@/components/admin/blog-editor";
-import { createClient } from "@/lib/supabase/client";
+import { createAdminBrowserClient } from "@/lib/supabase/client-admin";
 import { ArrowLeft } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -19,7 +19,7 @@ export default function EditBlogPage() {
 
   useEffect(() => {
     if (!id) return;
-    const supabase = createClient();
+    const supabase = createAdminBrowserClient();
     Promise.all([
       supabase.from("blogs").select("*").eq("id", id).single(),
       supabase.from("blogs").select("id, title, slug").order("updated_at", { ascending: false }).limit(10),
@@ -54,7 +54,7 @@ export default function EditBlogPage() {
   const handleSave = async (data: BlogFormData) => {
     setSaving(true);
     try {
-      const supabase = createClient();
+      const supabase = createAdminBrowserClient();
       const { error } = await supabase
         .from("blogs")
         .update({

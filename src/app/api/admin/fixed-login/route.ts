@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import crypto from "crypto";
-import { createClient } from "@/lib/supabase/server";
+import { createAdminServerClient } from "@/lib/supabase/server-admin";
 import { createServiceRoleClient } from "@/lib/supabase/server-service";
 
 function safeEqual(a: string, b: string) {
@@ -44,7 +44,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const supabase = await createClient();
+    const supabase = await createAdminServerClient();
     const { data, error } = await supabase.auth.signInWithPassword({
       email: adminEmail,
       password: adminPassword,

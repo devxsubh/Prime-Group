@@ -5,7 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Sidebar } from "./components/Sidebar";
-import { createClient } from "@/lib/supabase/client";
+import { createAdminBrowserClient } from "@/lib/supabase/client-admin";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -28,7 +28,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     const check = async () => {
-      const supabase = createClient();
+      const supabase = createAdminBrowserClient();
       const { data: { user } } = await supabase.auth.getUser();
       if (pathname === "/admin/login") {
         if (user) {

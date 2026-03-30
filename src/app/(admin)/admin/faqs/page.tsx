@@ -21,7 +21,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { HelpCircle, Plus, Pencil, Trash2, RefreshCw } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { createAdminBrowserClient } from "@/lib/supabase/client-admin";
 
 interface FaqRow {
   id: string;
@@ -40,7 +40,7 @@ export default function AdminFaqsPage() {
   const [saving, setSaving] = useState(false);
 
   const fetchFaqs = async () => {
-    const supabase = createClient();
+    const supabase = createAdminBrowserClient();
     setLoading(true);
     try {
       const { data, error } = await supabase
@@ -77,7 +77,7 @@ export default function AdminFaqsPage() {
   const handleSave = async () => {
     if (!question.trim() || !answer.trim()) return;
     setSaving(true);
-    const supabase = createClient();
+    const supabase = createAdminBrowserClient();
     try {
       if (editingId) {
         const { error } = await supabase
@@ -103,7 +103,7 @@ export default function AdminFaqsPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this FAQ?")) return;
-    const supabase = createClient();
+    const supabase = createAdminBrowserClient();
     try {
       const { error } = await supabase.from("faqs").delete().eq("id", id);
       if (error) throw error;
@@ -120,7 +120,7 @@ export default function AdminFaqsPage() {
     if (swapIdx < 0 || swapIdx >= faqs.length) return;
     const a = faqs[idx];
     const b = faqs[swapIdx];
-    const supabase = createClient();
+    const supabase = createAdminBrowserClient();
     try {
       await supabase.from("faqs").update({ sort_order: b.sort_order }).eq("id", a.id);
       await supabase.from("faqs").update({ sort_order: a.sort_order }).eq("id", b.id);

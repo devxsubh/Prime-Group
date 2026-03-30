@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createAdminServerClient } from "@/lib/supabase/server-admin";
 import { createServiceRoleClient } from "@/lib/supabase/server-service";
 
 const ADMIN_ROLES = ["admin", "super_admin"] as const;
@@ -16,7 +16,7 @@ export async function GET() {
       );
     }
 
-    const supabase = await createClient();
+    const supabase = await createAdminServerClient();
     const {
       data: { user },
     } = await supabase.auth.getUser();

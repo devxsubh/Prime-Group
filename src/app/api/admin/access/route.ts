@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createAdminServerClient } from "@/lib/supabase/server-admin";
 import { createServiceRoleClient } from "@/lib/supabase/server-service";
 
 const ADMIN_ROLES = ["admin", "super_admin"];
@@ -25,7 +25,7 @@ function isPermissionKey(s: string): s is PermissionKey {
 /** List all admin users (admin + super_admin) with profile info */
 export async function GET() {
   try {
-    const supabase = await createClient();
+    const supabase = await createAdminServerClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -67,7 +67,7 @@ export async function GET() {
 /** Create or update an admin: set role and permissions for a user. Only admins can call. */
 export async function POST(request: Request) {
   try {
-    const supabase = await createClient();
+    const supabase = await createAdminServerClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

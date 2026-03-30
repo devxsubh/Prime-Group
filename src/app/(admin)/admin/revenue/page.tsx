@@ -19,7 +19,7 @@ import {
   Calendar,
   CreditCard,
 } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { createAdminBrowserClient } from "@/lib/supabase/client-admin";
 import { cn } from "@/lib/utils";
 
 interface Plan {
@@ -62,7 +62,7 @@ export default function AdminRevenuePage() {
   const [confirmingId, setConfirmingId] = useState<string | null>(null);
 
   const fetchData = async () => {
-    const supabase = createClient();
+    const supabase = createAdminBrowserClient();
     setLoading(true);
     try {
       const [paymentsRes, plansRes, pendingUpiRes] = await Promise.all([

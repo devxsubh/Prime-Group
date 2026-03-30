@@ -18,7 +18,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/client";
+import { createAdminBrowserClient } from "@/lib/supabase/client-admin";
 
 interface RevenueRow {
   total: number;
@@ -62,7 +62,7 @@ export default function AdminDashboardPage() {
   const [fetchError, setFetchError] = useState<string | null>(null);
 
   const fetchStats = async () => {
-    const supabase = createClient();
+    const supabase = createAdminBrowserClient();
     setFetchError(null);
     const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
     try {

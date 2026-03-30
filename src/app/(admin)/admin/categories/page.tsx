@@ -23,7 +23,7 @@ import {
   Activity,
   Building2,
 } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { createAdminBrowserClient } from "@/lib/supabase/client-admin";
 import { cn } from "@/lib/utils";
 
 interface CategoryItem {
@@ -126,7 +126,7 @@ export default function AdminCategoriesPage() {
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchData = async () => {
-    const supabase = createClient();
+    const supabase = createAdminBrowserClient();
     setLoading(true);
     try {
       const { data, error } = await supabase

@@ -19,7 +19,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Mail, RefreshCw, Eye, Check } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { createAdminBrowserClient } from "@/lib/supabase/client-admin";
 
 interface ContactRow {
   id: string;
@@ -38,7 +38,7 @@ export default function AdminContactPage() {
   const [markingRead, setMarkingRead] = useState<string | null>(null);
 
   const fetchSubmissions = async () => {
-    const supabase = createClient();
+    const supabase = createAdminBrowserClient();
     setLoading(true);
     try {
       const { data, error } = await supabase
@@ -60,7 +60,7 @@ export default function AdminContactPage() {
 
   const markAsRead = async (id: string) => {
     setMarkingRead(id);
-    const supabase = createClient();
+    const supabase = createAdminBrowserClient();
     try {
       await supabase.from("contact_submissions").update({ read_at: new Date().toISOString() }).eq("id", id);
       setSubmissions((prev) => prev.map((s) => (s.id === id ? { ...s, read_at: new Date().toISOString() } : s)));

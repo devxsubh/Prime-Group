@@ -46,8 +46,8 @@ export function Sidebar({ collapsed = false, onToggle, onMobileClose }: SidebarP
   const router = useRouter();
 
   const handleLogout = async () => {
-    const { createClient } = await import("@/lib/supabase/client");
-    const supabase = createClient();
+    const { createAdminBrowserClient } = await import("@/lib/supabase/client-admin");
+    const supabase = createAdminBrowserClient();
     await supabase.auth.signOut();
     router.replace("/admin/login");
     router.refresh();

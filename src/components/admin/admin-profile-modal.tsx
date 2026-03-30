@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ProfileView, type ProfileRecord, type ProfilePhoto, type PartnerPreferences } from "@/components/profile/profile-view";
-import { createClient } from "@/lib/supabase/client";
+import { createAdminBrowserClient } from "@/lib/supabase/client-admin";
 import { CheckCircle, XCircle, Loader2 } from "lucide-react";
 
 interface AdminProfileModalProps {
@@ -38,7 +38,7 @@ export function AdminProfileModal({ profileId, open, onOpenChange, onStatusUpdat
 
     const fetchProfile = async () => {
       setLoading(true);
-      const supabase = createClient();
+      const supabase = createAdminBrowserClient();
       try {
         const { data: profileData, error: profileError } = await supabase
           .from("profiles")

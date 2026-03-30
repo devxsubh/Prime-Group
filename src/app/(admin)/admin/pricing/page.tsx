@@ -21,7 +21,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { IndianRupee, Pencil, RefreshCw } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { createAdminBrowserClient } from "@/lib/supabase/client-admin";
 
 interface Plan {
   id: string;
@@ -53,7 +53,7 @@ export default function AdminPricingPage() {
   });
 
   const fetchPlans = async () => {
-    const supabase = createClient();
+    const supabase = createAdminBrowserClient();
     setLoading(true);
     try {
       const { data, error } = await supabase
@@ -89,7 +89,7 @@ export default function AdminPricingPage() {
 
   const savePlan = async () => {
     if (!editing) return;
-    const supabase = createClient();
+    const supabase = createAdminBrowserClient();
     setSaving(true);
     try {
       const { error } = await supabase

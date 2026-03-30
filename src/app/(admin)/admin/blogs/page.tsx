@@ -14,7 +14,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { FileText, Plus, Pencil, Eye, RefreshCw } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { createAdminBrowserClient } from "@/lib/supabase/client-admin";
 import type { BlogPost } from "@/lib/blogs";
 
 interface BlogRow {
@@ -34,7 +34,7 @@ export default function AdminBlogsPage() {
   const [loading, setLoading] = useState(true);
 
   const fetchBlogs = async () => {
-    const supabase = createClient();
+    const supabase = createAdminBrowserClient();
     setLoading(true);
     try {
       const { data, error } = await supabase

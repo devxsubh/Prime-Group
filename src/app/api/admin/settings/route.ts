@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createAdminServerClient } from "@/lib/supabase/server-admin";
 import { createServiceRoleClient } from "@/lib/supabase/server-service";
 
 export const dynamic = "force-dynamic";
 
 /** GET: Admin reads all settings */
 export async function GET() {
-  const supabase = await createClient();
+  const supabase = await createAdminServerClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -43,7 +43,7 @@ export async function GET() {
 
 /** PATCH: Admin updates settings (e.g. payment_method) */
 export async function PATCH(req: Request) {
-  const supabase = await createClient();
+  const supabase = await createAdminServerClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
