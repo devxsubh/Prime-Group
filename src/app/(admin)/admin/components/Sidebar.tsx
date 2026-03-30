@@ -18,6 +18,7 @@ import {
   FileText,
   HelpCircle,
   Mail,
+  X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -36,9 +37,11 @@ const menuItems = [
 interface SidebarProps {
   collapsed?: boolean;
   onToggle?: () => void;
+  /** Mobile drawer: closes the overlay menu (desktop hides this control). */
+  onMobileClose?: () => void;
 }
 
-export function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
+export function Sidebar({ collapsed = false, onToggle, onMobileClose }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -74,8 +77,22 @@ export function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
         </button>
       )}
 
-      <div className={cn("border-b transition-all duration-300", collapsed ? "p-4" : "p-6")} style={{ borderColor: "rgba(212, 175, 55, 0.2)" }}>
-        <div className="flex items-center gap-3 mb-2">
+      <div
+        className={cn("border-b transition-all duration-300 relative", collapsed ? "p-4" : "p-6")}
+        style={{ borderColor: "rgba(212, 175, 55, 0.2)" }}
+      >
+        {onMobileClose && (
+          <button
+            type="button"
+            onClick={onMobileClose}
+            className="lg:hidden absolute top-4 right-4 z-20 flex h-9 w-9 items-center justify-center rounded-lg border bg-white shadow-sm hover:bg-gray-50"
+            style={{ borderColor: "var(--accent-gold)", color: "var(--primary-blue)" }}
+            aria-label="Close menu"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        )}
+        <div className={cn("flex items-center gap-3 mb-2", onMobileClose && "lg:pr-0 pr-11")}>
           <div
             className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
             style={{ backgroundColor: "var(--primary-blue)" }}

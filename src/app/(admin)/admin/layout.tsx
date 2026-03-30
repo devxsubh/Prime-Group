@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { Sidebar } from "./components/Sidebar";
 import { createClient } from "@/lib/supabase/client";
 
@@ -84,16 +85,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <button
         type="button"
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-white shadow border"
+        className={cn(
+          "lg:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-white shadow border",
+          isSidebarOpen && "hidden"
+        )}
         style={{ borderColor: "var(--accent-gold)" }}
-        aria-label="Toggle menu"
+        aria-label="Open menu"
       >
         <Menu className="w-6 h-6" style={{ color: "var(--primary-blue)" }} />
       </button>
 
       {isSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          className="fixed inset-0 bg-black/50 z-[45] lg:hidden"
           onClick={() => setIsSidebarOpen(false)}
           aria-hidden
         />
@@ -101,12 +105,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
       <div
         className={`
-          fixed lg:static inset-y-0 left-0 z-40 transform
+          fixed lg:static inset-y-0 left-0 z-[50] transform
           ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
           lg:translate-x-0 transition-transform duration-200 ease-in-out
         `}
       >
-        <Sidebar collapsed={isSidebarCollapsed} onToggle={handleToggleSidebar} />
+        <Sidebar
+          collapsed={isSidebarCollapsed}
+          onToggle={handleToggleSidebar}
+          onMobileClose={() => setIsSidebarOpen(false)}
+        />
       </div>
 
       <main className="admin-main flex-1 overflow-y-auto p-4 lg:p-8 w-full bg-gray-50 transition-all duration-300 text-base">
