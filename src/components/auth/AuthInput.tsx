@@ -48,7 +48,7 @@ export function AuthInput<T extends FieldValues = AuthFormData>({
           placeholder={placeholder}
           aria-invalid={!!error}
           aria-describedby={error ? errorId : undefined}
-          className="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--primary-blue)] focus:border-transparent"
+          className="block w-full pl-10 pr-3 py-3 text-base border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--primary-blue)] focus:border-transparent"
         />
       </div>
       {error && (

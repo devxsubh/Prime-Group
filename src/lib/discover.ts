@@ -8,6 +8,8 @@ export interface DiscoverCardData {
   profession: string;
   education: string;
   imageUrl: string;
+  /** When set (e.g. landing-page samples), the card links here instead of `/discover/{id}` */
+  ctaHref?: string;
 }
 
 function parseAge(dateOfBirth: string | null): number {
@@ -24,11 +26,30 @@ function buildLocation(parts: (string | null | undefined)[]): string {
   return parts.filter(Boolean).join(", ") || "—";
 }
 
+/** For discover: male viewers see female profiles and vice versa. `"other"` / unknown → no restriction. */
+export function discoverOppositeGenderForViewer(viewerGender: string | null | undefined): "male" | "female" | null {
+  const g = (viewerGender ?? "").toLowerCase();
+  if (g === "male") return "female";
+  if (g === "female") return "male";
+  return null;
+}
+
+export type GetDiscoverProfilesOptions = {
+  limit?: number;
+  profileIds?: string[];
+  /** When true, skip viewer gender filter (e.g. explicit ID lists). */
+  skipGenderFilter?: boolean;
+};
+
 /**
  * Fetches active profiles with primary photo for discover/featured/favorites.
+ * Logged-in users see the opposite gender only (male ↔ female); "other" / unknown shows all.
+ * Favorites (`profileIds`) are not filtered by gender.
  */
-export async function getDiscoverProfiles(options?: { limit?: number; profileIds?: string[] }): Promise<DiscoverCardData[]> {
+export async function getDiscoverProfiles(options?: GetDiscoverProfilesOptions): Promise<DiscoverCardData[]> {
   const supabase = await createClient();
+
+  const byIdsOnly = Boolean(options?.profileIds?.length);
 
   let query = supabase
     .from("profiles")
@@ -38,9 +59,29 @@ export async function getDiscoverProfiles(options?: { limit?: number; profileIds
     .is("deleted_at", null)
     .order("created_at", { ascending: false });
 
-  if (options?.profileIds?.length) {
-    query = query.in("id", options.profileIds);
+  if (byIdsOnly) {
+    query = query.in("id", options!.profileIds!);
+  } else if (!options?.skipGenderFilter) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (user) {
+      query = query.neq("user_id", user.id);
+
+      const { data: viewerProfile } = await supabase
+        .from("profiles")
+        .select("gender")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      const targetGender = discoverOppositeGenderForViewer(viewerProfile?.gender ?? null);
+      if (targetGender) {
+        query = query.eq("gender", targetGender);
+      }
+    }
   }
+
   if (options?.limit) {
     query = query.limit(options.limit);
   }

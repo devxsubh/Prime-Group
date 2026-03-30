@@ -111,10 +111,18 @@ export function AuthForm({ mode, hideTitle = false, submitLabel, className, next
       router.refresh();
       const isProfileCompleted =
         profile &&
-        (profile.profile_status === "active" || (profile.profile_completion_pct ?? 0) >= 75);
+        (profile.profile_status === "active" || (profile.profile_completion_pct ?? 0) >= 80);
       if (!isProfileCompleted) {
-        router.push("/onboarding");
-        return;
+        let skipped = false;
+        try {
+          skipped = localStorage.getItem("onboarding_skipped") === "1";
+        } catch {
+          skipped = false;
+        }
+        if (!skipped) {
+          router.push("/onboarding");
+          return;
+        }
       }
     }
     router.refresh();
@@ -123,14 +131,14 @@ export function AuthForm({ mode, hideTitle = false, submitLabel, className, next
   };
 
   return (
-    <div className={cn("w-full max-w-sm mx-auto", className)}>
+    <div className={cn("w-full", className)}>
       {!hideTitle && (
         <h2 className="text-2xl font-playfair-display font-bold text-center mb-6" style={{ color: "var(--primary-blue)" }}>
           {isSignUp ? "Create your account" : "Sign in"}
         </h2>
       )}
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         {message && (
           <div
             role="status"
@@ -174,7 +182,7 @@ export function AuthForm({ mode, hideTitle = false, submitLabel, className, next
                 <input
                   type="password"
                   {...register("confirmPassword")}
-                  className="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--primary-blue)] focus:border-transparent"
+                  className="block w-full pl-10 pr-3 py-3 text-base border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--primary-blue)] focus:border-transparent"
                   placeholder="Confirm password"
                 />
               </div>
@@ -226,7 +234,7 @@ export function AuthForm({ mode, hideTitle = false, submitLabel, className, next
           type="submit"
           disabled={isSubmitting}
           aria-label={submitLabel ?? (isSignUp ? "Sign up" : "Sign in")}
-          className="w-full py-2.5 px-4 rounded-lg font-general font-medium text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          className="w-full py-3 px-4 rounded-lg text-base font-general font-medium text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           style={{ backgroundColor: "var(--primary-blue)" }}
         >
           {isSubmitting ? (

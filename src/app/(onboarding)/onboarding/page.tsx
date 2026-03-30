@@ -16,11 +16,12 @@ export default async function OnboardingPage() {
     .eq("user_id", user.id)
     .single();
 
-  const isProfileCompleted =
-    profile &&
-    (profile.profile_status === "active" || (profile.profile_completion_pct ?? 0) >= 80);
-  if (isProfileCompleted) {
+  const pct = profile?.profile_completion_pct ?? 0;
+  if (profile?.profile_status === "active") {
     redirect("/discover");
+  }
+  if (pct >= 80) {
+    redirect("/onboarding/thank-you");
   }
 
   return (

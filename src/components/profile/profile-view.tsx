@@ -23,6 +23,8 @@ import { Button } from "@/components/ui/button";
 import { useCredits } from "@/context/credits-context";
 import Link from "next/link";
 import { Coins, Loader2, Mail, Unlock } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 
 export interface ProfilePhoto {
   id: string;
@@ -85,6 +87,7 @@ export interface ProfileRecord {
   contact_address?: string | null;
   contact_number?: string | null;
   willing_to_relocate?: string | null;
+  is_visible?: boolean | null;
   [key: string]: unknown;
 }
 
@@ -150,6 +153,7 @@ export function ProfileView({
   currentUserId,
   unlockedProfileIds = [],
 }: ProfileViewProps) {
+  const router = useRouter();
   const age = formatAge(profile.date_of_birth);
   const location = [profile.city, profile.state, profile.country].filter(Boolean).join(", ");
   const sortedPhotos = [...photos].sort((a, b) => a.display_order - b.display_order);
@@ -158,9 +162,60 @@ export function ProfileView({
   const [isEditing, setIsEditing] = useState(false);
   const [enlargedPhotoIndex, setEnlargedPhotoIndex] = useState<number | null>(null);
   const displayPhoto = sortedPhotos[selectedPhotoIndex] ?? primaryPhoto ?? sortedPhotos[0];
+  const [liveCompletionPct, setLiveCompletionPct] = useState<number | null>(null);
+  const [isVisible, setIsVisible] = useState<boolean>((profile.is_visible ?? true) === true);
+  const [visibilitySaving, setVisibilitySaving] = useState(false);
 
   // Credit unlock state
   const { credits, spendCredits, refreshCredits, loading: creditsLoading } = useCredits();
+
+  useEffect(() => {
+    if (!isOwnProfile) return;
+    let cancelled = false;
+    const run = async () => {
+      try {
+        const res = await fetch("/api/profile/progress", { method: "GET" });
+        if (!res.ok) return;
+        const data = (await res.json()) as { percent?: number };
+        if (!cancelled && typeof data.percent === "number") {
+          setLiveCompletionPct(data.percent);
+        }
+      } catch {
+        // ignore
+      }
+    };
+    void run();
+    return () => {
+      cancelled = true;
+    };
+  }, [isOwnProfile]);
+
+  useEffect(() => {
+    if (!isOwnProfile) return;
+    setIsVisible((profile.is_visible ?? true) === true);
+  }, [isOwnProfile, profile.is_visible]);
+
+  const toggleVisibility = useCallback(async () => {
+    if (!isOwnProfile || !userId || visibilitySaving) return;
+    const next = !isVisible;
+    setVisibilitySaving(true);
+    setIsVisible(next);
+    try {
+      const supabase = createClient();
+      const { error } = await supabase
+        .from("profiles")
+        .update({ is_visible: next, updated_at: new Date().toISOString() })
+        .eq("id", profile.id)
+        .eq("user_id", userId);
+      if (error) throw error;
+      router.refresh();
+    } catch {
+      // Revert if save fails
+      setIsVisible(!next);
+    } finally {
+      setVisibilitySaving(false);
+    }
+  }, [isOwnProfile, userId, visibilitySaving, isVisible, profile.id, router]);
 
   useEffect(() => {
     if (isOwnProfile) void refreshCredits();
@@ -278,7 +333,19 @@ export function ProfileView({
         {/* Info */}
         <div className="flex-1 text-center md:text-left flex flex-col justify-center h-full pt-0 md:pt-4">
           <h1 className="font-playfair-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[var(--primary-blue)] mb-3 sm:mb-4 tracking-tight">
-            {profile.full_name}
+            <span className="inline-flex items-center gap-3">
+              {profile.full_name}
+              {isOwnProfile && !isVisible && (
+                <span
+                  className="inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-general font-semibold"
+                  style={{ borderColor: "rgba(0, 51, 102, 0.18)", color: "var(--primary-blue)", backgroundColor: "rgba(0, 51, 102, 0.03)" }}
+                  title="Your profile is private and won’t appear in Discover"
+                >
+                  <Lock className="h-3.5 w-3.5" style={{ color: "var(--accent-gold)" }} />
+                  Private
+                </span>
+              )}
+            </span>
           </h1>
           
           <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 sm:gap-6 text-base sm:text-lg font-general text-[var(--primary-blue)]/90 mb-6">
@@ -441,9 +508,12 @@ export function ProfileView({
           <div className="flex flex-wrap items-center gap-6 font-general text-sm" style={{ color: "var(--primary-blue)" }}>
             <span className="flex items-center gap-3">
               <div className="w-24 h-2 bg-gray-100 rounded-full overflow-hidden">
-                <div className="h-full bg-[var(--accent-gold)]" style={{ width: `${profile.profile_completion_pct ?? 0}%` }} />
+                <div
+                  className="h-full bg-[var(--accent-gold)]"
+                  style={{ width: `${liveCompletionPct ?? profile.profile_completion_pct ?? 0}%` }}
+                />
               </div>
-              <strong>{profile.profile_completion_pct ?? 0}%</strong> Complete
+              <strong>{liveCompletionPct ?? profile.profile_completion_pct ?? 0}%</strong> Complete
             </span>
             <span>Status: <strong className="capitalize">{profile.profile_status.replace('_', ' ')}</strong></span>
             <span className="flex items-center gap-2 border-l border-[var(--primary-blue)]/15 pl-6">
@@ -464,6 +534,25 @@ export function ProfileView({
           <div className="flex gap-2">
             <Button onClick={() => setIsEditing(true)} variant="outline" size="sm" className="rounded-xl border-[var(--primary-blue)]/20 text-[var(--primary-blue)] hover:bg-[var(--accent-gold)]/10 hover:text-[var(--primary-blue)] font-semibold px-6">
               Edit Profile
+            </Button>
+            <Button
+              onClick={toggleVisibility}
+              variant="outline"
+              size="sm"
+              disabled={visibilitySaving}
+              className="rounded-xl border-[var(--primary-blue)]/20 text-[var(--primary-blue)] hover:bg-[var(--accent-gold)]/10 hover:text-[var(--primary-blue)] font-semibold px-6"
+              title="Toggle whether you appear in Discover (requires admin approval too)"
+            >
+              {visibilitySaving ? (
+                <span className="inline-flex items-center gap-2">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Saving…
+                </span>
+              ) : isVisible ? (
+                "Public"
+              ) : (
+                "Private"
+              )}
             </Button>
           </div>
         </div>

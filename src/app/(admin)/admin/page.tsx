@@ -336,7 +336,7 @@ export default function AdminDashboardPage() {
           </h2>
           <p className="text-sm font-general text-gray-600 mt-0.5">Profile counts by different dimensions. Each block is a separate summary.</p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-4 gap-4">
           <Card className="rounded-xl border shadow-sm overflow-hidden" style={cardStyle}>
             <CardHeader className="py-3 px-4 border-b bg-gray-50/80" style={{ borderColor: "rgba(212, 175, 55, 0.2)" }}>
               <CardTitle className="text-sm font-semibold font-general" style={{ color: "var(--primary-blue)" }}>
@@ -360,7 +360,7 @@ export default function AdminDashboardPage() {
                   ) : (
                     byGender.map((g) => (
                       <tr key={g.name} className="border-b last:border-0" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
-                        <td className="py-2 px-4 font-medium text-gray-800">{g.name}</td>
+                        <td className="py-2 px-4 font-medium text-gray-800 truncate max-w-[160px]" title={g.name}>{g.name}</td>
                         <td className="py-2 px-4 text-right font-medium text-gray-700">{g.count}</td>
                         <td className="py-2 px-4 text-right font-medium text-gray-700">{g.pct}%</td>
                       </tr>
@@ -487,62 +487,82 @@ export default function AdminDashboardPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
             <Button
               variant="outline"
-              className="h-14 flex-col gap-2 rounded-xl font-general hover:scale-[1.02] transition-transform"
+              className="h-auto min-h-14 rounded-xl font-general hover:scale-[1.02] transition-transform"
               style={{ borderColor: "var(--accent-gold)" }}
               asChild
             >
               <Link href="/admin/profiles">
-                <Users className="w-6 h-6" style={{ color: "var(--primary-blue)" }} />
-                <span>Manage Profiles</span>
-                <ArrowRight className="w-4 h-4" />
+                <div className="w-full flex items-center justify-between gap-3 px-4 py-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <Users className="w-5 h-5 flex-shrink-0" style={{ color: "var(--primary-blue)" }} />
+                    <span className="truncate">Manage Profiles</span>
+                  </div>
+                  <ArrowRight className="w-4 h-4 flex-shrink-0" />
+                </div>
               </Link>
             </Button>
             <Button
               variant="outline"
-              className="h-14 flex-col gap-2 rounded-xl font-general hover:scale-[1.02] transition-transform"
+              className="h-auto min-h-14 rounded-xl font-general hover:scale-[1.02] transition-transform"
               style={{ borderColor: "var(--accent-gold)" }}
               asChild
             >
               <Link href="/admin/categories">
-                <PieChart className="w-6 h-6" style={{ color: "var(--primary-blue)" }} />
-                <span>Categories</span>
-                <ArrowRight className="w-4 h-4" />
+                <div className="w-full flex items-center justify-between gap-3 px-4 py-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <PieChart className="w-5 h-5 flex-shrink-0" style={{ color: "var(--primary-blue)" }} />
+                    <span className="truncate">Categories</span>
+                  </div>
+                  <ArrowRight className="w-4 h-4 flex-shrink-0" />
+                </div>
               </Link>
             </Button>
             <Button
               variant="outline"
-              className="h-14 flex-col gap-2 rounded-xl font-general hover:scale-[1.02] transition-transform"
+              className="h-auto min-h-14 rounded-xl font-general hover:scale-[1.02] transition-transform"
               style={{ borderColor: "var(--accent-gold)" }}
               asChild
             >
               <Link href="/admin/revenue">
-                <IndianRupee className="w-6 h-6" style={{ color: "var(--primary-blue)" }} />
-                <span>Revenue</span>
-                <ArrowRight className="w-4 h-4" />
+                <div className="w-full flex items-center justify-between gap-3 px-4 py-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <IndianRupee className="w-5 h-5 flex-shrink-0" style={{ color: "var(--primary-blue)" }} />
+                    <span className="truncate">Revenue</span>
+                  </div>
+                  <ArrowRight className="w-4 h-4 flex-shrink-0" />
+                </div>
               </Link>
             </Button>
             <Button
               variant="outline"
-              className="h-14 flex-col gap-2 rounded-xl font-general hover:scale-[1.02] transition-transform"
+              className="h-auto min-h-14 rounded-xl font-general hover:scale-[1.02] transition-transform"
               style={{ borderColor: "var(--accent-gold)" }}
               asChild
             >
               <Link href="/admin/pricing">
-                <IndianRupee className="w-6 h-6" style={{ color: "var(--primary-blue)" }} />
-                <span>Pricing</span>
-                <ArrowRight className="w-4 h-4" />
+                <div className="w-full flex items-center justify-between gap-3 px-4 py-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <IndianRupee className="w-5 h-5 flex-shrink-0" style={{ color: "var(--primary-blue)" }} />
+                    <span className="truncate">Pricing</span>
+                  </div>
+                  <ArrowRight className="w-4 h-4 flex-shrink-0" />
+                </div>
               </Link>
             </Button>
             <Button
               variant="outline"
-              className="h-14 flex-col gap-2 rounded-xl font-general hover:scale-[1.02] transition-transform"
+              className="h-auto min-h-14 rounded-xl font-general hover:scale-[1.02] transition-transform"
               style={{ borderColor: "var(--accent-gold)" }}
               asChild
             >
               <Link href="/admin/settings">
-                <BarChart3 className="w-6 h-6" style={{ color: "var(--primary-blue)" }} />
-                <span>Settings</span>
-                <ArrowRight className="w-4 h-4" />
+                <div className="w-full flex items-center justify-between gap-3 px-4 py-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <BarChart3 className="w-5 h-5 flex-shrink-0" style={{ color: "var(--primary-blue)" }} />
+                    <span className="truncate">Settings</span>
+                  </div>
+                  <ArrowRight className="w-4 h-4 flex-shrink-0" />
+                </div>
               </Link>
             </Button>
           </div>

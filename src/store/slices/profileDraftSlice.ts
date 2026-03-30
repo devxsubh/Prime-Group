@@ -52,6 +52,8 @@ export interface ProfileDraftState {
   step2: Partial<Step2Data>;
   step3: Partial<Step3Data>;
   photos: ProfilePhotoItem[];
+  /** Whether profile should be visible in Discover once approved */
+  isVisible: boolean;
 }
 
 const initialState: ProfileDraftState = {
@@ -60,6 +62,7 @@ const initialState: ProfileDraftState = {
   step2: {},
   step3: {},
   photos: [],
+  isVisible: true,
 };
 
 const MAX_PHOTOS = 5;
@@ -79,6 +82,9 @@ const profileDraftSlice = createSlice({
     },
     updateStep3(state, action: PayloadAction<Partial<Step3Data>>) {
       state.step3 = { ...state.step3, ...action.payload };
+    },
+    setIsVisible(state, action: PayloadAction<boolean>) {
+      state.isVisible = action.payload;
     },
     addPhoto(state, action: PayloadAction<Omit<ProfilePhotoItem, "compressedSize"> & { compressedSize?: number }>) {
       if (state.photos.length >= MAX_PHOTOS) return;
@@ -108,6 +114,7 @@ export const {
   updateStep1,
   updateStep2,
   updateStep3,
+  setIsVisible,
   addPhoto,
   removePhoto,
   setPhotos,
@@ -127,5 +134,7 @@ export const selectPhotos = (state: { profileDraft: ProfileDraftState }) =>
   state.profileDraft.photos;
 export const selectCanAddPhoto = (state: { profileDraft: ProfileDraftState }) =>
   state.profileDraft.photos.length < MAX_PHOTOS;
+export const selectIsVisible = (state: { profileDraft: ProfileDraftState }) =>
+  state.profileDraft.isVisible;
 
 export default profileDraftSlice.reducer;

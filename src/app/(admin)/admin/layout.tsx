@@ -49,6 +49,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       const res = await fetch("/api/admin/me", { credentials: "include" });
       const data = await res.json().catch(() => ({}));
       if (!res.ok || !data.isAdmin) {
+        await supabase.auth.signOut();
         router.replace("/admin/login");
         setLoading(false);
         return;

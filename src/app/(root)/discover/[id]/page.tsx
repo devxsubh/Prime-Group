@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ProfileView } from "@/components/profile/profile-view";
 import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
+import { discoverOppositeGenderForViewer } from "@/lib/discover";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -15,7 +16,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const supabase = await createClient();
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name, date_of_birth, city, state, country")
+    .select("full_name, date_of_birth, city, state, country, gender, user_id")
     .eq("id", id)
     .eq("profile_status", "active")
     .eq("is_visible", true)
@@ -23,6 +24,21 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     .single();
 
   if (!profile) return { title: "Profile | Prime Group" };
+
+  const {
+    data: { user: metaUser },
+  } = await supabase.auth.getUser();
+  if (metaUser && profile.user_id !== metaUser.id) {
+    const { data: viewerP } = await supabase
+      .from("profiles")
+      .select("gender")
+      .eq("user_id", metaUser.id)
+      .maybeSingle();
+    const expected = discoverOppositeGenderForViewer(viewerP?.gender ?? null);
+    if (expected && (profile.gender ?? "").toLowerCase() !== expected) {
+      return { title: "Profile | Prime Group" };
+    }
+  }
 
   const age = new Date().getFullYear() - new Date(profile.date_of_birth).getFullYear();
   const location = [profile.city, profile.state, profile.country].filter(Boolean).join(", ");
@@ -56,6 +72,20 @@ export default async function DiscoverProfilePage({ params }: PageProps) {
 
   if (profileError || !profile) notFound();
 
+  const isOwn = authUser?.id === profile.user_id;
+
+  if (authUser && !isOwn) {
+    const { data: viewerProfile } = await supabase
+      .from("profiles")
+      .select("gender")
+      .eq("user_id", authUser.id)
+      .maybeSingle();
+    const expected = discoverOppositeGenderForViewer(viewerProfile?.gender ?? null);
+    if (expected && (profile.gender ?? "").toLowerCase() !== expected) {
+      notFound();
+    }
+  }
+
   const { data: photos } = await supabase
     .from("profile_photos")
     .select("id, photo_url, thumbnail_url, display_order, is_primary, status")
@@ -67,8 +97,6 @@ export default async function DiscoverProfilePage({ params }: PageProps) {
     .select("*")
     .eq("profile_id", profile.id)
     .single();
-
-  const isOwn = authUser?.id === profile.user_id;
 
   let unlockedProfileIds: string[] = [];
   if (authUser && !isOwn) {

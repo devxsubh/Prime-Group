@@ -4,14 +4,17 @@ import { cn } from "@/lib/utils";
 
 export default function SignUpPage() {
   return (
-    <div className="absolute inset-0 min-h-screen flex items-center justify-center overflow-y-auto overflow-x-hidden p-3 sm:p-4 md:p-6 lg:p-8 py-8 sm:py-10">
+    <div className="absolute inset-0 min-h-screen flex items-center justify-center overflow-y-auto overflow-x-hidden p-0 sm:p-4 md:p-6 lg:p-8">
       {/* White background */}
       <div className="absolute inset-0 bg-white" />
       
       {/* Main content container */}
       <div className="relative z-10 w-full max-w-5xl my-auto flex-shrink-0">
-        <div className="w-full overflow-hidden rounded-2xl sm:rounded-3xl border-2 bg-white/95 backdrop-blur-sm shadow-2xl animate-in fade-in zoom-in-95 duration-500" style={{ borderColor: "var(--accent-gold)" }}>
-          <div className="grid grid-cols-1 md:grid-cols-2 min-h-0 md:min-h-[720px]">
+        <div
+          className="w-full overflow-hidden bg-transparent sm:rounded-3xl sm:border-2 sm:bg-white/95 sm:backdrop-blur-sm sm:shadow-2xl animate-in fade-in zoom-in-95 duration-500"
+          style={{ borderColor: "var(--accent-gold)" }}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 min-h-screen sm:min-h-[70vh] md:min-h-[720px]">
             {/* Left side - Creative Doodles */}
             <div 
               className="relative hidden md:block overflow-hidden"
@@ -135,51 +138,53 @@ export default function SignUpPage() {
             </div>
 
             {/* Right side - Form */}
-            <div className="p-5 sm:p-8 md:p-10 lg:p-12 flex flex-col justify-center min-h-0 overflow-y-auto bg-gradient-to-br from-white to-gray-50/30">
-              {/* Mobile: small brand line (left panel hidden) */}
-              <div className="md:hidden mb-4 pb-3 border-b border-gray-200/80">
-                <p className="text-xs font-bold tracking-wider uppercase" style={{ color: "var(--primary-blue)" }}>
-                  PRIME GROUP
+            <div className="p-6 sm:p-8 md:p-10 lg:p-12 flex flex-col justify-center min-h-0 overflow-y-auto bg-gradient-to-br from-white to-gray-50/30">
+              <div className="w-full max-w-md mx-auto -mt-8 sm:mt-0">
+                {/* Mobile: small brand line (left panel hidden) */}
+                <div className="md:hidden mb-5 pb-3 border-b border-gray-200/80 text-center">
+                  <p className="text-xs font-bold tracking-wider uppercase" style={{ color: "var(--primary-blue)" }}>
+                    PRIME GROUP
+                  </p>
+                </div>
+                <div className="mb-7 sm:mb-8 space-y-3 text-center sm:text-left">
+                  <div className="flex flex-wrap items-center justify-center sm:justify-between gap-2">
+                    <p className="text-sm sm:text-sm text-gray-500">
+                      Already registered?{" "}
+                      <Link
+                        href="/sign-in"
+                        className={cn(
+                          "font-semibold transition-all duration-200 hover:opacity-100 whitespace-nowrap",
+                          "relative inline-block after:absolute after:bottom-0 after:left-0",
+                          "after:h-[2px] after:w-0 after:bg-[var(--accent-gold)]",
+                          "hover:after:w-full after:transition-all after:duration-300"
+                        )}
+                        style={{ color: "var(--accent-gold)" }}
+                      >
+                        Login here
+                      </Link>
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <h1 className="text-3xl sm:text-3xl md:text-4xl font-general font-bold tracking-tight" style={{ color: "var(--primary-blue)" }}>
+                      Create your account
+                    </h1>
+                    <p className="text-gray-600 text-base sm:text-base leading-relaxed">
+                      India&apos;s trusted matrimony service for meaningful connections.
+                    </p>
+                  </div>
+                </div>
+
+                <AuthForm mode="sign-up" hideTitle submitLabel="Register free" className="max-w-none" />
+
+                <p className="text-center text-sm mt-7 sm:mt-8 text-gray-500">
+                  <Link
+                    href="/"
+                    className="hover:text-[var(--primary-blue)] transition-colors duration-200 underline underline-offset-2"
+                  >
+                    Back to home
+                  </Link>
                 </p>
               </div>
-              <div className="mb-6 sm:mb-8 space-y-3">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <p className="text-xs sm:text-sm text-gray-500">
-                    Already registered?{" "}
-                    <Link 
-                      href="/sign-in" 
-                      className={cn(
-                        "font-semibold transition-all duration-200 hover:opacity-100 whitespace-nowrap",
-                        "relative inline-block after:absolute after:bottom-0 after:left-0",
-                        "after:h-[2px] after:w-0 after:bg-[var(--accent-gold)]",
-                        "hover:after:w-full after:transition-all after:duration-300"
-                      )}
-                      style={{ color: "var(--accent-gold)" }}
-                    >
-                      Login here
-                    </Link>
-                  </p>
-                </div>
-                <div className="space-y-1.5 sm:space-y-2">
-                  <h1 className="text-2xl sm:text-3xl md:text-4xl font-general font-bold tracking-tight" style={{ color: "var(--primary-blue)" }}>
-                    Create your account
-                  </h1>
-                  <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
-                    India&apos;s trusted matrimony service for meaningful connections.
-                  </p>
-                </div>
-              </div>
-
-              <AuthForm mode="sign-up" hideTitle submitLabel="Register free" className="max-w-none" />
-
-              <p className="text-center text-xs mt-6 sm:mt-8 text-gray-500">
-                <Link 
-                  href="/" 
-                  className="hover:text-[var(--primary-blue)] transition-colors duration-200 underline underline-offset-2"
-                >
-                  Back to home
-                </Link>
-              </p>
             </div>
           </div>
         </div>

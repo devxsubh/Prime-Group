@@ -2,10 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { createClient } from "@/lib/supabase/client";
 import { Eye, EyeOff, Mail, Shield } from "lucide-react";
 
 export default function AdminLoginPage() {
@@ -21,27 +19,19 @@ export default function AdminLoginPage() {
     setError("");
     setLoading(true);
     try {
-      const supabase = createClient();
-      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({ email, password });
-      if (authError) {
-        setError(authError.message || "Invalid email or password");
-        setLoading(false);
-        return;
-      }
-      if (!authData.user) {
-        setError("Login failed");
-        setLoading(false);
-        return;
-      }
-      // Use API with service role to check admin (bypasses RLS)
-      const res = await fetch("/api/admin/me", { credentials: "include" });
+      const res = await fetch("/api/admin/fixed-login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ email, password }),
+      });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok || !data.isAdmin) {
-        await supabase.auth.signOut();
-        setError("You do not have admin access. Your role may not be synced yet—try again in a moment.");
+      if (!res.ok) {
+        setError(data?.error || "Invalid login credentials");
         setLoading(false);
         return;
       }
+
       router.replace("/admin");
       router.refresh();
     } catch (err) {
@@ -52,11 +42,19 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-      <div
-        className="bg-white p-8 sm:p-10 rounded-2xl shadow-lg w-full max-w-md border"
-        style={{ borderColor: "rgba(212, 175, 55, 0.3)" }}
-      >
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50 relative overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none">
+        <div
+          className="absolute -top-32 -right-32 w-[520px] h-[520px] rounded-full blur-3xl opacity-25"
+          style={{ background: "radial-gradient(circle at 30% 30%, var(--accent-gold), transparent 60%)" }}
+        />
+        <div
+          className="absolute -bottom-40 -left-40 w-[560px] h-[560px] rounded-full blur-3xl opacity-20"
+          style={{ background: "radial-gradient(circle at 40% 40%, var(--primary-blue), transparent 60%)" }}
+        />
+      </div>
+
+      <div className="bg-white/90 backdrop-blur p-8 sm:p-10 rounded-2xl shadow-lg w-full max-w-md border relative">
         <div className="flex justify-center mb-6">
           <div
             className="w-20 h-20 rounded-xl flex items-center justify-center p-2"
@@ -92,7 +90,7 @@ export default function AdminLoginPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="admin@example.com"
+              placeholder="admin@primegroupmatrimony.com"
               required
               disabled={loading}
               className="rounded-lg border-gray-200"
@@ -109,9 +107,11 @@ export default function AdminLoginPage() {
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter password"
                 required
                 disabled={loading}
                 className="rounded-lg pr-10 border-gray-200"
+                autoComplete="current-password"
               />
               <button
                 type="button"

@@ -43,6 +43,8 @@ export type HeroDeckProfile = {
   image: string
   match: number
   tags: string[]
+  /** Override link for “View Profile” (e.g. landing samples → /discover) */
+  viewHref?: string
 }
 
 const FALLBACK_DECK: HeroDeckProfile[] = [
@@ -79,7 +81,7 @@ function mapDiscoverToDeck(p: DiscoverCardData): HeroDeckProfile {
   const match =
     85 + (p.id.split("").reduce((acc, ch) => acc + ch.charCodeAt(0), 0) % 11)
   return {
-    id: p.id,
+    id: p.ctaHref ? undefined : p.id,
     name: p.name,
     age: p.age || 0,
     location: p.location,
@@ -87,6 +89,7 @@ function mapDiscoverToDeck(p: DiscoverCardData): HeroDeckProfile {
     image: p.imageUrl,
     match,
     tags: ["Verified Profile", "Active on Prime"],
+    viewHref: p.ctaHref,
   }
 }
 
@@ -127,7 +130,8 @@ function ProfileMatchCard({
   interactive?: boolean
   imagePriority?: boolean
 }) {
-  const viewHref = profile.id ? `/discover/${profile.id}` : "/discover"
+  const viewHref =
+    profile.viewHref ?? (profile.id ? `/discover/${profile.id}` : "/discover")
   const photoAlt = `Profile photo, ${profile.name}, ${profile.age}, ${profile.location}`
 
   return (

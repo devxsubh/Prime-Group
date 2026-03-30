@@ -90,7 +90,6 @@ export default function AdminProfilesPage() {
         .from("profiles")
         .update({
           profile_status: newStatus,
-          is_visible: newStatus === "active",
           approved_at: newStatus === "active" ? new Date().toISOString() : null,
           updated_at: new Date().toISOString(),
         })

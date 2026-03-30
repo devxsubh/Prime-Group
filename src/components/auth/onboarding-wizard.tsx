@@ -10,6 +10,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import {
   Select,
   SelectContent,
@@ -23,11 +24,13 @@ import {
   updateStep1,
   updateStep2,
   updateStep3,
+  setIsVisible,
   clearDraft,
   selectStepIndex,
   selectStep1,
   selectStep2,
   selectStep3,
+  selectIsVisible,
   type Step1Data as ReduxStep1,
   type Step2Data as ReduxStep2,
   type Step3Data as ReduxStep3,
@@ -133,6 +136,7 @@ export function OnboardingWizard({ userId, existingProfileId, email }: Onboardin
   const reduxStep1 = useAppSelector(selectStep1);
   const reduxStep2 = useAppSelector(selectStep2);
   const reduxStep3 = useAppSelector(selectStep3);
+  const isVisible = useAppSelector(selectIsVisible);
 
   const [step, setStep] = useState(reduxStepIndex);
   const [saving, setSaving] = useState(false);
@@ -299,6 +303,19 @@ export function OnboardingWizard({ userId, existingProfileId, email }: Onboardin
           .eq("user_id", effectiveUserId)
           .maybeSingle();
         if (!profile) throw new Error("Profile not found");
+
+        // Save visibility preference + finalize completion.
+        const { error: finalizeErr } = await supabase
+          .from("profiles")
+          .update({
+            is_visible: isVisible,
+            profile_completion_pct: 100,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("id", profile.id)
+          .eq("user_id", effectiveUserId);
+        if (finalizeErr) throw new Error(formatDbError("profile-finalize", finalizeErr));
+
         const files = getProfilePhotoFiles();
         const bucket = "profile-photos";
         for (let i = 0; i < files.length; i++) {
@@ -324,7 +341,7 @@ export function OnboardingWizard({ userId, existingProfileId, email }: Onboardin
         clearProfilePhotoFiles();
         dispatch(clearDraft());
         router.refresh();
-        router.push("/discover");
+        router.push("/onboarding/thank-you");
         return;
       }
 
@@ -485,6 +502,17 @@ export function OnboardingWizard({ userId, existingProfileId, email }: Onboardin
     setStep(step - 1);
   };
 
+  const handleSkip = () => {
+    const d = form.getValues();
+    persistStepToRedux(step, d);
+    try {
+      localStorage.setItem("onboarding_skipped", "1");
+    } catch {
+      // ignore
+    }
+    router.push("/discover?onboarding=skipped");
+  };
+
   const handleFormSubmit = form.handleSubmit((d) => onSubmit(d));
 
   const inputClass =
@@ -495,8 +523,12 @@ export function OnboardingWizard({ userId, existingProfileId, email }: Onboardin
   const err = (field: string) => (form.formState.errors as Record<string, { message?: string }>)[field]?.message;
 
   return (
-    <div className="flex flex-col-reverse lg:grid lg:grid-cols-12 gap-8 lg:gap-12 items-start w-full">
-      <div className="lg:col-span-8 w-full">
+    <div className="flex flex-col lg:grid lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12 items-start w-full">
+      <div className="order-1 lg:order-2 lg:col-span-4 w-full lg:sticky lg:top-8 animate-in fade-in slide-in-from-right-4 duration-500">
+        <OnboardingChecklist currentStep={step} email={email} />
+      </div>
+
+      <div className="order-2 lg:order-1 lg:col-span-8 w-full">
         <div className="relative animate-in fade-in slide-in-from-bottom-4 duration-500">
 
       {/* Ultra-subtle royal watermark — centered behind form, barely visible */}
@@ -545,6 +577,25 @@ export function OnboardingWizard({ userId, existingProfileId, email }: Onboardin
           {error && (
             <div className="rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</div>
           )}
+
+          <div className="rounded-2xl bg-white/70 border border-[var(--primary-blue)]/10 p-4 sm:p-5">
+            <div className="flex items-start justify-between gap-4">
+              <div className="space-y-1">
+                <p className="text-sm font-semibold font-general" style={{ color: "var(--primary-blue)" }}>
+                  Show my profile in Discovery
+                </p>
+                <p className="text-xs text-gray-600">
+                  If turned off, your profile stays private and won’t appear in Discover even after approval.
+                </p>
+              </div>
+              <Switch
+                checked={isVisible}
+                onCheckedChange={(v) => dispatch(setIsVisible(v))}
+                className="data-[state=checked]:bg-[var(--primary-blue)] data-[state=unchecked]:bg-gray-200"
+              />
+            </div>
+          </div>
+
           <ProfilePhotoUpload />
           <div className="flex gap-4 pt-6">
             <Button
@@ -788,6 +839,15 @@ export function OnboardingWizard({ userId, existingProfileId, email }: Onboardin
               </Button>
             )}
             <Button
+              type="button"
+              variant="outline"
+              onClick={handleSkip}
+              className="flex-1 py-3 rounded-2xl border-2 transition-all duration-300 hover:bg-[var(--accent-gold)]/10 focus-visible:ring-2 focus-visible:ring-[var(--accent-gold)]/50 focus-visible:ring-offset-2"
+              style={{ borderColor: "rgba(0, 51, 102, 0.25)", color: "var(--primary-blue)" }}
+            >
+              Skip for now
+            </Button>
+            <Button
               type="submit"
               disabled={saving}
               className="flex-1 py-3 rounded-2xl transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(212,175,55,0.25)] focus-visible:ring-2 focus-visible:ring-[var(--accent-gold)]/60 focus-visible:ring-offset-2"
@@ -802,10 +862,20 @@ export function OnboardingWizard({ userId, existingProfileId, email }: Onboardin
           </div>
         </form>
       )}
+
+      {/* Mobile-only: move help box under the form */}
+      <div className="sm:hidden mt-8">
+        <div className="rounded-2xl bg-white p-4 border border-[var(--primary-blue)]/10 text-center shadow-[0_10px_30px_rgba(0,0,0,0.04)]">
+          <p className="text-sm font-semibold text-[var(--primary-blue)] mb-1">Need Help?</p>
+          <p className="text-xs text-gray-600 mb-2">
+            Contact Prime Group if you face any issues while filling the form.
+          </p>
+          <a href="tel:+919876543210" className="inline-block text-sm font-bold text-[var(--accent-gold)] tracking-wide">
+            +91 98765 43210
+          </a>
         </div>
       </div>
-      <div className="lg:col-span-4 w-full lg:sticky lg:top-8 animate-in fade-in slide-in-from-right-4 duration-500">
-        <OnboardingChecklist currentStep={step} email={email} />
+        </div>
       </div>
     </div>
   );

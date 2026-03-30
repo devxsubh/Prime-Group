@@ -50,7 +50,7 @@ export default function ProfileCard({ data, index }: ProfileCardProps) {
         <Heart className={`h-5 w-5 ${favorite ? "fill-red-500 text-red-500" : "text-gray-500"}`} />
       </button>
 
-      <Link href={`/discover/${data.id}`}>
+      <Link href={data.ctaHref ?? `/discover/${data.id}`}>
         {/* Profile Image */}
         <div className="relative h-80 overflow-hidden cursor-pointer">
           <Image

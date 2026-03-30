@@ -24,7 +24,6 @@ import { cn } from "@/lib/utils";
 const menuItems = [
   { name: "Dashboard", href: "/admin", icon: BarChart3, description: "Overview & stats" },
   { name: "Profiles", href: "/admin/profiles", icon: Users, description: "Manage profiles" },
-  { name: "Admin Access", href: "/admin/access", icon: Shield, description: "Admins & permissions" },
   { name: "Blogs", href: "/admin/blogs", icon: FileText, description: "Create & edit posts" },
   { name: "FAQs", href: "/admin/faqs", icon: HelpCircle, description: "Manage FAQs" },
   { name: "Contact", href: "/admin/contact", icon: Mail, description: "Form submissions" },
@@ -161,9 +160,9 @@ export function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
           >
             <div className="flex items-center gap-2 mb-1 font-semibold">
               <UserCircle className="w-4 h-4" />
-              Admin Access
+              Admin
             </div>
-            <p className="opacity-90">Full system control</p>
+            <p className="opacity-90">Admin panel access</p>
           </div>
         )}
         <button
