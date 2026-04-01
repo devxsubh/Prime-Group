@@ -9,6 +9,7 @@ export default async function SignInPage({
 }) {
   const params = await searchParams;
   const showPasswordResetSuccess = params.message === "password_reset";
+  const showEmailVerified = params.message === "email_verified";
   const next = params.next && params.next.trim().startsWith("/") && !params.next.trim().startsWith("//")
     ? params.next
     : undefined;
@@ -16,7 +17,7 @@ export default async function SignInPage({
   return (
     <div className="absolute inset-0 min-h-screen flex items-center justify-center overflow-y-auto overflow-x-hidden p-0 sm:p-4 md:p-6 lg:p-8">
       {/* White background */}
-      <div className="absolute inset-0 bg-white" />
+      <div className="fixed inset-0 bg-white sm:bg-transparent -z-10" />
       
       {/* Main content container */}
       <div className="relative z-10 w-full max-w-5xl my-auto flex-shrink-0">
@@ -187,6 +188,12 @@ export default async function SignInPage({
                 {showPasswordResetSuccess && (
                   <div className="mb-4 p-3 rounded-lg bg-green-50 text-green-800 text-sm font-general">
                     Password reset successfully. Sign in with your new password.
+                  </div>
+                )}
+
+                {showEmailVerified && (
+                  <div className="mb-4 p-3 rounded-lg bg-green-50 text-green-800 text-sm font-general border border-green-200/80">
+                    Email verified. Sign in with your email and password to continue.
                   </div>
                 )}
 

@@ -47,7 +47,19 @@ export function AdminProfileModal({ profileId, open, onOpenChange, onStatusUpdat
           .single();
 
         if (profileError) throw profileError;
-        setProfile(profileData as ProfileRecord);
+
+        // Fetch email from users table so admin can see it
+        let email: string | null = null;
+        if (profileData?.user_id) {
+          const { data: userRow } = await supabase
+            .from("users")
+            .select("email")
+            .eq("id", profileData.user_id)
+            .single();
+          email = (userRow as { email?: string | null } | null)?.email ?? null;
+        }
+
+        setProfile({ ...(profileData as ProfileRecord), email });
 
         const { data: photosData } = await supabase
           .from("profile_photos")
@@ -129,7 +141,13 @@ export function AdminProfileModal({ profileId, open, onOpenChange, onStatusUpdat
               <Loader2 className="h-8 w-8 animate-spin" style={{ color: "var(--accent-gold)" }} />
             </div>
           ) : profile ? (
-            <ProfileView profile={profile} photos={photos} preferences={preferences} isOwnProfile={false} />
+            <ProfileView
+              profile={profile}
+              photos={photos}
+              preferences={preferences}
+              isOwnProfile={false}
+              forceShowContact
+            />
           ) : (
             <div className="text-center py-12 font-general" style={{ color: "var(--primary-blue)" }}>
               Profile not found

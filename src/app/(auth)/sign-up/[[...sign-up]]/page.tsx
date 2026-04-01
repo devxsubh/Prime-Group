@@ -6,7 +6,7 @@ export default function SignUpPage() {
   return (
     <div className="absolute inset-0 min-h-screen flex items-center justify-center overflow-y-auto overflow-x-hidden p-0 sm:p-4 md:p-6 lg:p-8">
       {/* White background */}
-      <div className="absolute inset-0 bg-white" />
+      <div className="fixed inset-0 bg-white sm:bg-transparent -z-10" />
       
       {/* Main content container */}
       <div className="relative z-10 w-full max-w-5xl my-auto flex-shrink-0">

@@ -55,6 +55,8 @@ interface AuthFormProps {
 export function AuthForm({ mode, hideTitle = false, submitLabel, className, next: nextParam }: AuthFormProps) {
   const router = useRouter();
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [pendingVerificationEmail, setPendingVerificationEmail] = useState<string | null>(null);
+  const [resending, setResending] = useState(false);
 
   const isSignUp = mode === "sign-up";
 
@@ -72,24 +74,31 @@ export function AuthForm({ mode, hideTitle = false, submitLabel, className, next
 
   const onSubmit = async (data: AuthFormData & { confirmPassword?: string; acceptTerms?: boolean }) => {
     setMessage(null);
+    setPendingVerificationEmail(null);
     const supabase = createClient();
 
     if (isSignUp) {
-      const { error } = await supabase.auth.signUp({
+      const { data: signUpData, error } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback?next=/onboarding`,
+          emailRedirectTo: `${window.location.origin}/auth/callback?next=/hi`,
         },
       });
       if (error) {
         setMessage({ type: "error", text: error.message });
         return;
       }
+      
+      if (signUpData?.user?.identities?.length === 0) {
+        setMessage({ type: "error", text: "An account with this email already exists. Please log in." });
+        return;
+      }
       setMessage({
         type: "success",
         text: "Check your email for the confirmation link to complete sign up.",
       });
+      setPendingVerificationEmail(data.email);
       return;
     }
 
@@ -99,6 +108,9 @@ export function AuthForm({ mode, hideTitle = false, submitLabel, className, next
     });
     if (error) {
       setMessage({ type: "error", text: error.message });
+      if ((error.message || "").toLowerCase().includes("email not confirmed")) {
+        setPendingVerificationEmail(data.email);
+      }
       return;
     }
     const userId = signInData.user?.id;
@@ -150,6 +162,42 @@ export function AuthForm({ mode, hideTitle = false, submitLabel, className, next
             }`}
           >
             {message.text}
+          </div>
+        )}
+
+        {pendingVerificationEmail && (
+          <div className="flex items-center justify-between gap-3 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm">
+            <span className="text-gray-600">
+              Didn&apos;t get the verification email?
+            </span>
+            <button
+              type="button"
+              disabled={resending}
+              onClick={async () => {
+                setResending(true);
+                try {
+                  const supabase = createClient();
+                  const { error } = await supabase.auth.resend({
+                    type: "signup",
+                    email: pendingVerificationEmail,
+                    options: {
+                      emailRedirectTo: `${window.location.origin}/auth/callback?next=/hi`,
+                    },
+                  });
+                  if (error) {
+                    setMessage({ type: "error", text: error.message });
+                  } else {
+                    setMessage({ type: "success", text: "Verification email sent again. Please check your inbox/spam." });
+                  }
+                } finally {
+                  setResending(false);
+                }
+              }}
+              className="font-semibold underline underline-offset-2 disabled:opacity-60"
+              style={{ color: "var(--accent-gold)" }}
+            >
+              {resending ? "Sending…" : "Resend"}
+            </button>
           </div>
         )}
 

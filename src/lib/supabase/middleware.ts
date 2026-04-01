@@ -9,7 +9,10 @@ import { NextResponse, type NextRequest } from "next/server";
 export async function updateSession(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  if (!pathname.startsWith("/onboarding")) {
+  const protectedRoutes = ["/discover", "/profile", "/settings", "/favorites"];
+  const isProtected = protectedRoutes.some((route) => pathname.startsWith(route));
+
+  if (!pathname.startsWith("/onboarding") && !isProtected) {
     return NextResponse.next();
   }
 
@@ -43,8 +46,26 @@ export async function updateSession(request: NextRequest) {
   if (!user) {
     const url = request.nextUrl.clone();
     url.pathname = "/sign-in";
-    url.searchParams.set("next", request.nextUrl.pathname);
+    if (isProtected) {
+      url.searchParams.set("next", request.nextUrl.pathname);
+    }
     return NextResponse.redirect(url);
+  }
+
+  if (isProtected) {
+    // For protected routes, check if user has minimum 40% completion
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("profile_completion_pct, profile_status")
+      .eq("user_id", user.id)
+      .single();
+
+    const pct = profile?.profile_completion_pct ?? 0;
+    const isCompleted = profile?.profile_status === "active" || pct >= 40;
+
+    if (!isCompleted) {
+      return NextResponse.redirect(new URL("/onboarding", request.url));
+    }
   }
 
   return supabaseResponse;

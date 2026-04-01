@@ -26,6 +26,7 @@ export default function NewBlogPage() {
     setSaving(true);
     try {
       const supabase = createAdminBrowserClient();
+      const { data: auth } = await supabase.auth.getUser();
       const { error } = await supabase.from("blogs").insert({
         title: data.title,
         slug: data.slug || data.title.toLowerCase().replace(/\s+/g, "-"),
@@ -34,6 +35,7 @@ export default function NewBlogPage() {
         content: data.content,
         cover_image_url: data.cover_image_url || null,
         author_name: data.author_name || null,
+        author_user_id: auth?.user?.id ?? null,
         published_at: data.publish ? new Date().toISOString() : null,
         updated_at: new Date().toISOString(),
       });

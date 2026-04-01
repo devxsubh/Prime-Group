@@ -49,7 +49,7 @@ export function useAuth() {
       email: data.email,
       password: data.password,
       options: {
-        emailRedirectTo: `${typeof window !== "undefined" ? window.location.origin : ""}/auth/callback?next=/onboarding`,
+        emailRedirectTo: `${typeof window !== "undefined" ? window.location.origin : ""}/auth/callback?next=/hi`,
       },
     });
     setIsLoading(false);

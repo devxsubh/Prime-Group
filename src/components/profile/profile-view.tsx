@@ -86,6 +86,7 @@ export interface ProfileRecord {
   gotra?: string | null;
   contact_address?: string | null;
   contact_number?: string | null;
+  email?: string | null;
   willing_to_relocate?: string | null;
   is_visible?: boolean | null;
   [key: string]: unknown;
@@ -96,6 +97,8 @@ export interface ProfileViewProps {
   photos: ProfilePhoto[];
   preferences: PartnerPreferences | null;
   isOwnProfile?: boolean;
+  /** When true (e.g. admin view), always show contact details without credits/unlock gating. */
+  forceShowContact?: boolean;
   userId?: string;
   currentUserId?: string;
   unlockedProfileIds?: string[];
@@ -149,6 +152,7 @@ export function ProfileView({
   photos,
   preferences,
   isOwnProfile,
+  forceShowContact = false,
   userId,
   currentUserId,
   unlockedProfileIds = [],
@@ -403,7 +407,7 @@ export function ProfileView({
           {/* Quick Contact & Photos Toggle */}
           <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center md:justify-start gap-4 mt-auto">
             {/* Contact Info Section */}
-            {isOwnProfile ? (
+          {isOwnProfile || forceShowContact ? (
               /* Own profile: show contact info directly */
               <div className="flex flex-wrap justify-center sm:justify-start gap-3">
                 {profile.contact_number && (
@@ -416,6 +420,12 @@ export function ProfileView({
                   <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--primary-blue)]/15 bg-blue-50/40 text-sm font-semibold text-[var(--primary-blue)]">
                     <Home className="w-4 h-4 text-[var(--accent-gold)]" />
                     {profile.contact_address}
+                  </div>
+                )}
+                {profile.email && (
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--primary-blue)]/15 bg-blue-50/40 text-sm font-semibold text-[var(--primary-blue)]">
+                    <Mail className="w-4 h-4 text-[var(--accent-gold)]" />
+                    {profile.email}
                   </div>
                 )}
               </div>

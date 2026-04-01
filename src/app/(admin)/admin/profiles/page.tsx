@@ -33,6 +33,8 @@ interface ProfileRow {
   profile_status: string;
   profile_completion_pct: number | null;
   created_at: string;
+  contact_number?: string | null;
+  users?: { email: string } | { email: string }[];
 }
 
 const STATUS_OPTIONS = [
@@ -52,17 +54,29 @@ export default function AdminProfilesPage() {
   const [viewingProfileId, setViewingProfileId] = useState<string | null>(null);
 
   const fetchProfiles = async () => {
-    const supabase = createAdminBrowserClient();
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("id, user_id, full_name, gender, city, profile_status, profile_completion_pct, created_at")
-        .is("deleted_at", null)
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-      setProfiles((data as ProfileRow[]) ?? []);
-    } catch {
+      const res = await fetch("/api/admin/profiles");
+      if (!res.ok) {
+        let details = "";
+        try {
+          const json = (await res.json()) as { error?: string };
+          if (json?.error) details = json.error;
+        } catch {
+          try {
+            details = await res.text();
+          } catch {
+            details = "";
+          }
+        }
+        throw new Error(
+          details ? `Failed to load profiles: ${details}` : `Failed to load profiles: ${res.status}`
+        );
+      }
+      const json = (await res.json()) as { profiles?: ProfileRow[] };
+      setProfiles(json.profiles ?? []);
+    } catch (e) {
+      console.error(e);
       setProfiles([]);
     } finally {
       setLoading(false);
@@ -187,6 +201,7 @@ export default function AdminProfilesPage() {
                   <TableHead className="font-general">Gender</TableHead>
                   <TableHead className="font-general">City</TableHead>
                   <TableHead className="font-general">Status</TableHead>
+                  <TableHead className="font-general">Contact</TableHead>
                   <TableHead className="font-general">Change status</TableHead>
                   <TableHead className="font-general">Completion</TableHead>
                   <TableHead className="font-general">Created</TableHead>
@@ -227,6 +242,16 @@ export default function AdminProfilesPage() {
                         >
                           {p.profile_status}
                         </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex flex-col gap-1 text-xs text-gray-600">
+                          {p.users ? (
+                            <span>{Array.isArray(p.users) ? p.users[0]?.email : (p.users as { email: string }).email}</span>
+                          ) : (
+                            <span className="text-gray-400 italic">No email</span>
+                          )}
+                          {p.contact_number ? <span>{p.contact_number}</span> : <span className="text-gray-400 italic">No phone</span>}
+                        </div>
                       </TableCell>
                       <TableCell>
                         <Select
