@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
+import { getSiteUrl } from "@/lib/site";
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://primegroupmatrimony.com";
+const baseUrl = getSiteUrl();
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes = [

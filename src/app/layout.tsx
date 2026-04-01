@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "@/styles/globals.css";
+import { getSiteUrl } from "@/lib/site";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -19,7 +20,7 @@ const albertSans = localFont({
   weight: "100 200 300 400 500 600 700 800 900",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://primegroupmatrimony.com";
+const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

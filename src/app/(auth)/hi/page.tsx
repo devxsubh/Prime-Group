@@ -57,11 +57,14 @@ export default function EmailVerifiedHiPage() {
             <CheckCircle2 className="h-10 w-10" style={{ color: "var(--accent-gold)" }} strokeWidth={1.75} aria-hidden />
           </div>
 
+          <p className="font-general text-sm font-medium tracking-wide text-[#8B7A5A] uppercase mb-2">
+            Thank you for verifying your email
+          </p>
           <h1 className="font-playfair-display text-3xl sm:text-4xl font-bold tracking-tight mb-3" style={{ color: "var(--primary-blue)" }}>
-            Hi — you&apos;re verified
+            You&apos;re verified
           </h1>
           <p className="font-general text-base sm:text-lg text-gray-600 leading-relaxed mb-2">
-            Your email is confirmed. You can sign in with the email and password you chose at registration.
+            Your email is confirmed. You can sign in with the same email and password you used to register.
           </p>
           <p className="font-general text-sm text-gray-500 mb-10">
             {!cleared ? "Preparing your session…" : "Use the button below to continue."}
