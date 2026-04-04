@@ -11,6 +11,7 @@ import { createClient } from "@/lib/supabase/client";
 import { AuthInput } from "./AuthInput";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
+import { hasCompletedBasicProfile } from "@/lib/profile-basic-gate";
 import type { AuthFormData } from "../types/auth";
 
 const signInSchema = z.object({
@@ -117,24 +118,13 @@ export function AuthForm({ mode, hideTitle = false, submitLabel, className, next
     if (userId) {
       const { data: profile } = await supabase
         .from("profiles")
-        .select("id, profile_status, profile_completion_pct")
+        .select("full_name, date_of_birth, gender, contact_number, country, city")
         .eq("user_id", userId)
-        .single();
+        .maybeSingle();
       router.refresh();
-      const isProfileCompleted =
-        profile &&
-        (profile.profile_status === "active" || (profile.profile_completion_pct ?? 0) >= 80);
-      if (!isProfileCompleted) {
-        let skipped = false;
-        try {
-          skipped = localStorage.getItem("onboarding_skipped") === "1";
-        } catch {
-          skipped = false;
-        }
-        if (!skipped) {
-          router.push("/onboarding");
-          return;
-        }
+      if (!hasCompletedBasicProfile(profile)) {
+        router.push("/onboarding");
+        return;
       }
     }
     router.refresh();

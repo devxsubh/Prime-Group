@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { hasCompletedBasicProfile } from "@/lib/profile-basic-gate";
 
 export default async function OnboardingThankYouPage() {
   const supabase = await createClient();
@@ -11,15 +12,18 @@ export default async function OnboardingThankYouPage() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("id, profile_status, profile_completion_pct, is_visible")
+    .select(
+      "id, profile_status, profile_completion_pct, is_visible, full_name, date_of_birth, gender, contact_number, country, city"
+    )
     .eq("user_id", user.id)
     .maybeSingle();
 
-  const pct = profile?.profile_completion_pct ?? 0;
   if (profile?.profile_status === "active") {
     redirect("/discover");
   }
-  if (pct < 80) {
+
+  const pct = profile?.profile_completion_pct ?? 0;
+  if (!hasCompletedBasicProfile(profile) || pct < 80) {
     redirect("/onboarding");
   }
 

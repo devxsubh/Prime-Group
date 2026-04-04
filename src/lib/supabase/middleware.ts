@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { hasCompletedBasicProfile } from "@/lib/profile-basic-gate";
 
 /**
  * Only run Supabase auth in middleware where we enforce server-side rules.
@@ -53,17 +54,13 @@ export async function updateSession(request: NextRequest) {
   }
 
   if (isProtected) {
-    // For protected routes, check if user has minimum 40% completion
     const { data: profile } = await supabase
       .from("profiles")
-      .select("profile_completion_pct, profile_status")
+      .select("full_name, date_of_birth, gender, contact_number, country, city")
       .eq("user_id", user.id)
-      .single();
+      .maybeSingle();
 
-    const pct = profile?.profile_completion_pct ?? 0;
-    const isCompleted = profile?.profile_status === "active" || pct >= 40;
-
-    if (!isCompleted) {
+    if (!hasCompletedBasicProfile(profile)) {
       return NextResponse.redirect(new URL("/onboarding", request.url));
     }
   }

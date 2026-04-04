@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { OnboardingWizard } from "@/components/auth/onboarding-wizard";
 import { OnboardingStepBackground } from "@/components/auth/onboarding-step-background";
+import { hasCompletedBasicProfile } from "@/lib/profile-basic-gate";
 
 export default async function OnboardingPage() {
   const supabase = await createClient();
@@ -12,16 +13,21 @@ export default async function OnboardingPage() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("id, profile_status, profile_completion_pct")
+    .select("id, profile_status, profile_completion_pct, full_name, date_of_birth, gender, contact_number, country, city")
     .eq("user_id", user.id)
-    .single();
+    .maybeSingle();
 
-  const pct = profile?.profile_completion_pct ?? 0;
   if (profile?.profile_status === "active") {
     redirect("/discover");
   }
-  if (pct >= 80) {
+
+  const pct = profile?.profile_completion_pct ?? 0;
+  if (hasCompletedBasicProfile(profile) && pct >= 80) {
     redirect("/onboarding/thank-you");
+  }
+
+  if (hasCompletedBasicProfile(profile)) {
+    redirect("/discover");
   }
 
   return (

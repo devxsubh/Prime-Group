@@ -502,17 +502,6 @@ export function OnboardingWizard({ userId, existingProfileId, email }: Onboardin
     setStep(step - 1);
   };
 
-  const handleSkip = () => {
-    const d = form.getValues();
-    persistStepToRedux(step, d);
-    try {
-      localStorage.setItem("onboarding_skipped", "1");
-    } catch {
-      // ignore
-    }
-    router.push("/discover?onboarding=skipped");
-  };
-
   const handleFormSubmit = form.handleSubmit((d) => onSubmit(d));
 
   const inputClass =
@@ -838,15 +827,6 @@ export function OnboardingWizard({ userId, existingProfileId, email }: Onboardin
                 Back
               </Button>
             )}
-            <Button
-              type="button"
-              variant="outline"
-              onClick={handleSkip}
-              className="flex-1 py-3 rounded-2xl border-2 transition-all duration-300 hover:bg-[var(--accent-gold)]/10 focus-visible:ring-2 focus-visible:ring-[var(--accent-gold)]/50 focus-visible:ring-offset-2"
-              style={{ borderColor: "rgba(0, 51, 102, 0.25)", color: "var(--primary-blue)" }}
-            >
-              Skip for now
-            </Button>
             <Button
               type="submit"
               disabled={saving}
