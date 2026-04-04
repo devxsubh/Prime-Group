@@ -1,7 +1,6 @@
 'use client'
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import {
   Sheet,
@@ -21,7 +20,6 @@ export default function MobileNav() {
   const [open, setOpen] = useState(false);
   const { user, signOut } = useAuth();
   const { credits } = useCredits();
-  const router = useRouter();
 
   const handleLinkClick = () => {
     setOpen(false);
@@ -30,8 +28,6 @@ export default function MobileNav() {
   const handleSignOut = async () => {
     await signOut();
     setOpen(false);
-    router.push("/");
-    router.refresh();
   };
 
   return (

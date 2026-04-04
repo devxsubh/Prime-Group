@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Suspense, useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Lock } from "lucide-react";
+import { updatePasswordErrorUserMessage } from "@/lib/auth/auth-callback-errors";
 import { createClient } from "@/lib/supabase/client";
 import { AuthInput } from "@/components/auth/AuthInput";
 import { Spinner } from "@/components/ui/spinner";
@@ -23,8 +24,23 @@ const schema = z
 
 type FormData = z.infer<typeof schema>;
 
-export default function ResetPasswordPage() {
+function normalizeEmail(e: string | null | undefined): string {
+  return (e ?? "").trim().toLowerCase();
+}
+
+function decodeRecoveryEmailParam(raw: string | null): string | null {
+  if (!raw) return null;
+  try {
+    return decodeURIComponent(raw);
+  } catch {
+    return raw;
+  }
+}
+
+function ResetPasswordForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const recoveryEmailParam = searchParams.get("recovery_email");
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [checkingSession, setCheckingSession] = useState(true);
   const [hasSession, setHasSession] = useState(false);
@@ -38,22 +54,55 @@ export default function ResetPasswordPage() {
   });
 
   useEffect(() => {
+    let cancelled = false;
     const supabase = createClient();
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setHasSession(!!session);
-      setCheckingSession(false);
-      if (!session) {
-        router.replace("/sign-in?next=/reset-password");
+    const recoveryEmail = decodeRecoveryEmailParam(recoveryEmailParam);
+
+    (async () => {
+      let {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        await supabase.auth.refreshSession();
+        await new Promise((r) => setTimeout(r, 400));
+        if (cancelled) return;
+        ({
+          data: { user },
+        } = await supabase.auth.getUser());
       }
-    });
-  }, [router]);
+
+      if (cancelled) return;
+
+      if (!user) {
+        setCheckingSession(false);
+        router.replace("/sign-in?next=/reset-password");
+        return;
+      }
+
+      if (recoveryEmail) {
+        if (normalizeEmail(user.email) !== normalizeEmail(recoveryEmail)) {
+          await supabase.auth.signOut();
+          router.replace("/sign-in?error=recovery_wrong_account");
+          return;
+        }
+      }
+
+      setHasSession(true);
+      setCheckingSession(false);
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [router, recoveryEmailParam]);
 
   const onSubmit = async (data: FormData) => {
     setMessage(null);
     const supabase = createClient();
     const { error } = await supabase.auth.updateUser({ password: data.password });
     if (error) {
-      setMessage({ type: "error", text: error.message });
+      setMessage({ type: "error", text: updatePasswordErrorUserMessage(error) });
       return;
     }
     setMessage({ type: "success", text: "Password updated. Redirecting to sign in..." });
@@ -77,7 +126,10 @@ export default function ResetPasswordPage() {
 
   return (
     <div className="absolute inset-0 min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-md rounded-2xl border-2 bg-white/95 backdrop-blur-sm p-8 shadow-xl" style={{ borderColor: "var(--accent-gold)" }}>
+      <div
+        className="w-full max-w-md rounded-2xl border-2 bg-white/95 backdrop-blur-sm p-8 shadow-xl"
+        style={{ borderColor: "var(--accent-gold)" }}
+      >
         <h2 className="text-2xl font-playfair-display font-bold text-center mb-2" style={{ color: "var(--primary-blue)" }}>
           Set new password
         </h2>
@@ -131,5 +183,19 @@ export default function ResetPasswordPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="absolute inset-0 min-h-screen flex items-center justify-center p-4">
+          <Spinner label="Loading..." />
+        </div>
+      }
+    >
+      <ResetPasswordForm />
+    </Suspense>
   );
 }

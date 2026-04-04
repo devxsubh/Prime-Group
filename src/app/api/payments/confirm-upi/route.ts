@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { requireAdminApiUser } from "@/lib/api-route-access";
 import { createServiceRoleClient } from "@/lib/supabase/server-service";
 
 export const dynamic = "force-dynamic";
 
 /**
  * Mark a UPI payment as successful and add credits.
- * Allowed: admin/super_admin only (or optionally a shared secret for webhooks).
+ * Access: **admin** — `requireAdminApiUser()` (admin cookie + `users.role`); see `@/lib/api-route-access`.
  */
 export async function POST(req: Request) {
   try {
@@ -16,27 +16,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "order_id required" }, { status: 400 });
     }
 
-    const supabase = await createClient();
-    const {
-      data: { user: authUser },
-    } = await supabase.auth.getUser();
-    if (!authUser) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const { data: adminUser } = await supabase
-      .from("users")
-      .select("role")
-      .eq("id", authUser.id)
-      .single();
-
-    const isAdmin =
-      (adminUser as { role?: string } | null)?.role === "admin" ||
-      (adminUser as { role?: string } | null)?.role === "super_admin";
-
-    if (!isAdmin) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
+    const gate = await requireAdminApiUser();
+    if (!gate.ok) return gate.response;
 
     const serviceSupabase = createServiceRoleClient();
     const { data: payment, error: fetchError } = await serviceSupabase

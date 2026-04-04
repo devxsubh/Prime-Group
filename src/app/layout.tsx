@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "@/styles/globals.css";
 import { getSiteUrl } from "@/lib/site";
+import { AuthCrossTabSync } from "@/components/providers/auth-cross-tab-sync";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -103,6 +104,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
+        <AuthCrossTabSync />
         {children}
       </body>
     </html>

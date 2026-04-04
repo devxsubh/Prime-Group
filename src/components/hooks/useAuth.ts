@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { getSiteUrl } from "@/lib/site";
 import type { User } from "@supabase/supabase-js";
 import type { AuthFormData, UserType } from "../types/auth";
 
@@ -49,7 +50,7 @@ export function useAuth() {
       email: data.email,
       password: data.password,
       options: {
-        emailRedirectTo: `${typeof window !== "undefined" ? window.location.origin : ""}/auth/callback?next=/hi`,
+        emailRedirectTo: `${getSiteUrl()}/auth/callback?next=/hi`,
       },
     });
     setIsLoading(false);

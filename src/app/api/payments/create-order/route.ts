@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { requireUserWithBasicProfile } from "@/lib/api-require-basic-profile";
 import { createServiceRoleClient } from "@/lib/supabase/server-service";
 import { paymentConfig, getPaymentMethodFromDb, buildUpiUrl } from "@/lib/payment/config";
 import Razorpay from "razorpay";
@@ -9,13 +9,9 @@ export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
   try {
-    const supabase = await createClient();
-    const {
-      data: { user: authUser },
-    } = await supabase.auth.getUser();
-    if (!authUser) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const gate = await requireUserWithBasicProfile();
+    if (!gate.ok) return gate.response;
+    const { user: authUser, supabase } = gate;
 
     const body = await req.json();
     const planId = body?.plan_id as string | undefined;

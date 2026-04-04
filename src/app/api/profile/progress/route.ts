@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { requireUserWithBasicProfile } from "@/lib/api-require-basic-profile";
 
 type ProgressStepKey =
   | "basic_info"
@@ -21,14 +21,9 @@ function clampPct(n: number): number {
 
 export async function GET() {
   try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const gate = await requireUserWithBasicProfile();
+    if (!gate.ok) return gate.response;
+    const { user, supabase } = gate;
 
     const { data: profile, error: profileErr } = await supabase
       .from("profiles")

@@ -4,6 +4,33 @@ Manual QA reference for **member** and **admin** auth. Paths are relative to the
 
 ---
 
+## 0. Document review & audit log
+
+**Last reviewed:** 2026-04-04 — codebase walk-through (middleware, callback, sign-in/up, reset password, `/hi`, API routes, post-login helpers).
+
+### Verified / updated in code (this review)
+
+| Area | What was checked | Outcome |
+|------|------------------|---------|
+| Post-login redirects | Scattered logic in middleware, client sign-in, and `/auth/callback` | **Centralized** in `getPostLoginRedirect(user, { next, basicProfile })` (`src/lib/post-login-redirect.ts`). Callback recomputes `Location` after session + profile load. Protected path list shared via `isProtectedMemberPath` in middleware. |
+| Open `next` / defaults | `sanitizeNextPath` vs optional next | Still from `src/lib/safe-next-path.ts`; post-login uses `sanitizeOptionalNextPath` inside `getPostLoginRedirect`. Invalid `next` + incomplete profile → `/onboarding` (callback previously could land on `/discover` first). |
+| API auth | “Public vs authed” ambiguity | **Documented and enforced explicitly** in `src/lib/api-route-access.ts`. `/api/contact` = public, validated body + **service-role** insert (no reliance on member cookie). `/api/payments/verify` = **public_hmac** (Razorpay signature, no session). Member credit/payment APIs use `requireUserWithBasicProfile`. |
+| Admin UPI confirm | Who can POST `/api/payments/confirm-upi` | **Issue found:** handler used **member** `createClient()` while admin UI uses **admin** cookies → admins often got 401. **Fixed:** `requireAdminApiUser()` (admin cookie + `users.role`). |
+| Clock skew / flaky tokens | Callback + reset password | **Mitigations added:** bounded retry on `exchangeCodeForSession` / `verifyOtp` for transient errors (`src/lib/auth/auth-callback-errors.ts`); sign-in banner `error=auth_timing`; reset-password `refreshSession` + clearer `updateUser` errors. |
+| `/hi` | Email-verify landing vs OAuth | **Prior fix retained in code:** conditional session handling for password vs OAuth-style users (see `src/app/(auth)/hi/page.tsx`). |
+
+### Issues still open (track in backlog / QA)
+
+| ID | Issue | Severity |
+|----|--------|----------|
+| O1 | Guest opening `/onboarding` or `/onboarding/thank-you`: middleware sends `/sign-in` **without** `?next=…`, so return path after sign-in may not restore onboarding intent | P1 |
+| O2 | Middleware `?next=` uses **pathname only** — original query string on protected URLs is not preserved | P1 |
+| O3 | `AuthForm` “Remember me” not wired to Supabase persistence | P2 |
+| O4 | `useAuth.ts` still duplicates `emailRedirectTo` pattern vs `auth-form.tsx` — drift risk | P2 |
+| O5 | Admin `fixed-login` is sensitive — ensure env secrecy, rate limiting, monitoring in production | P3 |
+
+---
+
 ## 1. Surfaces inventory
 
 ### Member — pages (UI)
@@ -11,26 +38,28 @@ Manual QA reference for **member** and **admin** auth. Paths are relative to the
 | Path | Role |
 |------|------|
 | `/sign-up` | Register; `emailRedirectTo` → `/auth/callback?next=/hi` |
-| `/sign-in` | Password sign-in; optional `?next=` (safe relative path only); messages `password_reset`, `email_verified` |
-| `/hi` | After verify link: client `signOut`, CTA → `/sign-in?message=email_verified` |
+| `/sign-in` | Password sign-in; optional `?next=` (safe relative path only); messages `password_reset`, `email_verified`; errors `auth_callback_error`, **`auth_timing`**, `reset_link_expired`, `recovery_wrong_account` |
+| `/hi` | Post–email-verify landing; may `signOut` or keep session depending on path (password vs OAuth-style); successful callback adds **`?pg_verified=1`** — if there is **no session** on load, copy explains “verification succeeded, please sign in” (cookie blocked); CTA → `/sign-in?message=email_verified` |
 | `/forgot-password` | `resetPasswordForEmail` → `/auth/callback?next=/reset-password` |
 | `/reset-password` | Needs session from callback; `updateUser` password → `signOut` → `/sign-in?message=password_reset` |
 | `/onboarding` | Logged-in wizard; server redirects by profile state |
 | `/onboarding/thank-you` | Logged-in; requires basics + `profile_completion_pct >= 80` |
-| `/discover`, `/profile`, `/settings`, `/favorites` | **Middleware-protected** + basic profile gate on server |
+| `/discover` | **Public** listing (browse without sign-in) |
+| `/discover/[id]` | **Middleware-protected** (sign-in + basic profile) — full profile detail |
+| `/profile`, `/settings`, `/favorites` | **Middleware-protected** + basic profile gate on server |
 
 ### Member — route handler
 
 | Path | Role |
 |------|------|
-| `GET /auth/callback` | `code` → `exchangeCodeForSession`; or `token_hash` + `type` → `verifyOtp`; sets cookies on redirect; `next` sanitized (`/`, disallows `//`); failure → `/sign-in?error=auth_callback_error` |
+| `GET /auth/callback` | `code` → `exchangeCodeForSession` (or `token_hash` + `type` → `verifyOtp`); **bounded retry** on transient errors; **duplicate link open:** if exchange fails with “already used” / stale PKCE class errors but `getUser()` already has a session (first request won), **same success redirect** as first hit (`authCallbackFailureMayBeDuplicateHit`); cookies on redirect; **success `Location`** from `getPostLoginRedirect` + profile row; failure → `auth_callback_error`, **`auth_timing`**, `reset_link_expired`, or `email_verified` per case; `next` for failure uses `sanitizeNextPath` |
 
 ### Member — middleware
 
 | File | Role |
 |------|------|
 | `middleware.ts` | Invokes `updateSession` for almost all paths (see matcher) |
-| `src/lib/supabase/middleware.ts` | Only runs Supabase for `/ onboarding` prefix **or** `/discover`, `/profile`, `/settings`, `/favorites`; unauthenticated → `/sign-in`; adds `?next=` **only** for those protected prefixes when redirecting |
+| `src/lib/supabase/middleware.ts` | Runs Supabase for `/onboarding` or protected paths: **`/discover/<id>`** (not `/discover` listing), `/profile`, `/settings`, `/favorites`; **`/api/*` is not gated here**; unauthenticated → `/sign-in` + `next` when applicable |
 
 ### Member — notable components / hooks
 
@@ -39,16 +68,22 @@ Manual QA reference for **member** and **admin** auth. Paths are relative to the
 | `src/components/auth/auth-form.tsx` | Primary sign-up / sign-in / resend |
 | `src/components/hooks/useAuth.ts` | Alternate sign-in/sign-up (keep in sync with form if used elsewhere) |
 | `src/lib/profile-basic-gate.ts` | Shared “basic profile complete?” rules |
+| `src/lib/post-login-redirect.ts` | **`getPostLoginRedirect`**, `DEFAULT_POST_LOGIN_PATH`, `isProtectedMemberPath` |
+| `src/lib/api-route-access.ts` | API public vs protected policy + `requireAdminApiUser` |
+| `src/lib/auth/auth-callback-errors.ts` | Callback retry + timing-related UX helpers |
 | `src/components/auth/onboarding-wizard.tsx` | Multi-step save + photos finish → `/onboarding/thank-you` |
 
-### Member — APIs using **default** (member) server session
+### Member — API access (explicit tiers)
 
-Uses `createClient()` from `src/lib/supabase/server.ts` and `getUser()` — examples:
+**Source of truth:** `src/lib/api-route-access.ts` (table in file header). Do not assume middleware or RLS alone.
 
-- `src/app/api/profile/progress/route.ts`
-- `src/app/api/payments/*`
-- `src/app/api/credits/*`
-- `src/app/api/contact/route.ts` (verify if public or authed)
+| Tier | Examples | Enforcement |
+|------|----------|-------------|
+| **public** | `POST /api/contact`, `GET /api/settings/payment-method`, `POST /api/auth/resend-verification` | No member session; service role and/or anon client + validation / rate limits |
+| **public_hmac** | `POST /api/payments/verify` | Razorpay HMAC + service role (client calls after checkout) |
+| **member_onboarded** | `/api/credits/*`, `/api/payments/create-order`, `/api/payments/status`, `/api/profile/progress` | `requireUserWithBasicProfile()` |
+| **admin** | `/api/admin/*` (except `fixed-login`), `POST /api/payments/confirm-upi` | Admin cookie + `requireAdminApiUser()` or per-route role checks |
+| **public_secret** | `POST /api/admin/fixed-login` | Env-fixed credentials |
 
 ### Admin — pages
 
@@ -84,7 +119,8 @@ Uses `createClient()` from `src/lib/supabase/server.ts` and `getUser()` — exam
 
 | You open | You get |
 |---------|---------|
-| `/discover`, `/profile`, `/settings`, `/favorites` (any subpath) | `/sign-in?next=<pathname>` (pathname only; **no original query string**) |
+| `/discover` (listing only) | Normal page (not auth-gated) |
+| `/discover/<id>`, `/profile`, `/settings`, `/favorites` (as configured) | `/sign-in?next=<pathname>` (pathname only; **no original query string**) |
 | `/onboarding` or `/onboarding/thank-you` | `/sign-in` (**no `next`** — middleware does not treat onboarding as protected for `next`) |
 | `/sign-in`, `/sign-up`, `/`, public marketing pages | Normal page (no middleware auth) |
 
@@ -94,35 +130,40 @@ Note: `onboarding/page.tsx` contains `redirect("/sign-in?next=/onboarding")` if 
 
 | Condition | You get |
 |-----------|---------|
-| User + `/discover|/profile|/settings|/favorites` + **basic profile incomplete** | `/onboarding` |
+| User + **`/discover/<id>`** or `/profile|/settings|/favorites` + **basic profile incomplete** | `/onboarding` |
 | User + same + **basic profile complete** | Page loads |
 
 Basic fields: `full_name` (≥2 chars), `date_of_birth`, `gender` in `male|female|other`, `contact_number` (≥8 digits after strip), `country`, `city` — see `src/lib/profile-basic-gate.ts`.
 
 ### Sign-in (client, after `signInWithPassword` success)
 
+Uses **`getPostLoginRedirect(user, { next: nextParam, basicProfile: profile })`** (same rules as callback).
+
 | Condition | You get |
 |-----------|---------|
-| Basic profile incomplete | `router.push("/onboarding")` |
-| Basic complete + safe `next` from page props | `router.push(next)` |
-| Basic complete + no / unsafe `next` | `router.push("/discover")` |
+| Basic profile incomplete + `next` not in bypass list (e.g. `/favorites`) | `/onboarding` |
+| Basic profile incomplete + `next` in bypass list (`/hi`, `/reset-password`, `/onboarding`, `/checkout`, auth paths, …) | Sanitized `next` |
+| Basic complete + safe `next` | That path |
+| Basic complete + no / unsafe `next` | `/discover` |
 
 ### Email verification callback
 
 | Request | You get |
 |---------|---------|
-| `GET /auth/callback?code=...&next=/hi` (or safe path) | Session cookies on response; redirect to `next` |
+| `GET /auth/callback?code=...&next=/hi` (or safe path) | Session cookies; **`Location`** = `getPostLoginRedirect` destination + **`pg_verified=1`** (hint for landing UIs if cookies are dropped) |
 | `GET /auth/callback?token_hash=...&type=...&next=...` | Same if `verifyOtp` succeeds |
+| Transient / clock-skew class errors | **Retry** once after short delay; then failure UX as below |
 | Invalid / missing params | `/sign-in?error=auth_callback_error` |
-| `next=https://evil.com` or `next=//evil` | Treated as unsafe → redirect target falls back to **`/discover`** (for callback default) — still verify in QA |
+| JWT / timing-style failure after retries | `/sign-in?error=auth_timing` |
+| `next=https://evil.com` or `next=//evil` | Unsafe `next` dropped inside `getPostLoginRedirect`; incomplete → `/onboarding`, complete → `/discover` |
 
-Default when `next` missing in callback: **`/discover`** (not `/hi`) — signup uses explicit `next=/hi` in `emailRedirectTo`.
+Default when `next` missing / invalid: **incomplete profile → `/onboarding`**, **complete → `/discover`** — signup email still sets explicit `next=/hi` in `emailRedirectTo`.
 
 ### `/hi` page
 
 | Step | Behavior |
 |------|----------|
-| Load | `signOut()` on member client (clear link-granted session) |
+| Load | May `signOut()` (e.g. password verify flow) or **retain session** (OAuth / no `email_confirmed_at`); **`pg_verified=1` + no session** → “Verification succeeded” / please sign in (Safari-style cookie drop); see `hi-content.tsx` |
 | CTA | Link to `/sign-in?message=email_verified` |
 
 ### Onboarding server (`/onboarding`)
@@ -182,6 +223,8 @@ Use **Setup / Do / Expect / Watch** for each row.
 | B1 | From A3 | Observe `/hi` | “Preparing…” then Sign in CTA | Flash of wrong page |
 | B2 | On `/hi` | Wait, then click Sign in | `/sign-in?message=email_verified` + green banner | Session still active (should be signed out) |
 | B3 | Unconfirmed | Try sign-in | Error + resend for “email not confirmed” style | No way to resend |
+| B5 | Safari / strict cookies | After verify, land on `/hi?pg_verified=1` with cookies blocked | Title “Verification succeeded”, sign-in CTA + short cookie note; param stripped from URL | User thinks verify failed |
+| B4 | — | Open `/sign-in?error=auth_timing` | Amber banner: device clock / try link again | Generic error only |
 
 ### C. Sign-in & `next`
 
@@ -189,16 +232,19 @@ Use **Setup / Do / Expect / Watch** for each row.
 |---|--------|-----|--------|--------|
 | C1 | Verified + basic incomplete | Sign in from `/sign-in` | `/onboarding` | Sent to `/discover` wrongly |
 | C2 | Verified + basic complete | Sign in | `/discover` or safe `next` | Wrong default |
-| C3 | — | Open `/sign-in?next=/favorites`, sign in | After success → `/favorites` | Open redirect if `next=//evil.com` |
+| C3 | Basic **complete** | Open `/sign-in?next=/favorites`, sign in | After success → `/favorites` | Open redirect if `next=//evil.com` |
+| C3b | Basic **incomplete** | Same with `next=/favorites` | **`/onboarding`** (not favorites until basics done) | Drift vs middleware |
 | C4 | — | Open `/sign-in?next=https://evil.com` | Should **not** navigate off-site | Browser leaves origin |
 
 ### D. Middleware & deep links
 
 | # | Setup | Do | Expect | Watch |
 |---|--------|-----|--------|--------|
-| D1 | Logged out | Open `/discover` | `/sign-in?next=/discover` | Missing `next` |
+| D1 | Logged out | Open `/discover` | Listing loads (no redirect) | Wrongly forced to sign-in |
+| D1b | Logged out | Open `/discover/<profileId>` | `/sign-in?next=/discover/<id>` | Anonymous can read full profile |
 | D2 | Logged out | Open `/profile/edit` | `/sign-in?next=/profile/edit` | Query on original URL **not** preserved in `next` |
-| D3 | Logged in, basics incomplete | Open `/discover` | Redirect to `/onboarding` | Can browse other non-protected pages incorrectly |
+| D3 | Logged in, basics incomplete | Open `/discover` listing | Stays on listing (public) | — |
+| D3b | Logged in, basics incomplete | Open `/discover/<id>` | Redirect to `/onboarding` | Sees full profile without basics |
 | D4 | Logged out | Open `/onboarding` | `/sign-in` **without** `?next=/onboarding` | After sign-in, user goes default path not onboarding |
 
 ### E. Onboarding & thank-you
@@ -217,6 +263,7 @@ Use **Setup / Do / Expect / Watch** for each row.
 | F1 | Known account | `/forgot-password` submit | Success message | Email not received (config) |
 | F2 | From email link | Land on `/reset-password` | Form visible | No session → bounce to sign-in |
 | F3 | Set password | Submit new password | `/sign-in?message=password_reset` | Still logged in with old session elsewhere |
+| F4 | Wrong device clock / flaky JWT | Open reset link, land on form, submit | Clear error suggesting time/refresh/new link if session invalid | Opaque Supabase message |
 
 ### G. Admin
 
@@ -227,6 +274,7 @@ Use **Setup / Do / Expect / Watch** for each row.
 | G3 | Member logged in on main site | Open `/admin` | Must **not** use member cookie for admin (isolate) | Accidental `isAdmin` |
 | G4 | Auth user without `users.role` admin | Admin session edge case | Redirect login after `/api/admin/me` | API 403 vs UI |
 | G5 | `GET /api/admin/auth-users` without admin cookie | curl/fetch | 401/403 | Data leak |
+| G6 | Admin logged in via `/admin/login` | Confirm UPI payment in revenue UI | `POST /api/payments/confirm-upi` succeeds (admin cookie) | 401 if handler used wrong cookie (regression) |
 
 ### H. Security & perf spot-checks
 
@@ -235,30 +283,42 @@ Use **Setup / Do / Expect / Watch** for each row.
 | H1 | — | `/auth/callback?next=//evil.com` | Redirect stays same-site policy | Open redirect |
 | H2 | Logged in | Load page using `/img/signin.avif` | Reasonable (note: `.avif` **not** in middleware exclude list) | Extra middleware/auth work on static images |
 | H3 | Two tabs | Sign out in one | Other tab behavior | Stale UI |
+| H4 | Callback under load / flaky network | Complete OAuth or email link once | Eventually succeeds or clear error (retry path) | Infinite spinner |
+| H5 | curl `POST /api/contact` with JSON body | No member cookie | 200/400/500 per validation + DB; **not** 401 from missing session | Accidental member-session coupling |
 
 ---
 
 ## 4. Priority risks & follow-up fixes (backlog)
 
-| Priority | Risk | Suggested fix |
-|----------|------|----------------|
-| P1 | Guest hitting `/onboarding` or `/onboarding/thank-you` gets `/sign-in` **without** `next`, so return path after sign-in may ignore onboarding intent | In `src/lib/supabase/middleware.ts`, when `!user` and path starts with `/onboarding`, set `next` to full safe path (e.g. pathname only `/onboarding` or `/onboarding/thank-you`) same as protected routes |
-| P1 | `next` on sign-in redirect from middleware uses **pathname only** — query lost | Optionally append encoded `search` or full path if product needs it |
-| P2 | Callback default `next` is `/discover` when param missing — fine for generic verify, but document | Ensure all emails set explicit `next` where needed |
-| P2 | `AuthForm` “Remember me” is not wired to Supabase persistence | Either remove label or implement session persistence explicitly |
-| P2 | `useAuth.ts` duplicates sign-up redirect URL — drift vs `auth-form.tsx` | Single source for `emailRedirectTo` / `getSiteUrl()` if introduced |
-| P3 | Admin `fixed-login` + service-role repair is powerful — protect env + rate limit in production | Infra / WAF / monitoring |
-| P3 | `/api/admin/me` returns `200` with `isAdmin: false` for some errors — client treats as non-admin | OK for UX; document for API consumers |
+| Priority | Risk | Status / suggested fix |
+|----------|------|-------------------------|
+| P1 | Guest hitting `/onboarding` or `/onboarding/thank-you` gets `/sign-in` **without** `next` | **Open** — add `?next=/onboarding` (safe pathname) in `src/lib/supabase/middleware.ts` when redirecting unauthenticated onboarding URLs |
+| P1 | Middleware `next` uses **pathname only** — query lost | **Open** — product decision: optionally encode original `search` |
+| ~~P1~~ | ~~`/api/payments/confirm-upi` used member cookie~~ | **Resolved** — `requireAdminApiUser()` |
+| ~~P2~~ | ~~API routes “public vs authed” unclear~~ | **Resolved** — `src/lib/api-route-access.ts` + contact service-role insert |
+| P2 | `AuthForm` “Remember me” not wired to Supabase persistence | **Open** — remove label or implement |
+| P2 | `useAuth.ts` duplicates `emailRedirectTo` vs `auth-form.tsx` | **Open** — single helper constant |
+| P2 | Callback / reset password flaky on clock skew | **Mitigated** — retries + `auth_timing` + reset-password refresh + copy (not a full guarantee) |
+| P3 | Admin `fixed-login` + service-role repair is powerful | **Open** — env secrecy, rate limit, monitoring |
+| P3 | `/api/admin/me` returns `200` with `isAdmin: false` for some errors | **Documented** — intentional for UX |
 
 ---
 
 ## 5. File index (quick navigation)
 
 - Callback: `src/app/(auth)/auth/callback/route.ts`
+- Callback errors / retry: `src/lib/auth/auth-callback-errors.ts`
 - Middleware: `middleware.ts`, `src/lib/supabase/middleware.ts`
-- Gate: `src/lib/profile-basic-gate.ts`
+- Post-login redirect: `src/lib/post-login-redirect.ts`
+- Safe `next`: `src/lib/safe-next-path.ts`
+- Gate: `src/lib/profile-basic-gate.ts`, `src/lib/api-require-basic-profile.ts`
+- API policy: `src/lib/api-route-access.ts`
 - Forms: `src/components/auth/auth-form.tsx`
 - Onboarding: `src/app/(onboarding)/onboarding/page.tsx`, `thank-you/page.tsx`, `src/components/auth/onboarding-wizard.tsx`
-- Hi: `src/app/(auth)/hi/page.tsx`
+- Hi: `src/app/(auth)/hi/page.tsx`, `hi-content.tsx`
+- Post-auth landing hint: `src/lib/auth/post-auth-landing.ts`
+- Reset password: `src/app/(auth)/reset-password/page.tsx`
+- Sign-in: `src/app/(auth)/sign-in/[[...sign-in]]/page.tsx`
 - Admin layout/login: `src/app/(admin)/admin/layout.tsx`, `login/page.tsx`
 - Admin API: `src/app/api/admin/fixed-login/route.ts`, `me/route.ts`, `access/route.ts`, …
+- Payments: `src/app/api/payments/verify/route.ts`, `confirm-upi/route.ts`, …

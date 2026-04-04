@@ -3,7 +3,7 @@ import { createServiceRoleClient } from "@/lib/supabase/server-service";
 
 export const dynamic = "force-dynamic";
 
-/** Public API: returns current payment method for checkout. Backend reads from app_settings. */
+/** Access: **public** read — no session; service role. See `@/lib/api-route-access`. */
 export async function GET() {
   try {
     const supabase = createServiceRoleClient();

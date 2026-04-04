@@ -7,6 +7,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Mail } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { getSiteUrl } from "@/lib/site";
 import { AuthInput } from "@/components/auth/AuthInput";
 import { Spinner } from "@/components/ui/spinner";
 import type { AuthFormData } from "@/components/types/auth";
@@ -29,7 +30,7 @@ export default function ForgotPasswordPage() {
     setMessage(null);
     const supabase = createClient();
     const { error } = await supabase.auth.resetPasswordForEmail(data.email, {
-      redirectTo: `${window.location.origin}/auth/callback?next=/reset-password`,
+      redirectTo: `${getSiteUrl()}/auth/callback?next=/reset-password`,
     });
     if (error) {
       setMessage({ type: "error", text: error.message });

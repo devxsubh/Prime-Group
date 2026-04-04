@@ -3,6 +3,8 @@ import crypto from "crypto";
 import { createAdminServerClient } from "@/lib/supabase/server-admin";
 import { createServiceRoleClient } from "@/lib/supabase/server-service";
 
+/** Access: **public_secret** — env credentials only; see `@/lib/api-route-access`. */
+
 function safeEqual(a: string, b: string) {
   const aBuf = Buffer.from(a, "utf8");
   const bBuf = Buffer.from(b, "utf8");

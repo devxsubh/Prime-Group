@@ -9,6 +9,10 @@ const UUID_RE =
 
 export const dynamic = "force-dynamic";
 
+/**
+ * Access: **public_hmac** — no user session. Credits are updated only after Razorpay signature
+ * verification (shared secret). Do not gate with member auth; see `@/lib/api-route-access`.
+ */
 export async function POST(req: Request) {
   const supabase = createServiceRoleClient();
   const method = await getPaymentMethodFromDb(supabase);

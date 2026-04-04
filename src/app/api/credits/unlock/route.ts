@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { requireUserWithBasicProfile, type SupabaseServerClient } from "@/lib/api-require-basic-profile";
 import { createServiceRoleClient } from "@/lib/supabase/server-service";
 
 export const dynamic = "force-dynamic";
@@ -8,14 +8,9 @@ const UNLOCK_COST = 1; // credits per profile unlock
 
 export async function POST(req: Request) {
   try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const gate = await requireUserWithBasicProfile();
+    if (!gate.ok) return gate.response;
+    const { user, supabase } = gate;
 
     const body = await req.json();
     const profileId = body?.profile_id as string | undefined;
@@ -112,10 +107,7 @@ export async function POST(req: Request) {
   }
 }
 
-async function getContactInfo(
-  supabase: Awaited<ReturnType<typeof createClient>>,
-  profileId: string
-) {
+async function getContactInfo(supabase: SupabaseServerClient, profileId: string) {
   const { data: profile } = await supabase
     .from("profiles")
     .select("contact_number, contact_address")

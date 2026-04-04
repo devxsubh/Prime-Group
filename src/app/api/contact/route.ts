@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createServiceRoleClient } from "@/lib/supabase/server-service";
 
+/**
+ * Access: **public** — no auth. Inserts use the service role so behavior does not depend on member
+ * cookies or anon RLS context; see `@/lib/api-route-access`.
+ */
 export async function POST(request: Request) {
   try {
     const body = await request.json();
@@ -16,7 +20,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Message is required" }, { status: 400 });
     }
 
-    const supabase = await createClient();
+    const supabase = createServiceRoleClient();
     const { error } = await supabase.from("contact_submissions").insert({
       name: name.trim().slice(0, 500),
       email: email.trim().slice(0, 255),

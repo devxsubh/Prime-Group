@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -11,7 +11,8 @@ import { createClient } from "@/lib/supabase/client";
 import { AuthInput } from "./AuthInput";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
-import { hasCompletedBasicProfile } from "@/lib/profile-basic-gate";
+import { getPostLoginRedirect } from "@/lib/post-login-redirect";
+import { getSiteUrl } from "@/lib/site";
 import type { AuthFormData } from "../types/auth";
 
 const signInSchema = z.object({
@@ -37,11 +38,10 @@ const linkClass =
   "font-medium underline hover:opacity-90 transition-colors";
 const inputErrorClass = "text-red-500 text-sm";
 
-/** Allow only relative app paths; disallow protocol-relative or absolute URLs */
-function isSafeNextPath(next: string | undefined): next is string {
-  if (!next || typeof next !== "string") return false;
-  const trimmed = next.trim();
-  return trimmed.startsWith("/") && !trimmed.startsWith("//");
+const RESEND_VERIFICATION_COOLDOWN_MS = 60_000;
+
+function verificationResendStorageKey(email: string): string {
+  return `pg_verify_resend_until_${email.trim().toLowerCase()}`;
 }
 
 interface AuthFormProps {
@@ -58,8 +58,38 @@ export function AuthForm({ mode, hideTitle = false, submitLabel, className, next
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [pendingVerificationEmail, setPendingVerificationEmail] = useState<string | null>(null);
   const [resending, setResending] = useState(false);
+  /** Unix ms; until then resend is disabled (client + server-aligned cooldown). */
+  const [resendNotBefore, setResendNotBefore] = useState<number | null>(null);
+  const [resendCountdownTick, setResendCountdownTick] = useState(0);
 
   const isSignUp = mode === "sign-up";
+
+  useEffect(() => {
+    if (!pendingVerificationEmail || typeof window === "undefined") return;
+    try {
+      const raw = localStorage.getItem(verificationResendStorageKey(pendingVerificationEmail));
+      if (!raw) return;
+      const parsed = JSON.parse(raw) as { until?: number };
+      if (typeof parsed.until === "number" && parsed.until > Date.now()) {
+        setResendNotBefore(parsed.until);
+      }
+    } catch {
+      // ignore
+    }
+  }, [pendingVerificationEmail]);
+
+  useEffect(() => {
+    if (!resendNotBefore || resendNotBefore <= Date.now()) return;
+    const ms = resendNotBefore - Date.now();
+    const id = window.setTimeout(() => setResendNotBefore(null), ms);
+    return () => window.clearTimeout(id);
+  }, [resendNotBefore]);
+
+  useEffect(() => {
+    if (!resendNotBefore || resendNotBefore <= Date.now()) return;
+    const id = window.setInterval(() => setResendCountdownTick((t) => t + 1), 1000);
+    return () => window.clearInterval(id);
+  }, [resendNotBefore]);
 
   const {
     register,
@@ -83,7 +113,7 @@ export function AuthForm({ mode, hideTitle = false, submitLabel, className, next
         email: data.email,
         password: data.password,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback?next=/hi`,
+          emailRedirectTo: `${getSiteUrl()}/auth/callback?next=/hi`,
         },
       });
       if (error) {
@@ -114,21 +144,15 @@ export function AuthForm({ mode, hideTitle = false, submitLabel, className, next
       }
       return;
     }
-    const userId = signInData.user?.id;
-    if (userId) {
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("full_name, date_of_birth, gender, contact_number, country, city")
-        .eq("user_id", userId)
-        .maybeSingle();
-      router.refresh();
-      if (!hasCompletedBasicProfile(profile)) {
-        router.push("/onboarding");
-        return;
-      }
-    }
+    const user = signInData.user;
+    if (!user?.id) return;
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("full_name, date_of_birth, gender, contact_number, country, city")
+      .eq("user_id", user.id)
+      .maybeSingle();
     router.refresh();
-    const destination = isSafeNextPath(nextParam) ? nextParam : "/discover";
+    const destination = getPostLoginRedirect(user, { next: nextParam, basicProfile: profile });
     router.push(destination);
   };
 
@@ -162,31 +186,73 @@ export function AuthForm({ mode, hideTitle = false, submitLabel, className, next
             </span>
             <button
               type="button"
-              disabled={resending}
+              disabled={
+                resending ||
+                (resendNotBefore !== null && Date.now() < resendNotBefore)
+              }
               onClick={async () => {
+                if (!pendingVerificationEmail) return;
                 setResending(true);
                 try {
-                  const supabase = createClient();
-                  const { error } = await supabase.auth.resend({
-                    type: "signup",
-                    email: pendingVerificationEmail,
-                    options: {
-                      emailRedirectTo: `${window.location.origin}/auth/callback?next=/hi`,
-                    },
+                  const res = await fetch("/api/auth/resend-verification", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email: pendingVerificationEmail }),
                   });
-                  if (error) {
-                    setMessage({ type: "error", text: error.message });
-                  } else {
-                    setMessage({ type: "success", text: "Verification email sent again. Please check your inbox/spam." });
+                  const data = (await res.json().catch(() => ({}))) as { error?: string };
+                  if (!res.ok) {
+                    let cooldownMs = 15_000;
+                    if (res.status === 429) {
+                      const ra = parseInt(res.headers.get("Retry-After") ?? "", 10);
+                      if (Number.isFinite(ra)) {
+                        cooldownMs = Math.min(3_600_000, Math.max(1_000, ra * 1000));
+                      }
+                    }
+                    const until = Date.now() + cooldownMs;
+                    setResendNotBefore(until);
+                    try {
+                      localStorage.setItem(
+                        verificationResendStorageKey(pendingVerificationEmail),
+                        JSON.stringify({ until })
+                      );
+                    } catch {
+                      // ignore
+                    }
+                    setMessage({
+                      type: "error",
+                      text: data.error || "Could not resend the email. Try again in a moment.",
+                    });
+                    return;
                   }
+                  const until = Date.now() + RESEND_VERIFICATION_COOLDOWN_MS;
+                  setResendNotBefore(until);
+                  try {
+                    localStorage.setItem(
+                      verificationResendStorageKey(pendingVerificationEmail),
+                      JSON.stringify({ until })
+                    );
+                  } catch {
+                    // ignore
+                  }
+                  setMessage({
+                    type: "success",
+                    text: "Verification email sent again. Please check your inbox/spam.",
+                  });
                 } finally {
                   setResending(false);
                 }
               }}
-              className="font-semibold underline underline-offset-2 disabled:opacity-60"
+              className="font-semibold underline underline-offset-2 disabled:opacity-60 disabled:no-underline"
               style={{ color: "var(--accent-gold)" }}
             >
-              {resending ? "Sending…" : "Resend"}
+              {resending
+                ? "Sending…"
+                : (() => {
+                    void resendCountdownTick;
+                    return resendNotBefore !== null && Date.now() < resendNotBefore
+                      ? `Wait ${Math.max(1, Math.ceil((resendNotBefore - Date.now()) / 1000))}s`
+                      : "Resend";
+                  })()}
             </button>
           </div>
         )}

@@ -2,18 +2,22 @@ import Link from "next/link";
 import Image from "next/image";
 import { AuthForm } from "@/components/auth/auth-form";
 import { cn } from "@/lib/utils";
+import { sanitizeOptionalNextPath } from "@/lib/safe-next-path";
 
 export default async function SignInPage({
   searchParams,
 }: {
-  searchParams: Promise<{ message?: string; next?: string }>;
+  searchParams: Promise<{ message?: string; next?: string; error?: string }>;
 }) {
   const params = await searchParams;
   const showPasswordResetSuccess = params.message === "password_reset";
   const showEmailVerified = params.message === "email_verified";
-  const next = params.next && params.next.trim().startsWith("/") && !params.next.trim().startsWith("//")
-    ? params.next
-    : undefined;
+  const showResetLinkExpired = params.error === "reset_link_expired";
+  const showAuthCallbackError = params.error === "auth_callback_error";
+  const showAuthTimingHint = params.error === "auth_timing";
+  const showRecoveryWrongAccount = params.error === "recovery_wrong_account";
+  const showAccountRemoved = params.message === "account_removed";
+  const next = sanitizeOptionalNextPath(params.next);
 
   return (
     <div className="min-h-screen w-full">
@@ -98,6 +102,58 @@ export default async function SignInPage({
             {showEmailVerified && (
               <div className="mb-4 p-3 rounded-lg bg-green-50 text-green-800 text-sm font-general border border-green-200/80">
                 Email verified. Sign in with your email and password to continue.
+              </div>
+            )}
+
+            {showResetLinkExpired && (
+              <div
+                className="mb-4 p-3 rounded-lg bg-amber-50 text-amber-950 text-sm font-general border border-amber-200/80"
+                role="alert"
+              >
+                This reset link has expired or was already used.{" "}
+                <Link
+                  href="/forgot-password"
+                  className="font-semibold underline underline-offset-2"
+                  style={{ color: "var(--primary-blue)" }}
+                >
+                  Request a new one
+                </Link>
+                .
+              </div>
+            )}
+
+            {showAuthCallbackError && (
+              <div className="mb-4 p-3 rounded-lg bg-red-50 text-red-800 text-sm font-general border border-red-200/80" role="alert">
+                Something went wrong completing sign-in. Please try again, or request a new link from the sign-up or
+                password reset email.
+              </div>
+            )}
+
+            {showAuthTimingHint && (
+              <div
+                className="mb-4 p-3 rounded-lg bg-amber-50 text-amber-950 text-sm font-general border border-amber-200/80"
+                role="alert"
+              >
+                Sign-in could not be completed—sometimes this is caused by your device date or time being wrong. Check
+                that automatic time is enabled, try the link again, or request a new one from your email.
+              </div>
+            )}
+
+            {showRecoveryWrongAccount && (
+              <div className="mb-4 p-3 rounded-lg bg-red-50 text-red-800 text-sm font-general border border-red-200/80" role="alert">
+                That reset link is for a different account than the one you were signed in with. We signed you out—open
+                the reset link again, or{" "}
+                <Link href="/forgot-password" className="font-semibold underline underline-offset-2">
+                  request a new reset email
+                </Link>
+                .
+              </div>
+            )}
+
+            {showAccountRemoved && (
+              <div className="mb-4 p-3 rounded-lg bg-amber-50 text-amber-950 text-sm font-general border border-amber-200/80" role="alert">
+                Your session didn&apos;t match an active profile (the account may have been removed). Please sign in
+                again or create a new account.
               </div>
             )}
 

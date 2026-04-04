@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { requireUserWithBasicProfile } from "@/lib/api-require-basic-profile";
 
 export const dynamic = "force-dynamic";
 
@@ -10,13 +10,9 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "orderId required" }, { status: 400 });
   }
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const gate = await requireUserWithBasicProfile();
+  if (!gate.ok) return gate.response;
+  const { user, supabase } = gate;
 
   const { data: payment, error } = await supabase
     .from("payments")

@@ -71,8 +71,6 @@ export function SettingsClient({
     setSigningOut(true);
     try {
       await supabase.auth.signOut();
-      router.push("/");
-      router.refresh();
     } finally {
       setSigningOut(false);
     }

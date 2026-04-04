@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -38,7 +38,6 @@ export default function MainNav() {
   const { favoritesCount } = useFavorites();
   const { credits } = useCredits();
   const { user, signOut } = useAuth();
-  const router = useRouter();
   const pathname = usePathname();
   const [profilePhotoUrl, setProfilePhotoUrl] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
@@ -204,8 +203,6 @@ export default function MainNav() {
                         className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors duration-200"
                         onClick={async () => {
                           await signOut();
-                          router.push("/");
-                          router.refresh();
                         }}
                       >
                         <LogOut className="h-4 w-4" />

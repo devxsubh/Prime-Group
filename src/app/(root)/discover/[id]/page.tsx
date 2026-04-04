@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,13 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
   const supabase = await createClient();
+  const {
+    data: { user: metaAuthUser },
+  } = await supabase.auth.getUser();
+  if (!metaAuthUser) {
+    return { title: "Profile | Prime Group" };
+  }
+
   const { data: profile } = await supabase
     .from("profiles")
     .select("full_name, date_of_birth, city, state, country, gender, user_id")
@@ -25,14 +32,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (!profile) return { title: "Profile | Prime Group" };
 
-  const {
-    data: { user: metaUser },
-  } = await supabase.auth.getUser();
-  if (metaUser && profile.user_id !== metaUser.id) {
+  if (metaAuthUser && profile.user_id !== metaAuthUser.id) {
     const { data: viewerP } = await supabase
       .from("profiles")
       .select("gender")
-      .eq("user_id", metaUser.id)
+      .eq("user_id", metaAuthUser.id)
       .maybeSingle();
     const expected = discoverOppositeGenderForViewer(viewerP?.gender ?? null);
     if (expected && (profile.gender ?? "").toLowerCase() !== expected) {
@@ -60,6 +64,10 @@ export default async function DiscoverProfilePage({ params }: PageProps) {
   const {
     data: { user: authUser },
   } = await supabase.auth.getUser();
+
+  if (!authUser) {
+    redirect(`/sign-in?next=${encodeURIComponent(`/discover/${id}`)}`);
+  }
 
   const { data: profile, error: profileError } = await supabase
     .from("profiles")
